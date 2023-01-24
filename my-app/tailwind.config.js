@@ -9,7 +9,17 @@ module.exports = {
       'nova-flat': '"Nova Flat"',
       'sans': ['Proxima Nova', ...defaultTheme.fontFamily.sans],
     },
-    extend: {},
+    extend: {
+      colors:{
+        'black-rgba': 'rgba(0,0,0,0.3)'
+      },
+      spacing: {
+        '2/3': '66.666667%'
+      }
+    },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+    require('@tailwindcss/aspect-ratio'),
+  ],
 }

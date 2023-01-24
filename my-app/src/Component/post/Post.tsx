@@ -10,8 +10,9 @@ import { BiShare } from "react-icons/bi";
 const Post = () => {
     return (
         <>
-            <div className='md:hidden px-3 h-auto pt-4 space-y-6' >
-                <div className=' box-content h-auto  bg-[#2A2A2A] rounded-3xl px-4 py-3'>
+            <div className='md:hidden px-3 h-auto pt-4 space-y-6 ' >
+            <div className='max-h-screen overflow-y-scroll scrollbar-none space-y-5'>
+                <div className=' box-content h-auto  bg-[#2A2A2A] rounded-3xl px-4 py-3 '>
                     <div className="container mx-auto grid grid-cols-4 xl:grid-cols-3 pt-6 gap-8">
                         <div className=' col-span-1 pl-'>
                             <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover ' src="https://images.pexels.com/photos/3586798/pexels-photo-3586798.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
@@ -111,7 +112,7 @@ const Post = () => {
                         <div className='flex justify-center items col-span-2  items-center'><BiShare className='' size={28} /></div>
                     </div>
                 </div>
-
+                </div>
             </div>
         </>
     )
