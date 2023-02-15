@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import axiosinstance from '../../axios/axiosinstance'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -22,7 +23,7 @@ const Login = () => {
   }
 
   const authCheck = () => {
-    axios.get("http://localhost:4001/isUserAuth", {
+    axiosinstance.get("/isUserAuth", {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -40,7 +41,7 @@ const Login = () => {
     e.preventDefault()
     const { email, password } = user
     try {
-      axios.post("http://localhost:4001/login", user).then((response) => {
+      axiosinstance.post("/login", user).then((response) => {
         console.log("submitted");
         
         console.log(response.data, 'response in login');
@@ -60,7 +61,11 @@ const Login = () => {
           }
         }
 
-      })
+      }).catch((err) =>
+      console.log(err)
+       
+      
+      )
 
     } catch (err) {
       // navigate('/error')

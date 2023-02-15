@@ -1,7 +1,11 @@
 
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { log } from 'console'
+import { useQuery } from '@tanstack/react-query'
+import axiosinstance from '../../../axios/axiosinstance'
+import useDebounce from '../../../hooks/useDebounce'
 
 interface search {
   setSearchOpen: any
@@ -13,6 +17,40 @@ interface search {
 
 const Search = ({ setSearchOpen, open, tele, children }: search) => {
 
+  const [searchName, setSearchName] = useState<null | HTMLElement>()
+  const [searchAncher, setSearchAncher] = useState<null | HTMLElement>()
+  const [opens, setOpens] = useState<boolean>(false)
+
+  const debouncedValue = useDebounce(searchName, 500)
+
+  const { data: searchResult, isLoading, refetch } = useQuery(["searchUserValues", debouncedValue], () => {
+    return axiosinstance.get("/searchuser/" + debouncedValue, {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((res) => res.data)
+      .catch((err) => {
+        // navigate("/error")
+        console.log(err);
+
+      })
+  });
+  console.log("dataaaa", searchResult);
+
+
+  const handleSearch = (e: any) => {
+    // console.log(e.target.value)
+    if (e.target.value) {
+      setSearchAncher(e.currentTarget)
+      setOpens(true)
+      refetch()
+    } else {
+      setOpens(false)
+    }
+    console.log("Search anem", searchAncher);
+    setSearchName(e.target.value)
+
+  }
 
   return (
     <Transition.Root
@@ -79,7 +117,10 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
                       <div className="flex justify-center">
                         <div className="mb-3 xl:w-96">
                           <div className="input-group relative flex flex-wrap items-stretch w-full mb-4">
-                            <input type="search" className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal
+                            <input
+                              type="search"
+                              onChange={handleSearch}
+                              className="form-control relative flex-auto min-w-0 block w-full px-3 py-1.5 text-base font-normal
                              text-gray-700 bg-[#7069695d] bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0
                               focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                               placeholder="Search"
@@ -95,6 +136,29 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
 
                       {/* /End replace */}
                       <div className="mt- text-xs border-b border-[#616161] py- text-[#5e1e1e]"></div>
+
+                      {/* Search content */}
+                    {searchName ? 
+                    
+                    <>
+                     { searchResult && searchResult?.map((item: any, index: number) => (
+                          <div className='pt-4 flex gap-3'>
+                            <div>
+                              <img className=" w-14 h-14 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`/images/${item?.Images}`} alt="Bordered avatar" />
+                            </div> 
+                            <div>
+                              <div className='text-sm text-gray-300'>{item?.username}</div>
+                              <div className='text-sm text-gray-600'>{item?.name}</div>
+                            </div>
+
+                          </div>
+                        ))}
+                    </> 
+                    :
+                     <div>
+                        <div className='w-20 h-20 pl-3'>No User</div>
+                     </div>
+                    }
                     </div>
                   </div>
                 </Dialog.Panel>

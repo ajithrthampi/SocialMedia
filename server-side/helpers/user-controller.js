@@ -147,6 +147,7 @@ module.exports = {
     },
     addProfilePicture:async(req,res)=>{
         try{
+            const userId = req.body.user
             await signUp.findByIdAndUpdate({_id:userId},
                 {
                     $set:{
@@ -157,6 +158,7 @@ module.exports = {
                 res.status(200).json({msg:'changed profile pic'})
 
         }catch(err){
+            console.log(err,'llllllll');
             res.status(500).json(err)
         }
         const userId = ObjectId(req.body.user)
@@ -197,7 +199,8 @@ module.exports = {
                         userId:1,
                         likesCount:{$size:'$likes'},
                         likes:1,
-                        comment:1
+                        comment:1,
+                        createdAt:1
                     }
                 }
             ])
@@ -210,9 +213,11 @@ module.exports = {
     },
     viewProfilePosts:async(req,res)=>{
         try{
+            
 
             const userId = req.params
             const profilePosts = await post.find({userId:ObjectId(userId)}).sort({createdAt:-1})
+            console.log("Profile post",profilePosts);
             res.status(200).json(profilePosts)
         }catch(err){
             res.status(500).json(err)
@@ -234,20 +239,22 @@ module.exports = {
             const userId = req.params
             const email= await signUp.findOne({email:req.body.email})
             const username = await signUp.findOne({username:req.body.username})
-
+              console.log(req.body);
             if(email && username){
 
-                await signUp.findByIdAndUpdate({_id:ObjectId(userId)},{
+                await signUp.findByIdAndUpdate({_id:ObjectId(userId)},{ 
                     $set:{
                         phone:req.body.phone,
                         career:req.body.career,
-                        bio:req.body.bio
+                        bio:req.body.bio,
+                        name:req.body.name,
                     }
                 })
                 res.status(200).json({msg:'updated'})
             }else{
                 await signUp.findByIdAndUpdate({_id:ObjectId(userId)},{
                     $set:{
+                        name:req.body.name,
                         username:req.body.username,
                         email:req.body.email,
                         phone:req.body.phone,
@@ -412,6 +419,12 @@ module.exports = {
             res.status(500).json(err)
         }
     },
+    viewUsers:async(req,res)=>{
+        const userList = await signUp.find()
+        if(userList){
+            res.json(userList)
+        }
+},
     postCount:async(req,res)=>{
         try{
             const userId = req.params
@@ -640,8 +653,10 @@ module.exports = {
                 $pull:{comment:{_id:ObjectId(commentId)}}
             })
             res.status(200).json({msg:"deleted"})
+            console.log("Try erreore");
         }catch(err){
             res.status(500).json(err)
+            console.log("helloo catch");
         }
 
     },
@@ -722,6 +737,7 @@ module.exports = {
     },
     deletePost:async(req,res)=>{
         const postId = req.params
+        console.log(req.params,"delete")
         try{
             await post.findByIdAndDelete(ObjectId(postId))
             res.status(200).json({msg:"deleted post"})
@@ -730,18 +746,20 @@ module.exports = {
         }
     },
     reportPost:async(req,res)=>{
-        const {reportPostId,userId} = req.body
+        const {reportState,userId} = req.body
         const condition = req.params.id
-        console.log(reportPostId,userId,condition);
+        console.log(reportState,userId,condition);
+        console.log(req.body);
         try{
 
-            const Post = await post.findOne({_id:ObjectId(reportPostId)})
+            const Post = await post.findOne({_id:ObjectId(reportState)})
+            // console.log("Post report",post);
             if(Post){
                 const reportPost = {
                     userId:ObjectId(userId),
                     condition:condition
                 }
-                await post.findByIdAndUpdate({_id:ObjectId(reportPostId)},
+                await post.findByIdAndUpdate({_id:ObjectId(reportState)},
                 {
                     $push:{report:reportPost}
                 }

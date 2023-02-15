@@ -1,9 +1,10 @@
-import { log } from 'console';
-import React, { useState } from 'react'
+// import { log } from 'console';
+import React, { useEffect, useState } from 'react'
 import { IoMdClose } from "react-icons/io";
 import { BsArrowLeft } from "react-icons/bs";
 import { GoLocation } from "react-icons/go";
 import { IoMdPhotos } from "react-icons/io";
+import { useContext } from 'react'
 import {
     MdFastfood,
     MdCloudUpload,
@@ -11,6 +12,9 @@ import {
     MdFoodBank,
     MdAttachMoney,
 } from 'react-icons/md';
+import { UserContext } from '../../Pages/context/Context';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -25,38 +29,99 @@ interface modal {
 const PostModal = ({ isVisible, onClose, }: modal) => {
 
     const [image, setImages] = useState<string>()
+    const { user } = useContext(UserContext)
+    const [change, setChange] = useState('')
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const navigate = useNavigate()
     const [imageForm, setImageForm] = useState<any>({
-        Images: "",
+        caption: '',
+        Images: ''
+    })
+
+    if (user) {
+        var userId = user.id
     }
-    )
+
+
 
     const fileUpload = (e: any) => {
         const image = e.target.files[0]
-        console.log("Image Uploaded", image);
+        // console.log("Image Uploaded", image);
         setImageForm({
-      ...imageForm,
+            ...imageForm,
             Images: image
         })
         setImages(URL.createObjectURL(e.target.files[0]))
     }
-    console.log(" Imageform", imageForm);
+    // console.log(" Imageform", imageForm);
 
     const deleteImage = () => {
-        setImages((oldState:any) => oldState.filter( (item:any) => item.item === 1));
+        setImages((oldState: any) => oldState.filter((item: any) => item.item === 1));
     }
 
-    {/*  ADD POST */}
-
-    const addPost = () => {
-        // const PostData = new FormData();
-        // for (let key in imageForm) {
-        //     console.log(key,"IIIIIIIIIIIIIIIIIIIIIIIII");
-        //       PostData.append(key, form[keyw])
-        // }
+    const handleChange = (e: any) => {
+        e.preventDefault()
+        const { name, value } = e.target
+        setImageForm({
+            ...imageForm,
+            [name]: value
+        })
     }
 
-    
+    {/*  ADD POST */ }
 
+    // const addPost = () => {
+    //     // e.preventDefault()
+    //     const PostData = new FormData();
+    //     for (let key in imageForm) {
+    //         PostData.append(key, imageForm[key])
+    //     }
+    //     PostData.append("user", user.id)
+    //     const { caption, Images } = imageForm
+    //     if (caption || Images) {
+    //         axios.post("http://localhost:4001/addpost", PostData, {
+    //             headers: {
+    //                 "x-access-token": localStorage.getItem("token"),
+    //             },
+    //         }).then((response) => {
+    //             // setChange(response)
+    //             onClose()
+    //             setImages("")
+    //         }).catch((err) => {
+    //             navigate('/error')
+    //         })
+    //     }
+    // }
+
+    useEffect(() => {
+       if(!isLoading) return;
+       const PostData = new FormData();
+       for (let key in imageForm) {
+           PostData.append(key, imageForm[key])
+       }
+       PostData.append("user", user.id)
+       const { caption, Images } = imageForm
+       if (caption || Images) {
+           axios.post("http://localhost:4001/addpost", PostData, {
+               headers: {
+                   "x-access-token": localStorage.getItem("token"),
+               },
+           }).then((response) => {
+               // setChange(response)
+            //    setImages("")
+               onClose()
+               
+           }).catch((err) => {
+               navigate('/error')
+           })
+       }
+    },[ isLoading ,user])
+
+    const handleClick = (event:any) => {
+        event.preventDefault()
+        setIsLoading(true)
+        setImages("")
+    }
 
     if (!isVisible) return null
 
@@ -65,7 +130,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
         <>
             <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
            flex justify-center items-center'>
-            
+
                 <div className='w-[1000px] flex flex-col'>
                     <button className='text-white text-xl place-self-end'
                         onClick={() => onClose()} >
@@ -124,7 +189,6 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                                 {/* </div> */}
                             </div>
 
-
                             <div>
                                 <div className='flex items-center p-3 gap-3'>
                                     <div className='w-12 h-12 rounded-full overflow-hidden cursor-pointer'>
@@ -134,7 +198,16 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                                     <div>@ajithrthampi</div>
                                 </div>
                                 <div>
-                                    <textarea className=' w-full p-1 pl-5 mt-2 bg-[#3131319d] h-48 ' placeholder={'What on your mind!!!'} />
+                                    <textarea
+                                        id="caption-address"
+                                        name="caption"
+                                        className='w-full p-1 pl-5 mt-2 h-48'
+                                        placeholder={'What on your mind!!!'}
+                                        rows={5}
+                                        cols={20}
+                                        onChange={handleChange}
+                                        style={{ backgroundColor: "#313131" }}
+                                    />
                                 </div>
                                 <div className='flex items-center justify-between p-3'>
                                     <div className=''>Add Location</div>
@@ -142,7 +215,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                                 </div>
 
                                 <div className="mt-20 p-3">
-                                    <button onClick={addPost} className='text-black font-semibold bg-[#FFFF1A] px-6 py-1 rounded-xl'>
+                                    <button onClick={handleClick} className='text-black font-semibold bg-[#FFFF1A] px-6 py-1 rounded-xl'>
                                         Share
                                     </button>
                                 </div>

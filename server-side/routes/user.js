@@ -23,6 +23,8 @@ router.post('/forgotpassword',userController.forgotPassword)
 
 router.post('/otp',userController.verifyOtp)
 
+router.get('/users',userController.viewUsers)
+
 router.post('/addpost',verifyJWT,upload.single('Images'),userController.addPost)
 
 router.post('/addprofilepic',verifyJWT,upload.single('Images'),userController.addProfilePicture)

@@ -37,8 +37,8 @@ const Sidebar = () => {
     return (
         <>
 
-            <div className='xl:w-1/5 hidd xl:max-w-[280px] xl:min-w-[300px] '>
-                <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[300px] h-[600px] '>
+            <div className='xl:w-1/5 hidd xl:max-w-[280px] xl:min-w-[270px]  '>
+                <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[270px] h-[643px] '>
                     <div className='px-10 text-lg pt-5 pb-7 '>
                         <Link to="/home">
                             <a href="" className={nonActiveElement} >
@@ -57,13 +57,15 @@ const Sidebar = () => {
                             </div>
 
                         </div>
-                        <a href="/message" className={nonActiveElement}>
+                        <Link to="/message">
+                        <div className={nonActiveElement}>
                             <AiOutlineMessage size={25} />
                             <div className='hidden xl:block'>
                                 Message
                             </div>
 
-                        </a>
+                        </div>
+                        </Link>
                         <div className={nonActiveElement} onClick={() => setOpen(true)}  >
                             <MdOutlineNotifications size={25} />
                             <div className='hidden xl:block'>
@@ -73,13 +75,13 @@ const Sidebar = () => {
                             {/* <button onClick={() => setIsOpen(true)}>Click me again</button> */}
 
                         </div>
-                        <a href="connection" className={nonActiveElement}>
+                        {/* <Link to="/connection" className={nonActiveElement}>
                             <BsPeople size={25} />
                             <div className='hidden xl:block'>
                                 Connection
                             </div>
 
-                        </a>
+                        </Link> */}
                         <Link to="/profile">
                             <a href="" className={nonActiveElement}>
                                 <CgProfile size={25} />
@@ -119,41 +121,7 @@ const Sidebar = () => {
                 </div>
             </div>
 
-            {/* <div className=' shadow-md rounded-3xl mb-5 bg-[#2A2A2A] text-white lg:hidden  '>
-            <div className='px-10 text-  pt-5 pb-7 '>
-                        <a href="" className={activeElement}>
-                            <HiHome size={25} />
-                            Home
-                        </a>
-                        <a href="" className={nonActiveElement}>
-                            <BiSearch size={25} />
-                            Search
-                        </a>
-                        <a href="" className={nonActiveElement}>
-                            <AiOutlineMessage size={25} />
-                            Message
-                        </a>
-                        <a href="" className={nonActiveElement}>
-                            <MdOutlineNotifications size={25} />
-                            Notification
-                        </a>
-                        <a href="" className={nonActiveElement}>
-                            <BsPeople size={25} />
-                            Connection
-                        </a>
-                        <Link to="/profile">
-                            <a href="" className={nonActiveElement}>
-                                <CgProfile size={25} />
-                                Profile
-                            </a>
-                        </Link>
-                        <a href="" className={nonActiveElement}>
-                            <FiLogOut size={25} />
-                            Logout
-                        </a>
-                    </div>
-            </div> */}
-
+           
         </>
     )
 }

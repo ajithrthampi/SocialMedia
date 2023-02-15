@@ -2,9 +2,11 @@ import axios from 'axios'
 import React, { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Layout from '../../Component/layout/Layout'
+import DownNavbar from '../../Component/navbar/DownNavbar'
 import Navbar from '../../Component/navbar/Navbar'
 import Post from '../../Component/post/Post'
 import PostFormCard from '../../Component/post/PostFormCard'
+import Connection from '../userpages/connection/Connection'
 
 
 const HomePage = () => {
@@ -27,17 +29,20 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    authCheck()
+    // authCheck()
   }, [])
 
   return (
     <>
-      <div className='max-h-screen overflow-hidden'>
+      <div className='max-h-screen overflow-hidden '>
         <Navbar />
+        
         <Post />
+        
         <Layout>
           <PostFormCard />
         </Layout>
+        {/* <DownNavbar /> */}
       </div>
     </>
   )
