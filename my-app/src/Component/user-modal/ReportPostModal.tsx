@@ -60,7 +60,7 @@ const ReportPostModal = ({ isVisible, onClose, reportState }: modal) => {
     <>
 
       <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
-               md:flex justify-center items-center pt-20 md:pt-0'>
+               md:flex justify-center items-center pt- md:pt-0'>
         <div className=' flex flex-col'>
           <button className='text-white '
             onClick={() => onClose()} >
@@ -75,6 +75,7 @@ const ReportPostModal = ({ isVisible, onClose, reportState }: modal) => {
               </div>
               <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
               <div className='p-2'>why are you reporting this post?</div>
+              <div className='max-h-screen overflow-y-scroll scroll-smooth scrollbar-none pb-24'>
               <div className=' flex flex-col gap-7 text-sm p-2 cursor-pointer'>
                 <div className='' onClick={() => report("t is a scam")}>It is a scam</div>
                 <div className='' onClick={() => report("Violence or dangerous signal")}>Violence or dangerous signal</div>
@@ -85,6 +86,7 @@ const ReportPostModal = ({ isVisible, onClose, reportState }: modal) => {
                 <div className='' onClick={() => report("Fraud contents")}>Fraud contents</div>
                 <div className='' onClick={() => report("I just dont like this")}>I just dont like this</div>
               </div>
+            </div>
             </div>
           </div>
 

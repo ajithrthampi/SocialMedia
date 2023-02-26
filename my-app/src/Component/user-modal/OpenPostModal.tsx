@@ -8,6 +8,8 @@ import DeleteCommentPost from './DeleteCommentPost'
 import DeleteModal from './DeleteModal'
 import EachPostModalDetails from './EachPostModalDetails'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
+import jwtDecode from 'jwt-decode'
+import { BiDotsVerticalRounded } from 'react-icons/bi'
 
 interface openPost {
     isVisible: boolean
@@ -17,6 +19,9 @@ interface openPost {
 }
 
 const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPost) => {
+
+    const updateDeletePost = useSelector((state: any) => state.userDetails.value.closeDeleteUpdateMOdal)
+    // console.log("?????????????????reduc", postPassDetails);
 
     const [userName, setUserName] = useState([])
     const [comment, setComment] = useState<any>()
@@ -28,12 +33,31 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
     const space = /\s/
     const [eachPost, setEachPost] = useState<boolean>(false)
     const { user } = useContext(UserContext)
+    const [statee, setStatee] = useState(false)
+    const [userIdData, setUserIdData] = useState<any>()
 
     // const isFriendPostModals = useSelector((state: any) => state.userDetails.value.friendDetails)
-    // console.log("is modalll datalkadlsf.fds//.././././",isFriendPostModals);
+    // console.log("is modalll datalkadlsf.fds//.././././",is   s);
 
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
-    // console.log("is modalll...... datalkadlsf.fds//.././././",isFriendEachPost);
+    const isUpdateCaption = useSelector((state:any) => state.userDetails.value.updateCaptionModal)
+    const isPostDetails = useSelector((state:any) =>  state.userDetails.value.PostDetails)
+    // console.log("isUpdateCaptionisUpdateCaption",isUpdateCaption);
+
+    useEffect(() => {
+        try {
+            const data = localStorage.getItem('token')
+            if (data != null) {
+                const userData: any = jwtDecode(data)
+                const userId = userData?.id
+                setUserIdData(userId)
+                setStatee(true)
+            }
+        } catch (error) {
+            console.log("user id rreor", error);
+        }
+    }, [statee])
+    // console.log("userprofile ....userIdData userIdData", userIdData);
 
     //COMMENT ONCJANGE
 
@@ -49,10 +73,12 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
     const submitComment = (postId: string, type: number) => {
         const Images = postPassDetails.Images
-        const userId = user.id
+        const userId = user?.id
         const id = { userId, postId, comment }
 
         // console.log(userId, postId, comment, "scsdcscscsssddddddddd............");
+        console.log("Idid", id);
+
 
         if (comment) {
             axiosinstance.post("/comment", id, {
@@ -67,6 +93,8 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
             }).catch((err) => {
                 // navigate('/error')
+                console.log(err);
+
             })
         }
         setComment("")
@@ -88,7 +116,8 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
             console.log(err);
         })
-    }, [postPassDetails])
+    }, [postPassDetails,isUpdateCaption])
+    // console.log("logggggggg", userName);
 
     useEffect(() => {
         const postId = postPassDetails._id
@@ -98,16 +127,17 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
             },
         }).then((response) => {
             setGetComment(response.data)
-            console.log("..................................................");
+
             console.log("reponse....", response.data);
 
         }).catch((err) => {
             // navigate('/error')'
             console.log(err);
-
-            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         })
-    }, [postPassDetails, modalDelete, commentStatus, eachPost])
+    }, [postPassDetails, modalDelete, commentStatus, eachPost, state, isUpdateCaption])
+
+    console.log("Comments..,.,.,.,.", getComment);
+
 
     const openModalData = (commentId: any) => {
         setModalDelete(true)
@@ -123,10 +153,11 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
     if (!isVisible) return null
     return (
         <>
-            <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
-               md:flex justify-center items-center pt-20 md:pt-0'>
 
-                <div className='w-[1000px] flex flex-col'>
+            <div className='fixed inset-0 bg-black bg-opacity-25 backdrop-blur-sm
+               md:flex justify-center items-center md:pt-20 '>
+
+                <div className='w-[1000px] fle flex-col hidden md:block'>
                     <button className='text-white text-xl place-self-end'
                         onClick={() => onClose()} >
                         <IoMdClose size={25} />
@@ -186,7 +217,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                                 alt="" />
                                         </div>
                                         <div className='text-sm'> {userName}</div>
-                                        <div className='text-sm'>{postPassDetails.caption}</div>
+                                        <div className='text-sm'>{isPostDetails.caption}</div>
                                     </div>
                                 </div>
 
@@ -218,13 +249,6 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                                                 >
                                                                     <HiOutlineDotsHorizontal size={17} />
                                                                 </div>
-                                                                {/* </> */}
-                                                                {/* : */}
-                                                                {/* <> */}
-
-                                                                {/* </> */}
-                                                                {/* } */}
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -255,6 +279,46 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                         }
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile Screen */}
+
+                <div className='w-full bg-[#2A2A2A]  h-screen md:hidden'>
+                    <div className='w-full bg-black h-10 flex  items-center'>
+                        <div onClick={() => onClose()} className="pl-3">
+                            <BsArrowLeft size={24} className="text-white" />
+                        </div>
+                    </div>
+                    <div className='w-full h-14 bg-[#2A2A2A]  items-center p-2 '>
+                        <div className=' flex items-center justify-between'>
+                            <div className='flex gap-3 items-center '>
+                                <img
+                                    className='object-cover w-10 h-10 rounded-full '
+                                    src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                    alt="" />
+                                <div>
+                                    <div className='text-sm text-white'>name</div>
+                                    <div className='text-sm text-[#908c8c]'>{userName}</div>
+                                </div>
+                            </div>
+                            <div className='flex  ' onClick={() => EachPostModal(postPassDetails._id)}>
+                                <BiDotsVerticalRounded size={22} className="text-white" />
+                            </div>
+
+                        </div>
+                        {/* <div className=" text-xs  border border-[#5b5858] w-ful  mt-2 text-[#002D74]"></div>/ */}
+                        <p className='text-sm my-3 pl-2 text-white '>
+                        {postPassDetails.caption}
+                        </p>
+                    </div>
+
+                    <div>
+                        <div className='pt-10 px-3 '>
+                            <div className='box-border h- w-full '>
+                                <img className='rounded-3xl h-[500px] w-full object-cover ' src={`/images/${postPassDetails.Images}`} alt="" />
                             </div>
                         </div>
                     </div>

@@ -83,4 +83,8 @@ router.post('/report/:id',verifyJWT,userController.reportPost)
 
 router.post('/applyverification',verifyJWT,userController.applyVerfication)
 
+router.post('/addnotification',verifyJWT, userController.doNotifications)
+
+router.get('/getnotifications', verifyJWT, userController.getNotifications)
+
 module.exports = router                              

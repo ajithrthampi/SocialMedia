@@ -16,8 +16,9 @@ export default function Notifi( { open , setOpen,  onClose,isOpen , title, child
   // const [open, setOpen] = useState(true)
 
   return (
+    <>
     <Transition.Root show={open} as={Fragment} >
-      <Dialog as="div" className="relative z-10 hidden md:block" 
+      <Dialog as="div" className="relative z-10 hidden sm:block" 
       onClose={setOpen}
       >
         <Transition.Child
@@ -96,5 +97,6 @@ export default function Notifi( { open , setOpen,  onClose,isOpen , title, child
         </div>
       </Dialog>
     </Transition.Root>
+    </>
   )
 }

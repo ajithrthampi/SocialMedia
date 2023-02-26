@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import jwtDecode from 'jwt-decode'
 import React, { useContext, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
@@ -14,6 +15,26 @@ const Layout = ({ children }: any) => {
   const [profileDetails, setProfileDetails] = useState<any>()
   const { user } = useContext(UserContext)
   const location = useLocation();
+  const [userIdData, setUserIdData] = useState<any>()
+  const [state, setState] = useState<boolean>()
+
+
+  useEffect(() => {
+    try {
+      const data = localStorage.getItem('token')
+      if (data != null) {
+        const userData: any = jwtDecode(data)
+        const userId = userData?.id
+        setUserIdData(userId)
+        setState(true)
+      }
+    } catch (error) {
+      console.log("user id rreor", error);
+    }
+  }, [state,location])
+  // console.log("userIdData userIdData",userIdData);
+  
+  
 
   // USER DATA
 
@@ -30,23 +51,26 @@ const Layout = ({ children }: any) => {
 
   useEffect(() => {
     try {
-      const userId = user.id
-      axiosinstance.get("/viewprofiledetails/" + userId, {
+      // const userId = user?.id
+      console.log("userId userId userId userId",userIdData);
+      
+      axiosinstance.get("/viewprofiledetails/" + userIdData, {
         headers: {
           "x-access-token": localStorage.getItem("token"),
         },
       }).then((response) => {
-        console.log(response.data[0].name, 'yesyesyesyes');
+        // console.log(response.data[0].name, 'yesyesyesyes');
         setProfileDetails(response.data)
         refetch()
 
       })
     } catch (err) {
       // navigate('/error')
-      console.log("Eror message...", err);
+      // console.log("Eror message...", err);
 
     }
-  }, [user])
+  }, [state])
+
 
   return (
     <div className='hidden md:block  px-8  '>

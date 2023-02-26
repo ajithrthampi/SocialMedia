@@ -41,14 +41,14 @@ const Sidebar = () => {
                 <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[270px] h-[643px] '>
                     <div className='px-10 text-lg pt-5 pb-7 '>
                         <Link to="/home">
-                            <a href="" className={nonActiveElement} >
+                            <div className={nonActiveElement} >
 
                                 <HiHome size={25} />
                                 <div className='hidden xl:block '>
                                     Home
                                 </div>
 
-                            </a>
+                            </div>
                         </Link>
                         <div className={nonActiveElement} onClick={() => setSearchOpen(true)}>
                             <BiSearch size={25} />
@@ -58,40 +58,34 @@ const Sidebar = () => {
 
                         </div>
                         <Link to="/message">
-                        <div className={nonActiveElement}>
-                            <AiOutlineMessage size={25} />
-                            <div className='hidden xl:block'>
-                                Message
-                            </div>
+                            <div className={nonActiveElement}>
+                                <AiOutlineMessage size={25} />
+                                <div className='hidden xl:block'>
+                                    Message
+                                </div>
 
-                        </div>
+                            </div>
                         </Link>
                         <div className={nonActiveElement} onClick={() => setOpen(true)}  >
                             <MdOutlineNotifications size={25} />
                             <div className='hidden xl:block'>
-                                {/* <Notification/> */}
+                              
                                 Notification
                             </div>
                             {/* <button onClick={() => setIsOpen(true)}>Click me again</button> */}
 
                         </div>
-                        {/* <Link to="/connection" className={nonActiveElement}>
-                            <BsPeople size={25} />
-                            <div className='hidden xl:block'>
-                                Connection
-                            </div>
-
-                        </Link> */}
+                      
                         <Link to="/profile">
-                            <a href="" className={nonActiveElement}>
+                            <div className={nonActiveElement}>
                                 <CgProfile size={25} />
                                 <div className='hidden xl:block'>
                                     Profile
                                 </div>
 
-                            </a>
+                            </div>
                         </Link>
-                        <a href="" className={nonActiveElement}
+                        <div className={nonActiveElement}
                             onClick={logout}
                         >
                             <FiLogOut size={25} />
@@ -99,7 +93,7 @@ const Sidebar = () => {
                                 Logout
                             </div>
 
-                        </a>
+                        </div>
                         <Notifi
                             open={open}
                             setOpen={setOpen}
@@ -116,12 +110,11 @@ const Sidebar = () => {
                             tele="hi there"
                         >
                         </Search>
-
                     </div>
                 </div>
             </div>
 
-           
+
         </>
     )
 }

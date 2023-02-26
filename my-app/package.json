@@ -29,6 +29,8 @@
     "react-table": "^7.8.0",
     "react-time-ago": "^7.2.1",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.6.0",
+    "sweetalert2": "^11.7.2",
     "tailwind-scrollbar": "^2.1.0",
     "tailwind-scrollbar-hide": "^1.1.7",
     "time-ago": "^0.2.1",

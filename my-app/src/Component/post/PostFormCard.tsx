@@ -63,7 +63,33 @@ const PostFormCard = () => {
     const { user } = useContext(UserContext)
     const dispatch = useDispatch()
 
+    const [userIdData, setUserIdData] = useState<any>()
+    const [state, setState] = useState<boolean>()
+
+    console.log("USer, user", user);
+
     if (user) {
+        var userId = user?.id
+    }
+
+    useEffect(() => {
+        try {
+            const data = localStorage.getItem('token')
+            if (data != null) {
+                const userData: any = jwtDecode(data)
+                const userId = userData?.id
+                setUserIdData(userId)
+                setState(true)
+            }
+        } catch (error) {
+            console.log("user id rreor", error);
+        }
+
+    }, [state])
+
+
+    if (user) {
+
         var userId = user.id
     }
     // console.log("Profule details", profileDetails);
@@ -108,9 +134,11 @@ const PostFormCard = () => {
     //  LIKE POST
 
     const likePost = (postId: string, username: string, type: number, images: any) => {
-        const userId = user.id
+        const userId = user?.id
         const id = { postId, userId }
         // setTimeout( async () => {
+        console.log("idIdiID", userId);
+
 
 
         axios.post("http://localhost:4001/likepost", id, {
@@ -129,7 +157,7 @@ const PostFormCard = () => {
     //  UNLIKE POST
 
     const UnlikePost = (postId: string, username: string, type: number) => {
-        const userId = user.id
+        // const userId = user.id
         const id = { postId, userId }
 
         axios.post("http://localhost:4001/likepost", id, {
@@ -161,8 +189,6 @@ const PostFormCard = () => {
         })
 
     }
-
-
 
     // USER DATA
 
@@ -279,16 +305,16 @@ const PostFormCard = () => {
         setReportState(postId)
     }
 
-  
 
-     // NAVIGATE TO FRIEND PROFILE
-     const handleFriendProfile = (item: any) => {
-        console.log("CLicked modal data",item.userId._id);
-        if(item.userId._id === userId) {
+
+    // NAVIGATE TO FRIEND PROFILE
+    const handleFriendProfile = (item: any) => {
+        console.log("CLicked modal data", item.userId._id);
+        if (item.userId._id === userId) {
             navigate("/profile")
-        } else{
-             dispatch(passfriendDetails(item))
-        navigate("/fried-Profile")
+        } else {
+            dispatch(passfriendDetails(item?.userId))
+            navigate("/fried-Profile")
         }
     }
 
@@ -307,7 +333,9 @@ const PostFormCard = () => {
                                             <img className='' src={`/images/${profileDetails[0].Images}`} alt="" />
                                             :
                                             <>
-                                                <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
+                                                <div className='pt-1'>
+                                                    <img className=" mx-auto  w-9 justify-content-center h-9 rounded-full ring-2 ring-gray-300" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
+                                                </div>
                                             </>
                                         }
 
@@ -346,15 +374,12 @@ const PostFormCard = () => {
                                     <div className="flex ">
                                         <div>
                                             <div>
-                                                {/* <Link to='/profile'> */}
-
                                                 <div className='w-10 h-10 rounded-full overflow-hidden cursor-pointer'>
                                                     {post.userId.Images ? <img src={`/images/${post.userId.Images}`} alt="profilepic" />
                                                         : <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profilepic" />
                                                     }
 
                                                 </div>
-                                                {/* </Link> */}
                                             </div>
                                         </div>
                                         <div className='pl-3 grow'>
@@ -444,7 +469,7 @@ const PostFormCard = () => {
                                     <div className='flex gap-8'>
                                         <div className='mt-4 flex gap-2 items-center '>
                                             {
-                                                post.likes.includes(userId) ?
+                                                post.likes.includes(userIdData) ?
                                                     <>
                                                         <button className='i' onClick={() => UnlikePost(post._id, post.userId.username, 1)}><IoMdHeart size={26} /></button>
                                                     </>
@@ -470,7 +495,6 @@ const PostFormCard = () => {
                         :
                         <>
                             <SkeletonElement />
-
                         </>
                     }
 

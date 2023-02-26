@@ -1,11 +1,27 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 const AdminNavbar = () => {
+    const navigate = useNavigate()
+
+    const logout = () => {
+        Swal.fire({
+            title: "Logout",
+            text: "Are you sure you want to logout?",
+            icon: "success",
+            confirmButtonText: "OK",
+            showCancelButton:true
+          }).then((result)=>{
+            if(result.isConfirmed){
+                navigate('/adminlogin')
+            }
+          })
+    }
 
     const [navbar, setNavbar] = useState(false);
     return (
         <>
-
             <nav className="w-full bg-[#2A2A2A] shadow px-10    ">
                 <div className="justify-between px-4 mx-auto lg:max-w-7x md:items-center md:flex md:px-8">
                     <div className='text-white'>
@@ -73,7 +89,9 @@ const AdminNavbar = () => {
                                 text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:shadow-lg
                                  focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900
                                   active:shadow-lg transition duration-150 ease-in-out"
-                                    >Admin
+                                  onClick={logout}
+                                    >
+                                        Logout
                                     </button>
                                 </li>
                             </ul>

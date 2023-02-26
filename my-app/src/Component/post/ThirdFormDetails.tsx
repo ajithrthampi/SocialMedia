@@ -3,14 +3,17 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
+import { useNavigate } from 'react-router-dom'
+import { passfriendDetails } from '../../redux/store/features/userSlice'
+import { useDispatch } from 'react-redux'
 
 interface details {
-    profileDetails:any
+    profileDetails: any
     data: any
     // viewAllFollowing:any
 }
 
-const ThirdFormDetails = ( { profileDetails, data } :details) => {
+const ThirdFormDetails = ({ profileDetails, data }: details) => {
     const [suggestionUser, setSuggestionUser] = useState([])
     const [followUser, setFollowUser] = useState([])
     const { user } = useContext(UserContext)
@@ -18,10 +21,20 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
     const [followers, setFollowers] = useState<any>()
     const [following, setfFollowing] = useState<any>()
     const [currentUserId, setCurrentUserId] = useState()
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    console.log("Followere count..../././/. ", followers);
-    console.log("Followeringgg count..../././/. ", following);
+
+
+    // console.log("Followere count..../././/. ", profileDetails);
+    // console.log("Followeringgg count..../././/. ", following);
+
+
+    if (user) {
+        var userId = user?.id
+    }
     
+
 
     // suggestion user
 
@@ -40,9 +53,9 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
             // navigate('/error')
         })
 
-    }, [user, data,viewAllFollowing])
+    }, [user, data, viewAllFollowing])
 
-    const follow = (friendFollowId:any) => {
+    const follow = (friendFollowId: any) => {
         const userId = user?.id
         const friendId = friendFollowId
         try {
@@ -66,33 +79,33 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
     useEffect(() => {
         const data = localStorage.getItem('token')
         if (data != null) {
-            const userData:any = jwtDecode(data)
+            const userData: any = jwtDecode(data)
             const userId = userData?.id
-            ViewAllFollowing(userId)        
+            ViewAllFollowing(userId)
         }
-      
-    }, [user,followUser, ])
 
-    const ViewAllFollowing = (userId:any) => {
-        axiosinstance.get("/viewallfollowing/" + userId , {
+    }, [user, followUser,])
+
+    const ViewAllFollowing = (userId: any) => {
+        axiosinstance.get("/viewallfollowing/" + userId, {
             headers: {
-               "x-access-token": localStorage.getItem("token"),
-           },
+                "x-access-token": localStorage.getItem("token"),
+            },
         }).then((response) => {
-                    // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
-                    setViewAllFollowing(response.data.following)
-                    // refetch()
-                }).catch((err)=>{
-                    // navigate('/error')
-                    console.log(err);
-                })
+            // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
+            setViewAllFollowing(response.data.following)
+            // refetch()
+        }).catch((err) => {
+            // navigate('/error')
+            console.log(err);
+        })
     }
 
-     // VIEW ALL FOLLOWERS
+    // VIEW ALL FOLLOWERS
 
-     useEffect(() => {
+    useEffect(() => {
         try {
-            
+
             axiosinstance.get("/followingcount/" + currentUserId, {
                 headers: {
                     "x-access-token": localStorage.getItem("token"),
@@ -106,7 +119,7 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
             console.log(err);
         }
 
-    }, [currentUserId,viewAllFollowing])
+    }, [currentUserId, viewAllFollowing])
 
 
     //CURENT USER ID
@@ -114,29 +127,42 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
     useEffect(() => {
         const token = localStorage.getItem('token')
         if (token != null) {
-          const tokenData: any = jwtDecode(token)
-          setCurrentUserId(tokenData?.id)
-        //   dispatch(CurrentUserId(tokenData?.id))
-        // refetch()
+            const tokenData: any = jwtDecode(token)
+            setCurrentUserId(tokenData?.id)
+            //   dispatch(CurrentUserId(tokenData?.id))
+            // refetch()
         }
         // profileData()
-      }, [user,following, followers, viewAllFollowing])
+    }, [user, following, followers, viewAllFollowing])
 
-    
-    
+    //GO TO PROFILE
+
+    const handleFriendProfile = (item: any) => {
+        console.log(item?._id);
+
+        if (item?.userId?._id === userId) {
+            navigate("/profile")
+        } else {
+            dispatch(passfriendDetails(item))
+            navigate("/fried-Profile")
+        }
+    }
 
 
-  return (
-    <>
-      
-      <div className='lg:w-1/4 w-2/5 hidden lg:block ' >
+
+    return (
+        <>
+
+            <div className='lg:w-1/4 w-2/5 hidden lg:block ' >
                 <div className='shadow-md rounded-3xl p  p- mb-5 bg-[#2A2A2A] text-white overflow-hidden'>
                     {profileDetails?.map((item: any, index: number) => (
                         <div className=''>
                             <div className='flex flex-col justify-center items-center  pt-3'>
                                 <div className=' xl:w-24 xl:h-24 w-16  h-16 rounded-3xl  borde overflow-hidden cursor-pointer'>
                                     {/* <img className='object-cover' src="https://images.pexels.com/photos/5397723/pexels-photo-5397723.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
-                                    {profileDetails[0].Images ? <img className='object-cover' src={`/images/${profileDetails[0].Images}`} alt="" />
+                                    {profileDetails[0].Images ?
+
+                                        <img className='object-cover' src={`/images/${profileDetails[0].Images}`} alt="" />
                                         :
                                         <>
                                             <img className='object-cover' src="https://images.pexels.com/photos/5397723/pexels-photo-5397723.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
@@ -146,30 +172,30 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
                                 {/* <div> */}
 
                                 <div className='absolute flex 2xl:gap-28 xl:gap-28 lg:gap-14  justify-center items-center pt-1 top-48 text-md -mt-7'>
-                                    <div className='flex flex-col justify-center items-center '>
-                                        {following ? 
-                                        <>
-                                         <p className='lg:text-xs xl:text-lg'>{followers}</p>
-                                        </>
-                                         : 
-                                         <>
-                                          <p className='lg:text-xs xl:text-lg'>0</p>
-                                         </>    
-                                    }
-                                       
+                                    <div className='flex flex-col justify-center items-center   '>
+                                        {followers ?
+                                            <>
+                                                <p className='lg:text-xs xl:text-lg'>{followers}</p>
+                                            </>
+                                            :
+                                            <>
+                                                <p className='lg:text-xs xl:text-lg'>0</p>
+                                            </>
+                                        }
+
                                         <h1 className='text-sm text-[#a7a7a7]'>Followers</h1>
 
                                     </div>
 
                                     <div className='flex flex-col justify-center items-center '>
-                                        {following ? 
-                                        <>
-                                        <p className='lg:text-xs xl:text-lg'>{following}</p>
-                                        </> : 
-                                        <>
-                                        <p className='lg:text-xs xl:text-lg'>0</p>
-                                        </>}
-                                        
+                                        {following ?
+                                            <>
+                                                <p className='lg:text-xs xl:text-lg'>{following}</p>
+                                            </> :
+                                            <>
+                                                <p className='lg:text-xs xl:text-lg'>0</p>
+                                            </>}
+
                                         <h1 className='text-sm text-[#a7a7a7]'>Following</h1>
 
                                     </div>
@@ -211,23 +237,23 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
                         </div>
                         <div className='max-h-[210px] overflow-y-scroll scrollbar-none'>
                             {/* First */}
-                            {suggestionUser?.map((item:any, index:number) => (
-                                <div className='px-2'  key={index}>
-                                    {item._id === user.id ? "" : <> <div className='shadow-md rounded-3xl px- mb-3  bg-[#1a1a1a77] text-white overflow-hidden'>
+                            {suggestionUser?.map((item: any, index: number) => (
+                                <div className='px-2' key={index}>
+                                    {item?._id === user?.id ? "" : <> <div className='shadow-md rounded-3xl px- mb-3  bg-[#1a1a1a77] text-white overflow-hidden'>
 
                                         <div className='flex gap-2 p-2 items-center'>
                                             <div className='w-12 h-12 rounded-full overflow-hidden cursor-pointer'>
                                                 {/* <img src="https://images.pexels.com/photos/4612113/pexels-photo-4612113.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
                                                 {item.Images ? <>
-                                            <img className='w-10 h-10 box-border    rounded-full object-cover ' src={`/images/${item.Images}`} alt="" />
-                                        </>
-                                            :
-                                            <>
-                                                <div className='bg-cover'>
-                                                    <img className='rounded-full md:w-36 md:h-36 w-20 h-20  overflow-hidden' src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
-                                                </div>
-                                            </>
-                                        }
+                                                    <img className='w-10 h-10 box-border    rounded-full object-cover ' onClick={() => handleFriendProfile(item)} src={`/images/${item.Images}`} alt="" />
+                                                </>
+                                                    :
+                                                    <>
+                                                        <div className='bg-cover'>
+                                                            <img className='rounded-full md:w-36 md:h-36 w-20 h-20  overflow-hidden' src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+                                                        </div>
+                                                    </>
+                                                }
                                             </div>
                                             <div>
                                                 <div>
@@ -238,23 +264,23 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
                                         </div>
 
                                         <div className='px-2 pt-2'>
-                                            
+
                                             <div className='shadow-md rounded-3xl px-3  mb-3 bg-[#1a1a1ad5] text-white overflow-hidden p-2 py-3'>
                                                 <div className='flex justify-evenly '>
                                                     {/* <button className='text-black bg-[#ffffff] text-sm font-semibold xl:px-7 lg:px-5  py-2 rounded-xl'>Remove</button> */}
                                                     {/* {viewAllFollowing.following.includes(followerlist.list._id) ?  */}
                                                     {viewAllFollowing?.includes(item._id) ?
-                                                      <button className='text-black bg-[#FFFF1A] text-sm font-semibold xl:px-7  lg:px-3  py-2 rounded-xl' onClick={() => follow(item._id)}>Following</button>
-                                                      :
-                                                      <button className='text-black bg-[#FFFF1A] text-sm font-semibold xl:px-7  lg:px-3  py-2 rounded-xl' onClick={() => follow(item._id)}>Follow</button>
-                                                }
-                                                  
+                                                        <button className='text-black bg-[#FFFF1A] text-sm font-semibold xl:px-7  lg:px-3  py-2 rounded-xl' onClick={() => follow(item._id)}>Following</button>
+                                                        :
+                                                        <button className='text-black bg-[#FFFF1A] text-sm font-semibold xl:px-7  lg:px-3  py-2 rounded-xl' onClick={() => follow(item._id)}>Follow</button>
+                                                    }
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     </>}
-                                   
+
                                 </div>
                             ))}
                             {/* Secnd */}
@@ -268,8 +294,8 @@ const ThirdFormDetails = ( { profileDetails, data } :details) => {
                 </div>
             </div>
 
-    </>
-  )
+        </>
+    )
 }
 
 export default ThirdFormDetails

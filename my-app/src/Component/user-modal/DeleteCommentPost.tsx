@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import axiosinstance from '../../axios/axiosinstance'
+import { closeDeleteModal } from '../../redux/store/features/userSlice'
 
 interface modal {
     isVisible: any
@@ -12,6 +14,8 @@ interface modal {
 const DeleteCommentPost = ({ isVisible, children, onClose, state, postPassDetails }: modal) => {
 
     const [commentStatus, setCommentStatus] = useState<any>()
+    const [deleteState, setDeleteState] = useState<boolean>(false)
+    const dispatch = useDispatch()
 
 
     // DELETE COMMENT
@@ -26,14 +30,14 @@ const DeleteCommentPost = ({ isVisible, children, onClose, state, postPassDetail
                 "x-access-token": localStorage.getItem("token"),
             },
         }).then((response) => {
+            dispatch(closeDeleteModal(true))  
             setCommentStatus(response)
             console.log("deleytex comment");
-            onClose()
+             
         }).catch((err) => {
             console.log(err);
         })
     }
-
     useEffect(() => {
         onClose()
     },[commentStatus])

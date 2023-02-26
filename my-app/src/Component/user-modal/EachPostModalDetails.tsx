@@ -4,6 +4,8 @@ import { IoMdClose } from 'react-icons/io'
 import axiosinstance from '../../axios/axiosinstance'
 import ImageUploading from 'react-images-uploading';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
+import { useDispatch } from 'react-redux';
+import { updateCaptionIn } from '../../redux/store/features/userSlice';
 
 interface modal {
     isVisible: any
@@ -17,9 +19,7 @@ interface modal {
 }
 
 const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData, postPassDetails }: modal) => {
-    console.log("Post data///////////", postData);
-    console.log("onclosee.ee.....",onClosee);
-    console.log("onclose......",onClose);
+  
     
     // const postId = postData._id
 
@@ -28,7 +28,8 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
     const [editPostData, setEditPostData] = useState<boolean>(false)
     const [caption, setCaption] = useState({})
     const [state, setState] = useState()
-    console.log(caption);
+    const dispatch = useDispatch()
+    
 
     // const isFriendPostModals = useSelector((state:any) => state.userDetails.value.friendShowModal)
     
@@ -87,6 +88,7 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
 
     const updateCaption = () => {
         const postId = postData
+        dispatch(updateCaptionIn(true))
         // console.log("Post dataashdbakhfbhfbkdf",postId);
         axiosinstance.post("/editcaption/" + postId, caption, {
             headers: {
@@ -177,7 +179,7 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
                                             name='caption' 
                                             className="rounded-md px-4 py-2 w-full outline outline-white text-slate-400 bg-[#313131] " 
                                             type="text"
-                                            defaultValue={postPassDetails.caption} 
+                                            defaultValue={postPassDetails.caption}
                                             onChange={handleCaption}
                                             />
                                         </div>

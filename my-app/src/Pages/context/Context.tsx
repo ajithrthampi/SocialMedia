@@ -12,6 +12,8 @@ export const UserContext = createContext< {user: any; setUser: any} > ({
 
 export const Context = ({ children }: contextUser) => {
     const [user, setUser] = useState<any>(null)
+    // console.log("user/././././././/./././",user);
+    
     return (
         <div>
 

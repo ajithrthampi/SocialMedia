@@ -1,4 +1,7 @@
 const nodemailer = require('nodemailer')
+const notificationSchema = require('../models/notification')
+const mongoose = require('mongoose')
+let ObjectId = mongoose.Types.ObjectId
 
 let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -58,5 +61,74 @@ module.exports={
                 message: error.message,
             })
         }
-    }
+    },
+
+    // ADD NOTIFICATION //
+
+    addNotifications: async (data) => {
+        try {
+            const { receiverId, senderId, postId, type,  } = data
+            const res = await notificationSchema.findOne({
+                triggered_by: senderId,
+                notify: receiverId,
+                postId: postId,
+                notification: type,
+            })
+            if (!res) {
+                const notifications = new notificationSchema({
+                    triggered_by: senderId,
+                    notify: receiverId,
+                    postId: postId,
+                    notification: type,
+                })
+                notifications.save()
+            } else {
+                await notificationSchema.findByIdAndUpdate(ObjectId(res._id), {
+                    notification: type
+                })
+            }
+            return { msg: "sucessfully" }
+        } catch (error) {
+            return error.message
+        }
+    },
+
+    // GET NOTIFICATION //
+
+    getUserNotifications: async (UID) => {
+        try {
+            const notifications = await notificationSchema.aggregate([
+                {
+                    $match: {
+                        notify: ObjectId(UID)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'triggered_by',
+                        foreignField: '_id',
+                        as: "triggeredUser"
+                    }
+                }, {
+                    $unwind: '$triggeredUser'
+                },
+                //  {
+                //     $project: {
+                //         userName: '$triggeredUser.userName',
+                //         userDp: '$triggeredUser.profilePhoto',
+                //         time: '$createdAt',
+                //         type: '$notification',
+                //         read: '$read',
+                //     }
+                // }, 
+                {
+                    $sort: { 'time': -1 }
+                }
+            ])
+            return notifications
+        } catch (error) {
+            return error.message
+        }
+    },
 }

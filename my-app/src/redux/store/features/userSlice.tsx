@@ -11,6 +11,10 @@ interface PersonState {
   friendDetails:any
   friendEachPost:any
   friendShowModal:boolean
+  closeDeleteUpdateMOdal:boolean
+  updateFollowCount:boolean
+  updateCaptionModal:boolean
+  PostDetails:any
 
 }
 
@@ -20,6 +24,10 @@ const initalState:PersonState ={
    friendDetails:{},
    friendShowModal: false,
    friendEachPost:{},
+   closeDeleteUpdateMOdal:false,
+   updateFollowCount:false,
+   updateCaptionModal:false,
+   PostDetails:[]
 }
 
 export const PersonSlice = createSlice({
@@ -39,22 +47,37 @@ export const PersonSlice = createSlice({
         passfriendDetails:(state, action) => {
             state.value.friendDetails = action.payload
             //  console.log("redux valuie/...", state.value.friendDetails);
+            // console.log(" state.value.friendDetails", state.value.friendDetails);
         },
 
         friendPostModal:(state, action) => {
             state.value.friendShowModal = action.payload
-            console.log(state.value.friendShowModal,"Hello");
+            // console.log(state.value.friendShowModal,"Hello");
             
         },
         friendEachPost:(state, action) => {
             state.value.friendEachPost = action.payload
-            console.log("reduxxh../././.../",state.value.friendEachPost);
+            // console.log("reduxxh../././.../",state.value.friendEachPost);
+        },
+        closeDeleteModal:(state, action) =>{
+            state.value.closeDeleteUpdateMOdal = action.payload
+            // console.log(" state.value.closeDeleteUpdateMOdal><><>>>><>..........", state.value.closeDeleteUpdateMOdal);
+        },
+        updateFollowData:(state, action) => {
+            state.value.updateFollowCount = action.payload
+            console.log(" state.value.updateFollowCoun.,.,.,.,.," ,state.value.updateFollowCount);
+        },
+        updateCaptionIn:(state, action) => {
+            state.value.updateCaptionModal = action.payload;
+            console.log("state.value.updateCaptionModal   state.value.updateCaptionModal",state.value.updateCaptionModal);
+        },
+        updatePostDetails:(state, action) => {
+            state.value.PostDetails = action.payload
+            console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);
+            
         }
-        
-    }
-    
+    }  
 })
-
 export default PersonSlice.reducer;
 export const 
 {
@@ -62,5 +85,9 @@ export const
     passfriendDetails, 
     friendPostModal, 
     friendEachPost,
+    closeDeleteModal,
+    updateFollowData,
+    updateCaptionIn,
+    updatePostDetails,
 }
  = PersonSlice.actions

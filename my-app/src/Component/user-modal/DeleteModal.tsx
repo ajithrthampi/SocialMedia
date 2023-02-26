@@ -42,7 +42,7 @@ const DeleteModal = ({ isVisible, children, onClose, state, postPassDetails }: m
     if (!isVisible) return null
     return (
         <>
-            <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
+            <div className='fixed z-30  inset-0 bg-black bg-opacity-25 backdrop-blur-sm flex justify-center items-center'>
                 <div className="modal-dialog relative  pointer-events-none w-[360px]">
                     <div className="modal-content bg-[#191819] border-none  shadow-lg relative flex flex-col justify-center items-center w-full pointer-events-auto  bg-clip-padding rounded-md outline-none text-current">
                         <button className="modal-body relativ p-4 text-white text-sm  hover:bg-[#1E1E1E] w-full"

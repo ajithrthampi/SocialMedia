@@ -15,6 +15,7 @@ import {
 import { UserContext } from '../../Pages/context/Context';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 
 
@@ -37,6 +38,23 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
         caption: '',
         Images: ''
     })
+    const [userIdData, setUserIdData] = useState<any>()
+    const [state, setState] = useState<boolean>()
+  
+  
+    useEffect(() => {
+      try {
+        const data = localStorage.getItem('token')
+        if (data != null) {
+          const userData: any = jwtDecode(data)
+          const userId = userData?.id
+          setUserIdData(userId)
+          setState(true)
+        }
+      } catch (error) {
+        console.log("user id rreor", error);
+      }
+    }, [state])
 
     if (user) {
         var userId = user.id
@@ -56,7 +74,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
     // console.log(" Imageform", imageForm);
 
     const deleteImage = () => {
-        setImages((oldState: any) => oldState.filter((item: any) => item.item === 1));
+        setImages("");
     }
 
     const handleChange = (e: any) => {
@@ -99,7 +117,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
        for (let key in imageForm) {
            PostData.append(key, imageForm[key])
        }
-       PostData.append("user", user.id)
+       PostData.append("user", userIdData)
        const { caption, Images } = imageForm
        if (caption || Images) {
            axios.post("http://localhost:4001/addpost", PostData, {
@@ -115,7 +133,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                navigate('/error')
            })
        }
-    },[ isLoading ,user])
+    },[ isLoading ,state])
 
     const handleClick = (event:any) => {
         event.preventDefault()
@@ -129,7 +147,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
     return (
         <>
             <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
-           flex justify-center items-center'>
+           flex justify-center items-center '>
 
                 <div className='w-[1000px] flex flex-col'>
                     <button className='text-white text-xl place-self-end'
@@ -209,10 +227,10 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                                         style={{ backgroundColor: "#313131" }}
                                     />
                                 </div>
-                                <div className='flex items-center justify-between p-3'>
+                                {/* <div className='flex items-center justify-between p-3'>
                                     <div className=''>Add Location</div>
                                     <div><GoLocation /></div>
-                                </div>
+                                </div> */}
 
                                 <div className="mt-20 p-3">
                                     <button onClick={handleClick} className='text-black font-semibold bg-[#FFFF1A] px-6 py-1 rounded-xl'>

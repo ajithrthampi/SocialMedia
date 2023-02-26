@@ -7,6 +7,7 @@ import Navbar from '../navbar/Navbar';
 import { UserContext } from '../../Pages/context/Context';
 import axios from 'axios';
 import axiosinstance from '../../axios/axiosinstance';
+import jwtDecode from 'jwt-decode';
 
 interface editmodal {
     isVisible: boolean
@@ -21,6 +22,8 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
     const [profileDetails, setProfileDetails] = useState<any>()
     const [updatePicture, setUpdatePicture] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [userIdData, setUserIdData] = useState<any>()
+    const [state, setState] = useState<boolean>()
 
     const { user } = useContext(UserContext)
     const navigate = useNavigate()
@@ -40,6 +43,22 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
         var userId = user.id
     }
 
+    // USER ID
+
+    useEffect(() => {
+        try {
+            const data = localStorage.getItem('token')
+            if (data != null) {
+                const userData: any = jwtDecode(data)
+                const userId = userData?.id
+                setUserIdData(userId)
+                setState(true)
+            }
+        } catch (error) {
+            console.log("user id rreor", error);
+        }
+    }, [state])
+
 
     // IMAGE 
 
@@ -55,74 +74,42 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
 
 
 
-    // ADD PROFILE PICTURE TO BACKEND
-
-    // const addProfilePic = (e: any) => {
-    //     e.preventDefault()
-       
-    //         const Data = new FormData();
-    //         for (let key in form) {
-    //             Data.append(key, form[key])
-    //         }
-    //         Data.append('user', user.id)
-    //         const { Images } = form
-    //         console.log("Profilr image DAta......", Images);
-
-    //         if (Images) {
-    //             axiosinstance.post("/addprofilepic", Data, {
-    //                 headers: {
-    //                     "x-access-token": localStorage.getItem("token"),
-    //                 },
-    //             }).then((response) => {
-                 
-                    
-    //                 console.log("..................................................");
-    //                 console.log("reponse....", response.data);
-    //             }).catch((err) => {
-    //                 // navigate('/error')'
-    //                 console.log(err);
-        
-    //                 console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-    //             })
-    //             // setUpdatePicture(false)
-    //         }
-    // }
 
     useEffect(() => {
-        if(!isLoading) return;
+        if (!isLoading) return;
 
         const Data = new FormData();
-            for (let key in form) {
-                Data.append(key, form[key])
-            }
-            Data.append('user', user.id)
-            const { Images } = form
-            console.log("Profilr image DAta......", Images);
+        for (let key in form) {
+            Data.append(key, form[key])
+        }
+        Data.append('user', user.id)
+        const { Images } = form
+        console.log("Profilr image DAta......", Images);
 
-            if (Images) {
-                axiosinstance.post("/addprofilepic", Data, {
-                    headers: {
-                        "x-access-token": localStorage.getItem("token"),
-                    },
-                }).then((response) => {
-                 
-                    
-                    console.log("..................................................");
-                    console.log("reponse....", response.data);
-                }).catch((err) => {
-                    // navigate('/error')'
-                    console.log(err);
-        
-                    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-                })
-                // setUpdatePicture(false)
-            }
+        if (Images) {
+            axiosinstance.post("/addprofilepic", Data, {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
+            }).then((response) => {
 
-        
 
-    },[isLoading, user])
+                console.log("..................................................");
+                console.log("reponse....", response.data);
+            }).catch((err) => {
+                // navigate('/error')'
+                console.log(err);
 
-    const addProfilePic = (event:any) => {
+                console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+            })
+            // setUpdatePicture(false)
+        }
+
+
+
+    }, [isLoading, user])
+
+    const addProfilePic = (event: any) => {
         event.preventDefault()
         setIsLoading(true)
         setUpdatePicture(false)
@@ -143,8 +130,8 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
 
     useEffect(() => {
         try {
-            const userId = user.id
-            axiosinstance.get("/viewprofiledetails/" + userId, {
+            // const userId = user.id
+            axiosinstance.get("/viewprofiledetails/" + userIdData, {
                 headers: {
                     "x-access-token": localStorage.getItem("token"),
                 },
@@ -164,13 +151,15 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
             console.log("Eror message...", err);
 
         }
-    }, [isVisible, user])
+    }, [isVisible, state])
+    console.log("updatePicture",profileDetails);
+    
 
     const onSubmit = () => {
         try {
-            const userId = user.id
+            // const userId = user.id
             console.log(userDetails, 'userDetails in submit function');
-            axiosinstance.post("editprofile/" + userId, userDetails, {
+            axiosinstance.post("editprofile/" + userIdData, userDetails, {
                 headers: {
                     "x-access-token": localStorage.getItem("token"),
                 },
@@ -202,7 +191,7 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
                         <div className='bg-[#191819]  rounded text-white py-7 '>
                             <div className='  md:pl-5 sm:pl-10 pl-16 md:pb-7 pb-6 md:pt-0 pt-40  ' onClick={() => { onClose(); setImage('') }}> <BsArrowLeft size={24} /> </div>
                             <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
-                            {profileDetails.map((item: any, index: any) => (
+                            {profileDetails?.map((item: any, index: any) => (
 
                                 <div key={index} className=' px-20'>
                                     <div className='flex items-center gap-6'>
@@ -221,7 +210,7 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
 
                                         </div>
                                         <div className=''>
-                                            <div><h1>@ajithrthampi</h1></div>
+                                            <div><h1>@ajithrthamp</h1></div>
                                             {/* <div>
                                                 <label className='text-[#706b6bde] cursor-pointer'>
                                                     <h3 

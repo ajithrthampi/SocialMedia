@@ -129,6 +129,30 @@ module.exports = {
             res.status(500).json(err)
         }
     },
+
+    // DO NOTIFICATION //
+
+    doNotifications: async (req, res) => {
+        try {
+            const result = await userHelper.addNotifications(req.body)
+            res.json(result)
+        } catch (err) {
+            res.status(500).json({ error: err.message })
+        }
+    },
+
+    // GET NOTIFICATION //
+
+    getNotifications: async (req, res) => {
+        console.log(req.userId)
+        try {
+            const result = await userHelper.getUserNotifications(req.userId)
+            console.log(result,'result')
+            res.json(result)
+        } catch (err) {
+            res.status(500).json({ error: err.message })
+        }
+    },
     
     addPost:async(req,res)=>{
         try{
@@ -217,13 +241,14 @@ module.exports = {
 
             const userId = req.params
             const profilePosts = await post.find({userId:ObjectId(userId)}).sort({createdAt:-1})
-            console.log("Profile post",profilePosts);
+            // console.log("Profile post",profilePosts);
             res.status(200).json(profilePosts)
         }catch(err){
             res.status(500).json(err)
         }
     },
     viewProfileDetails:async(req,res)=>{
+        console.log(req.params)
         try{
             const userId = req.params
             const profileDetails= await signUp.find({_id:ObjectId(userId)})
@@ -685,12 +710,15 @@ module.exports = {
     checkUser:async(req,res)=>{
         try{
             const conversation = await Conversation.find({
-                members:{ $in:[(ObjectId(req.params))]}
+                members:{ $in:[(ObjectId(req.params.id))]}
             })
             res.status(200).json(conversation)
+            // console.log("res conversation", req.params);
+            // console.log("con", conversation);
         }catch(err){
             res.status(500).json(err)
         }
+
     },
     doMessage:async(req,res)=>{
         const newMessage = Message(req.body)
@@ -706,6 +734,8 @@ module.exports = {
             const messages = await Message.find({
                 conversationId:ObjectId(req.params)
             })
+            console.log("messages",req.params)
+            console.log("messages",messages)
             res.status(200).json(messages)
         }catch(err){
             res.status(500).json(err)

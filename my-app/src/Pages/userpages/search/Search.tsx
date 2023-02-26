@@ -1,11 +1,16 @@
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState,useContext } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { log } from 'console'
 import { useQuery } from '@tanstack/react-query'
 import axiosinstance from '../../../axios/axiosinstance'
 import useDebounce from '../../../hooks/useDebounce'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { UserContext } from '../../context/Context'
+import { passfriendDetails } from '../../../redux/store/features/userSlice'
+import Post from '../../../Component/post/Post'
 
 interface search {
   setSearchOpen: any
@@ -20,6 +25,27 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
   const [searchName, setSearchName] = useState<null | HTMLElement>()
   const [searchAncher, setSearchAncher] = useState<null | HTMLElement>()
   const [opens, setOpens] = useState<boolean>(false)
+  const navigate = useNavigate()
+  const { user } = useContext(UserContext)
+  const dispatch = useDispatch()
+
+  if (user) {
+    var userId = user.id
+}
+
+// All data
+
+const { data } = useQuery(["Id"], () => {
+  return axiosinstance.get("viewpost", {
+      headers: {
+          "x-access-token": localStorage.getItem("token"),
+      },
+  }).then((res) => res.data)
+      .catch((err) => {
+          navigate("/error")
+      })
+});
+
 
   const debouncedValue = useDebounce(searchName, 500)
 
@@ -35,7 +61,7 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
 
       })
   });
-  console.log("dataaaa", searchResult);
+  // console.log("dataaaa", searchResult);
 
 
   const handleSearch = (e: any) => {
@@ -50,6 +76,20 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
     console.log("Search anem", searchAncher);
     setSearchName(e.target.value)
 
+  }
+
+  // GO TO PROFILE ACCOUNT
+
+  const handleFriendProfile = (item:any) => {
+    console.log(item?._id);
+
+    if(item?.userId?._id === userId) {
+      navigate("/profile")
+  } else{
+       dispatch(passfriendDetails(item))
+  navigate("/fried-Profile")
+  }
+    
   }
 
   return (
@@ -143,9 +183,14 @@ const Search = ({ setSearchOpen, open, tele, children }: search) => {
                     <>
                      { searchResult && searchResult?.map((item: any, index: number) => (
                           <div className='pt-4 flex gap-3'>
-                            <div>
-                              <img className=" w-14 h-14 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`/images/${item?.Images}`} alt="Bordered avatar" />
+                            {/* {data?.map((Post:any) => (
+                              <> */}
+                              <div>
+                              <img onClick={() => handleFriendProfile(item)} className=" w-14 h-14 rounded-full object-cover  dark:ring-gray-500" src={`/images/${item?.Images}`} alt="Bordered avatar" />
                             </div> 
+                              {/* </>
+                            ))} */}
+                            
                             <div>
                               <div className='text-sm text-gray-300'>{item?.username}</div>
                               <div className='text-sm text-gray-600'>{item?.name}</div>

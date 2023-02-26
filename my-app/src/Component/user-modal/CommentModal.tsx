@@ -18,8 +18,8 @@ interface modal {
     onClose: () => void
     children: any
     postPassDetails: any
-    data:any
-   
+    data: any
+
 
 }
 
@@ -142,6 +142,8 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
     const openModalData = (commentId: any) => {
         setModalDelete(true)
         setState(commentId)
+        console.log("commentId",commentId);
+        
     }
     // console.log(".datataTTATATATATTATATATATATTATATA",state);
 
@@ -153,9 +155,9 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         <>
 
             <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
-               md:flex justify-center items-center pt-20 md:pt-0'>
+               md:flex justify-center items-center pt-20 md:pt-0 z-20'>
 
-                <div className='w-[1000px] flex flex-col'>
+                <div className='md:w-[1000px]  flex flex-col'>
                     <button className='text-white text-xl place-self-end'
                         onClick={() => onClose()} >
                         <IoMdClose size={25} />
@@ -186,30 +188,30 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
 
                             {/* TOP IMAGE */}
                             <div className='w-screen md:w-auto'>
-                                
+
                                 <div>
-                                <div className='flex items-center p-3 gap-3 '>
-                                    <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                        <img
-                                            className='object-cove'
-                                            src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                                            alt="" />
+                                    <div className='flex items-center p-3 gap-3 '>
+                                        <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
+                                            <img
+                                                className='object-cove'
+                                                src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                                alt="" />
+                                        </div>
+                                        <div className='text-sm'>{userName}</div>
                                     </div>
-                                    <div className='text-sm'>{userName}</div>
-                                </div>
 
-                                <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
+                                    <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
 
-                                <div className='flex items-center p-3 gap-3'>
-                                    <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                        <img
-                                            className='object-cove'
-                                            src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                                            alt="" />
+                                    <div className='flex items-center p-3 gap-3'>
+                                        <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
+                                            <img
+                                                className='object-cove'
+                                                src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                                alt="" />
+                                        </div>
+                                        <div className='text-sm'> {userName} </div>
+                                        <div className='text-sm'>{postPassDetails.caption}</div>
                                     </div>
-                                    <div className='text-sm'> {userName} </div>
-                                    <div className='text-sm'>{postPassDetails.caption}</div>
-                                </div>
                                 </div>
 
 
@@ -268,17 +270,17 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                                             style={{ backgroundColor: "#313131" }}
                                         />
                                         {!comment?.comment || space.test(comment?.comment) === true ?
-                                        <>
-                                        
-                                        </>
-                                        :
-                                        
-                                          <button className='text-white pt-5' onClick={() => submitComment(postPassDetails._id, 2)}>
-                                            POST
-                                        </button>
-                                            
-                                    }
-                                      
+                                            <>
+
+                                            </>
+                                            :
+
+                                            <button className='text-white pt-5' onClick={() => submitComment(postPassDetails._id, 2)}>
+                                                POST
+                                            </button>
+
+                                        }
+
                                     </div>
                                 </div>
                             </div>
@@ -286,10 +288,11 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                     </div>
                 </div>
             </div>
+            {/* <div className='z-10'> */}
+                <DeleteModal isVisible={modalDelete} onClose={() => setModalDelete(false)} state={state} postPassDetails={postPassDetails}>
 
-            <DeleteModal isVisible={modalDelete} onClose={() => setModalDelete(false)} state={state} postPassDetails={postPassDetails}>
-
-            </DeleteModal>
+                </DeleteModal>
+            {/* </div> */}
 
 
         </>

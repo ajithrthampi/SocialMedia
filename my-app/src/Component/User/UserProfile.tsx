@@ -14,11 +14,16 @@ import OpenPostModal from '../user-modal/OpenPostModal';
 import CommentModal from '../user-modal/CommentModal';
 import jwtDecode from 'jwt-decode';
 import FollowListModal from '../user-modal/FollowListModal';
-import { useDispatch } from 'react-redux';
-import { openModalFollowers } from '../../redux/store/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { openModalFollowers, updatePostDetails } from '../../redux/store/features/userSlice';
+import PostModal from '../user-modal/PostModal';
 
 
 const UserProfile = () => {
+
+
+
+
 
     const [editModal, setEditModal] = useState(false)
     const [openPostModal, setOpenPostModal] = useState<boolean>(false)
@@ -33,18 +38,48 @@ const UserProfile = () => {
     const [currentUserId, setCurrentUserId] = useState()
     const navigate = useNavigate()
     const [followModal, setFollowModal] = useState<boolean>(false)
+
+    const [postModal, setPostModal] = useState(false)
+    const [statee, setStatee] = useState(false)
+    const [userIdData, setUserIdData] = useState<any>()
+    const [followersLists, setFollowersLists] = useState<any>()
+    const [followingLists, setFollowingLists] = useState<any>()
+    const [stateFollowers, setStateFollowers] = useState<any>()
     const dispatch = useDispatch();
+
+    const isUpdatePostyDetails = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
+
+    console.log("><>>>>>><><><><><><><><><><", isUpdatePostyDetails);
+
+
+
+    useEffect(() => {
+        try {
+            const data = localStorage.getItem('token')
+            if (data != null) {
+                const userData: any = jwtDecode(data)
+                const userId = userData?.id
+                setUserIdData(userId)
+                setStatee(true)
+            }
+        } catch (error) {
+            console.log("user id rreor", error);
+        }
+    }, [statee])
+    console.log("userprofile ....userIdData userIdData", userIdData);
+
+
 
     useEffect(() => {
         viewPost()
 
-    }, [editModal, user, openPostModal])
+    }, [editModal, statee, openPostModal, postModal])
 
     const viewPost = () => {
 
-        const userId = user?.id
+        // const userId = user?.id
 
-        axiosinstance.get("/viewprofilepost/" + userId, {
+        axiosinstance.get("/viewprofilepost/" + userIdData, {
             headers: {
                 "x-access-token": localStorage.getItem("token"),
             },
@@ -52,20 +87,22 @@ const UserProfile = () => {
 
             setState(response.data)
             setProfilePosts(response.data)
+            // console.log("updateDeletePost>><><><><><><><",updateDeletePost);
         }).catch((err) => {
             // navigate('/error')
+            console.log("view Image", err);
+
         })
     }
-
-    console.log("profile details///././././././././././././.", profilePosts);
+    // console.log("profile details///././././././././././././.", profilePosts);
 
 
     // USER DATA
 
     useEffect(() => {
         try {
-            const userId = user.id
-            axiosinstance.get("/viewprofiledetails/" + userId, {
+            // const userId = user.id
+            axiosinstance.get("/viewprofiledetails/" + userIdData, {
                 headers: {
                     "x-access-token": localStorage.getItem("token"),
                 },
@@ -78,25 +115,38 @@ const UserProfile = () => {
             console.log("Eror message...", err);
 
         }
-    }, [user, editModal])
-    // console.log("User profile ",profileDetails);
+    }, [statee, state, editModal])
+    console.log("User profile><><><><><><><>/ ", profileDetails);
 
 
     // USER POST DATA
+    const [up, setUp] = useState(false)
+    const [hi, setHi] = useState()
 
     const viewImagePost = (postId: any) => {
-        console.log(postId, 'id in comment click');
-        axiosinstance.get("/postdetails/" + postId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            setOpenPostModal(true)
-            setEachPost(response.data)
-        }).catch((err) => {
-            navigate('/error')
-        })
+        setUp(!up)
+        setHi(postId)
     }
+
+    useEffect(() => {
+        const viewImagePosts = (postId: any) => {
+            console.log(postId, 'id in comment click');
+            axiosinstance.get("/postdetails/" + postId, {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
+            }).then((response) => {
+                setOpenPostModal(true)
+                setEachPost(response.data)
+                dispatch(updatePostDetails(response.data))
+            }).catch((err) => {
+                // navigate('/error')
+            })
+        }
+        viewImagePosts(hi)
+    }, [isUpdatePostyDetails,up])
+
+
     // console.log("Each Post data..................", eachPost);
 
     // FOLLOW COUNT
@@ -127,14 +177,53 @@ const UserProfile = () => {
             console.log(err);
         }
 
-    }, [currentUserId])
+    }, [currentUserId, user, followModal])
 
     //FOLLOW MODAL
 
+
+
     const followersModal = () => {
-        console.log("modala ponted  dddjdj");
-        setFollowModal(true)
+        try {
+            const userId = user.id
+            axiosinstance.get("/followerslist/" + userId, {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
+            }).then((response) => {
+                setFollowersLists(response.data)
+                setFollowModal(true)
+                setStateFollowers("Followers")
+            })
+
+        } catch (err) {
+            // navigate('/error')
+            console.log(err);
+        }
     }
+    // console.log("setFollowersLists",followersLists);
+
+
+    const followingsModal = () => {
+        try {
+            const userId = user.id
+            axiosinstance.get("/followinglist/" + userId, {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
+            }).then((response) => {
+                setFollowersLists(response.data)
+                setFollowModal(true)
+                setStateFollowers("Remove")
+            })
+
+        } catch (err) {
+            // navigate('/error')
+            console.log(err);
+        }
+    }
+
+
 
     return (
         <>
@@ -144,29 +233,34 @@ const UserProfile = () => {
 
             <div className='md:hidden '>
                 <div className='max-h-screen overflow-y-scroll scrollbar-none space-y-5 '>
-                    <div className='md:hidden sm:px-10  h-auto pt-6 space-y-6' >
+                    <div className='md:hidden sm:px-10   pt- space-y-6' >
                         {profileDetails?.map((item: any, index: number) => (
                             <>
                                 <div className=' box-content h-auto  bg-[2A2A2A] rounded-3xl px-4 py-3'>
                                     <div className=' grid grid-cols-3'>
                                         <div>
-                                            {profileDetails[0].Images ? <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`/images/${profileDetails[0].Images}`} alt="Bordered avatar" />
-                                                : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />}
+                                            {profileDetails[0].Images ?
+                                                <img className="p-1 mx-aut  w-20 justify-content-center h-20 rounded-full ring-1 object-cover
+                                             ring-gray-300 dark:ring-gray-500" src={`/images/${profileDetails[0].Images}`} alt="Bordered avatar" />
+                                                : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full
+                                                 ring-2 ring-gray-300 dark:ring-gray-500"
+                                                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU'
+                                                    alt="Bordered avatar" />}
                                         </div>
-                                        <div className='pl-6 text-white  text-center'>
-                                            <div className='text-lg'>
-                                                {followers}
+                                        <div className='flex gap-8 pt-3'>
+                                            <div className='pl-6 text-white  text-center'>
+                                                <div className='text-lg' onClick={followersModal}>
+                                                    {followers}
+                                                </div>
+                                                <div className='text-xs text-[#737373] font'>Followers</div>
                                             </div>
-                                            <div className='text-xs text-[#737373] font'>Followers</div>
-                                        </div>
 
-                                        <div className='pl-6 text-white text-center'>
-                                            <div className='text-lg'>
-
-                                                {following}
-
+                                            <div className='pl-6 text-white text-center'>
+                                                <div className='text-lg' onClick={followingsModal}>
+                                                    {following}
+                                                </div>
+                                                <div className='text-xs text-[#8b8282]'>Following</div>
                                             </div>
-                                            <div className='text-xs text-[#8b8282]'>Following</div>
                                         </div>
                                     </div>
 
@@ -175,7 +269,7 @@ const UserProfile = () => {
                                         <div className='sm:px-10 px-'>
                                             <div className='text-white pt-6'>
                                                 <h1>{profileDetails[0].name}</h1>
-                                                <h3 className='text-sm text-[#737373] pt-1 py-3 '>{profileDetails[0].username}</h3>
+                                                <h3 className='text-sm text-[#737373] '>{profileDetails[0].username}</h3>
                                             </div>
 
                                             {/* BIO */}
@@ -183,7 +277,7 @@ const UserProfile = () => {
 
                                             {/* EDIT PROFILE */}
                                         </div>
-                                        <div className='py-5'>
+                                        <div className='py-5 '>
                                             <button type="button" className="mb-2  w-full inline-block px-6 py-2.5 bg-[#2A2A2A] font-bold
                                                  text-xs leading-normal uppercase rounded-lg shadow-md hover:shadow-lg focus:bg-[#FFFF1A] focus:text-black
                                                    focus:shadow-lg focus:outline-none focus:ring-0  transition duration-150 ease-in-out text-white"
@@ -191,8 +285,12 @@ const UserProfile = () => {
                                             >
                                                 Edit Profile
                                             </button>
-                                            <div className="mt-3 text-xs border-b border-[#616161] py-4 text-[#747474]"></div>
+                                            <div className='flex flex-col justify-center ' onClick={() => setPostModal(true)}>
+                                                <button className='bg-[#FFFF1A] px-5 py-1  rounded-md font-semibold '>Add Post</button>
+                                            </div>
+                                            <div className=" text-xs border-b border-[#616161] py-4 text-[#747474]"></div>
                                         </div>
+
                                     </div>
                                 </div>
                             </>
@@ -201,12 +299,12 @@ const UserProfile = () => {
 
                     {/* POST */}
 
-                    <div className='grid grid-cols-3 gap-0.5 px-1 p-4 pb-20'>
+                    <div className='grid grid-cols-3 gap-0.5 px-1  pb-32'>
                         {profilePosts?.map((item: any, index: number) => (
-                            <div key={index} className="overflow-hidden ">
+                            <div key={index} className="overflow-hidden " onClick={() => viewImagePost(item._id)}>
                                 <div className='relative group cursor-pointer z-0 '>
                                     <div className='relative '>
-                                        <div className='h-28 sm:h-40 overflow-hidden'>
+                                        <div className='h-28 sm:h-40 overflow-hidden' >
                                             <img className='object-cover h-28 sm:h-40 w-full' src={`/images/${item?.Images}`} alt="" />
                                         </div>
                                     </div>
@@ -240,8 +338,20 @@ const UserProfile = () => {
                             <div className='max-h-screen overflow-y-scroll scrollbar-none'>
                                 <div className='flex  lg:p-10 p-5 gap-12 lg:pl-40 pl-32'>
                                     {profileDetails?.map((item: any, index: number) => (
+
                                         <div className='  rounded-full  cursor-pointer'>
-                                            <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`/images/${profileDetails[0].Images}`} alt="" />
+                                            {profileDetails[0].Images ?
+                                                <>
+                                                    <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`/images/${profileDetails[0]?.Images}`} alt="" />
+                                                </>
+
+                                                :
+
+                                                <>
+                                                    <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
+                                                </>
+                                            }
+
                                         </div>
 
                                     ))}
@@ -259,16 +369,19 @@ const UserProfile = () => {
                                                         Edit Profile
                                                     </button>
                                                     {/* </NavLink> */}
-                                                    <FiSettings size={25} />
+                                                    {/* <FiSettings size={25} /> */}
                                                 </div>
                                                 <div className='flex xl:gap-10 gap-4 mt-4 lg:text-md text-xs'>
-                                                    <div>40 Post</div>
+                                                    {/* <div>40 Post</div> */}
 
                                                     <div
-                                                        // onClick={followersModal}
-                                                        onClick={() => dispatch(openModalFollowers(true))}
-                                                        className='cursor-pointer'> <span>{followers}</span> followers</div>
-                                                    <div className='cursor-pointer'><span>{following}</span> following</div>
+                                                        onClick={followersModal}
+                                                        // onClick={() => dispatch(openModalFollowers(true))}
+
+                                                        className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{followers}</span> followers</div>
+                                                    <div
+                                                        onClick={followingsModal}
+                                                        className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{following}</span> following</div>
                                                 </div>
                                                 <div className='xl:mt-5 mt-3    '>
                                                     <h1>{profileDetails[0].name}</h1>
@@ -280,13 +393,22 @@ const UserProfile = () => {
 
                                     </div>
                                 </div>
+
                                 <div className=' px-14 py-5 '>
-                                    <div className="mt-3 text-xs border-b border-[#5b5858] py-1  text-[#002D74]"></div>
+                                    <div className='flex justify-center items-center text-md font-semibold'
+                                        onClick={() => setPostModal(true)}
+                                    >
+                                        <button className=' px-3 py-1 rounded-md bg-[#FFFF1A] text-black'>
+                                            Add Post
+                                        </button>
+                                    </div>
+                                    <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
                                 </div>
 
                                 {/* Image Post */}
 
-                                <div className='grid grid-cols-3 gap-3 px-5 p-4'
+
+                                <div className='grid grid-cols-3 gap-3 px-5 p-4 min-h-[346px]'
                                 // onClick={() => setOpenPostModal(true)}
                                 >
                                     {profilePosts?.map((item: any, index: number) => (
@@ -318,12 +440,16 @@ const UserProfile = () => {
                                         </div>
                                     ))}
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </Layout>
             </div >
+
+
+            <PostModal onClose={() => setPostModal(false)} isVisible={postModal} >
+
+            </PostModal>
 
             <EditUserModal onClose={() => setEditModal(false)} isVisible={editModal}>
 
@@ -333,16 +459,9 @@ const UserProfile = () => {
 
             </OpenPostModal>
 
-            <FollowListModal isVisible={followModal}>
+            <FollowListModal isVisible={followModal} onClose={() => setFollowModal(false)} followersLists={followersLists} stateFollowers={stateFollowers}>
 
             </FollowListModal>
-
-            {/* <CommentModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal} data={"sdsd"}>
-
-            </CommentModal> */}
-
-
-
 
         </>
     )
