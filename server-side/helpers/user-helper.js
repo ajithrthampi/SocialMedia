@@ -131,4 +131,35 @@ module.exports={
             return error.message
         }
     },
+    // UPDATE NOTIFICATION //
+
+    doNotifications: async (NID) => {
+        try {
+            const notification = await notificationSchema.findByIdAndUpdate(NID, {
+                $set: {
+                    read: true,
+                }
+            })
+            return { msg: "sucessfully" }
+        } catch (error) {
+            return error.message
+        }
+    },
+    // GET NOTIFICATION COUNT //
+
+    getUserNotificationsCount: async (UID) => {
+        try {
+            const notifications = await notificationSchema.aggregate([
+                {
+                    $match: {
+                        notify: ObjectId(UID),
+                        read: false
+                    }
+                }
+            ])
+            return notifications
+        } catch (error) {
+            return error.message
+        }
+    },
 }

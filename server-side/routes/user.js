@@ -87,4 +87,8 @@ router.post('/addnotification',verifyJWT, userController.doNotifications)
 
 router.get('/getnotifications', verifyJWT, userController.getNotifications)
 
+router.patch('/updatenotifications/:id', userController.EditNotifications)
+
+router.get('/getnotificationscount',verifyJWT, userController.getNotificationsCount)
+
 module.exports = router                              

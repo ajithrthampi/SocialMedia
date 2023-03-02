@@ -85,7 +85,7 @@ function App() {
               <Route path="/" element={<Login />} />
 
 
-              <Route path="/home" element={<HomePage />} />
+              <Route path="/home" element={<HomePage  socket={socketio}  />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/message" element={<Message socket={socketio} />} />
               <Route path="/connection" element={<Connection />} />

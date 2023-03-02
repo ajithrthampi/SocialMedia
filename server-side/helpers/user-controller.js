@@ -153,6 +153,30 @@ module.exports = {
             res.status(500).json({ error: err.message })
         }
     },
+
+    // UPDATE NOTIFICATION // 
+
+    EditNotifications: async (req, res) => {
+        console.log(req.params,'params id')
+        try {
+            const result = await userHelper.doNotifications(req.params.id)
+            res.json(result)
+            console.log(result,'result update')
+        } catch (err) {
+            res.status(500).json({ error: err.message })
+        }
+    },
+    
+    // GET NOTIFICATION COUNT //
+
+    getNotificationsCount: async (req, res) => {
+        try {
+            const result = await userHelper.getUserNotificationsCount(req.userId)
+            res.json(result)
+        } catch (err) {
+            res.status(500).json({ error: err.message })
+        }
+    },
     
     addPost:async(req,res)=>{
         try{

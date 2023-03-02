@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { AiOutlineComment, AiOutlineHeart } from 'react-icons/ai'
 import { FiSettings } from 'react-icons/fi'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
-import { friendEachPost, friendPostModal, openModalFollowers } from '../../redux/store/features/userSlice'
+import { followUpdation, friendEachPost, friendPostModal, openModalFollowers } from '../../redux/store/features/userSlice'
 import Layout from '../layout/Layout'
 import Navbar from '../navbar/Navbar'
 import { useDispatch } from 'react-redux';
@@ -12,6 +12,7 @@ import { UserContext } from '../../Pages/context/Context'
 import OpenPostModal from '../user-modal/OpenPostModal'
 import { useNavigate } from 'react-router-dom'
 import FollowListModal from '../user-modal/FollowListModal'
+import jwtDecode from 'jwt-decode'
 
 const FriendProfile = () => {
 
@@ -26,8 +27,22 @@ const FriendProfile = () => {
   const [openPostModal, setOpenPostModal] = useState<boolean>(false)
   const [eachPost, setEachPost] = useState([])
   const [userIdd, setUserIdd] = useState<any>()
-  const navigate = useNavigate()
-  // console.log("userr id In friend", user.id);
+  const [followUser, setFollowUser] = useState()
+ const navigate = useNavigate()
+
+  const [followersLists, setFollowersLists] = useState<any>()
+  const [followModal, setFollowModal] = useState<boolean>(false)
+  const [stateFollowers, setStateFollowers] = useState<any>()
+  const [viewAllFollowing, setViewAllFollowing] = useState<any>()
+  const isprofileDetails = useSelector((state: any) => state.userDetails.value.friendDetails)
+  const followUnfollowUpdations = useSelector((state: any) => state.userDetails.value.followUnfollowUpdation)
+
+ 
+  console.log("userr id In friend", followUser);
+
+  useEffect(() => {
+    setReduxState(isprofileDetails)
+  }, [editModal, userId])
 
 
   useEffect(() => {
@@ -35,30 +50,11 @@ const FriendProfile = () => {
       var userID = user.id
       setUserId(userID)
     }
-
-
   }, [following])
 
   const dispatch = useDispatch();
 
-  const [followersLists, setFollowersLists] = useState<any>()
-  const [followModal, setFollowModal] = useState<boolean>(false)
-  const [stateFollowers, setStateFollowers] = useState<any>()
-  const isprofileDetails = useSelector((state: any) => state.userDetails.value.friendDetails)
-  // const isUpdateFollowCount = useSelector((state: any) => state.userDetails.value.updateFollowCount )
 
-  // console.log("HisUpdateFollowCount.,.,.,.isUpdateFollowCount", isUpdateFollowCount);
-
-  // useEffect(() => {
-  //   setUserIdd(isprofileDetails._id)
-  // },[isprofileDetails])
-
-  // console.log("userIdd",userIdd);
-
-
-  useEffect(() => {
-    setReduxState(isprofileDetails)
-  }, [editModal, userId])
 
 
   useEffect(() => {
@@ -77,7 +73,7 @@ const FriendProfile = () => {
       console.log(err);
     }
 
-  }, [editModal, reduxState])
+  }, [editModal, reduxState,followUnfollowUpdations,viewAllFollowing  ])
 
   // console.log("User details in redixtoolkit", reduxState?.userId?._id);
 
@@ -131,29 +127,6 @@ const FriendProfile = () => {
 
     })
   }
-
-  //START CONVERSATION
-
-  // const startConversation = () => {
-  //   // console.log("Hello there",)
-  //  try {
-  //   axiosinstance.post("/conversation", + userIdd,{
-  //     headers: {
-  //       "x-access-token": localStorage.getItem("token"),
-  //     },
-  //   }).then((response) => {
-  //     // setMessages([...messages, response.data])
-  //     // setNewMessage('')
-  //     console.log("chat,.. conversation", response);
-  //     navigate("/message")
-  //   })
-
-  //  } catch (error) {
-  //   console.log("eror",error);
-
-  //  }
-
-  // }
 
   const startConversation = () => {
     const userId = user?.id
@@ -209,20 +182,81 @@ const FriendProfile = () => {
   const followingsModal = () => {
     try {
       const userId = isprofileDetails._id
-        axiosinstance.get("/followinglist/" + userId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            setFollowersLists(response.data)
-            setFollowModal(true)
-        })
+      axiosinstance.get("/followinglist/" + userId, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }).then((response) => {
+        setFollowersLists(response.data)
+        setFollowModal(true)
+      })
 
     } catch (err) {
+      // navigate('/error')
+      console.log(err);
+    }
+  }
+
+  //FOLLOW UNFOLLOW
+
+  const followUnFollow = () => {
+  
+    const userId = user?.id
+    const friendId = isprofileDetails._id
+    try {  
+     
+      const id = { userId, friendId }
+      axiosinstance.post("/follow", id, {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      }).then((response) => {
+         dispatch(followUpdation(true))
+        if (response.data.msg == "follow") {
+        
+          setFollowUser(response.data.msg)
+          
+          // refetch()
+        } else {
+          setFollowUser(response.data.msg)
+        }
+      })
+    } catch (err) {
+      // navigate('/error')
+    }
+  }
+  console.log("follow", followUser);
+
+
+
+  useEffect(() => {
+    const data = localStorage.getItem('token')
+    if (data != null) {
+        const userData: any = jwtDecode(data)
+        const userId = userData?.id
+        ViewAllFollowing(userId)
+    }
+
+}, [user, followUser,reduxState])
+
+  //VIEW ALL FOLLOWING
+
+  const ViewAllFollowing = (userId: any) => {
+    axiosinstance.get("/viewallfollowing/" + userId, {
+        headers: {
+            "x-access-token": localStorage.getItem("token"),
+        },
+    }).then((response) => {
+        // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
+        setViewAllFollowing(response.data.following)
+        // refetch()
+    }).catch((err) => {
         // navigate('/error')
         console.log(err);
-    }
+    })
 }
+
+
 
 
   return (
@@ -241,21 +275,35 @@ const FriendProfile = () => {
                     {reduxState ? <img className="p-1 mx-auto object-cover w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`images/${reduxState?.Images}`} alt="Bordered " />
                       : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />}
                   </div>
-                  <div className='pl-6 text-white  text-center'>
-                    <div className='text-lg' onClick={followersModal}>
-                      {followers}
+
+                  <div className='flex flex-col space-x-4 gap-7'>
+                    <div className='flex gap-10'>
+                      <div className='pl-6 text-white  text-center'>
+                        <div className='text-xl' onClick={followersModal}>
+                          {followers}
+                        </div>
+                        <div className='text-sm text-[#d8d6d6] font'>Followers</div>
+                      </div>
+
+                      <div className='pl-6 text-white text-center'>
+                        <div className='text-xl' onClick={followingsModal}>
+                          {following}
+                        </div>
+                        <div className='text-sm text-[#d8d6d6]'>Following</div>
+                      </div>
                     </div>
-                    <div className='text-xs text-[#737373] font'>Followers</div>
+                    {!viewAllFollowing?.includes(reduxState._id) ?
+                      <>
+                        <div className='px-24 cursor-pointer   py-1 rounded-xl bg-white text-black flex justify-center items-center w-ful font-semibold text-lg' onClick={followUnFollow}>follow</div>
+                      </>
+                      :
+                      <>
+                        <div className='px-24 cursor-pointer   py-1 rounded-xl bg-white text-black flex justify-center items-center w-ful font-semibold text-lg' onClick={followUnFollow}>Following</div>
+                      </>
+                    }
+
                   </div>
 
-                  <div className='pl-6 text-white text-center'>
-                    <div className='text-lg'  onClick={followingsModal}>
-
-                      {following}
-
-                    </div>
-                    <div className='text-xs text-[#8b8282]'>Following</div>
-                  </div>
                 </div>
 
                 {/* NAME */}
@@ -263,16 +311,20 @@ const FriendProfile = () => {
                   <div className='sm:px-10 px-'>
                     <div className='text-white pt-6'>
                       <h1>{reduxState?.name}</h1>
-                      <h3 className='text-sm text-[#737373] pt-1 py-3 '>{reduxState?.date}</h3>
+                      {/* <h3 className='text-sm text-[#737373] pt-1 py-3 '>{reduxState?.date}</h3> */}
                     </div>
 
                     {/* BIO */}
                     <div className='text-white font-semibold'>{reduxState?.bio}</div>
 
+
                     {/* EDIT PROFILE */}
                   </div>
+                  <div className='pt-7'>
+                    <button className='text-black bg-[#FFFF1A] text-lg xl:px-7 px-5 w-full font-semibold  py-2 rounded-xl' onClick={startConversation}>Message</button>
+                  </div>
 
-                  <div className="mt-3 text-xs border-b border-[#616161] py-4 text-[#747474]"></div>
+                  <div className="mt-3 text-xs border-b border-[#616161] py- text-[#747474]"></div>
 
 
                 </div>
@@ -321,7 +373,7 @@ const FriendProfile = () => {
               <div className='flex  lg:p-10 p-5 gap-12 lg:pl-40 pl-32'>
 
                 <div className='  rounded-full  cursor-pointer'>
-                  <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`images/${reduxState?.Images}`} alt="" />
+                  <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`images/${reduxState?.Images}`} alt="profile pic" />
                 </div>
                 <div>
                   <>
@@ -335,7 +387,7 @@ const FriendProfile = () => {
                       <div
                         // onClick={followersModal}
                         // onClick={() => dispatch(openModalFollowers(true))}
-                        className='cursor-pointer text-base'> <span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'  onClick={followersModal}>{followers}</span> followers</div>
+                        className='cursor-pointer text-base'> <span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base' onClick={followersModal}>{followers}</span> followers</div>
                       <div className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base' onClick={followingsModal}>{following}</span> following</div>
                     </div>
                     <div className='xl:mt-5 mt-3    '>

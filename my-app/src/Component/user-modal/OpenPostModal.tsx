@@ -317,8 +317,8 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
                     <div>
                         <div className='pt-10 px-3 '>
-                            <div className='box-border h- w-full '>
-                                <img className='rounded-3xl h-[500px] w-full object-cover ' src={`/images/${postPassDetails.Images}`} alt="" />
+                            <div className='box-border  w-full '>
+                                <img className='rounded-3xl h-[370px] w-full object-cover ' src={`/images/${postPassDetails.Images}`} alt="" />
                             </div>
                         </div>
                     </div>

@@ -151,7 +151,7 @@ const FollowListModal = ({ isVisible, onClose, followersLists, stateFollowers }:
                                                 <button className='text-black rounded-md bg-[#FFFF1A] text-sm font-semibold px-5 py-2' >Followers</button>                                            </>
                                         ) :
                                             <>
-                                            <div className='text-white text-xl flex text-center justify-center items-center'>Nothing to show</div>
+                                            <div className='text-white text-xl flex text-center justify-center items-center'></div>
                                             </>
                                         }  
                                     </div>

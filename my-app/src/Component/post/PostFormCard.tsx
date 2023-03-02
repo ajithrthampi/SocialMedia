@@ -33,14 +33,22 @@ import jwtDecode from 'jwt-decode';
 import ReportPostModal from '../user-modal/ReportPostModal';
 import ThirdFormDetails from './ThirdFormDetails';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
-import { passfriendDetails } from '../../redux/store/features/userSlice';
+import { NotifyUpdate, passfriendDetails } from '../../redux/store/features/userSlice';
+import { useSelector } from 'react-redux';
+
 
 
 function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
+
 }
 
-const PostFormCard = () => {
+
+interface Socket_io {
+    socket: any
+}
+
+const PostFormCard = ({ socket }: Socket_io) => {
 
     const [viewPost, setViewPost] = useState([])
     const [postModal, setPostModal] = useState(false)
@@ -65,6 +73,10 @@ const PostFormCard = () => {
 
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
+
+    const notifyUpdate = useSelector((state:any) => state.userDetails.value.notifi)
+    // console.log('notifyUpdate.,.,/./,/.,/',notifyUpdate);
+    
 
     console.log("USer, user", user);
 
@@ -133,20 +145,46 @@ const PostFormCard = () => {
 
     //  LIKE POST
 
-    const likePost = (postId: string, username: string, type: number, images: any) => {
+    const likePost = (postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
         const userId = user?.id
         const id = { postId, userId }
         // setTimeout( async () => {
-        console.log("idIdiID", userId);
-
-
-
-        axios.post("http://localhost:4001/likepost", id, {
+        let details = {
+            receiverId: postOwnerId,
+            userName: username,
+            type: "liked",
+            userDp: DP,
+            read: false
+        }
+        axiosinstance.post("/likepost", id, {
             headers: {
                 "x-access-token": localStorage.getItem("token"),
             },
         }).then((response) => {
+            socket?.emit("sendNotification", details)
+            let notifyDetails = {
+                receiverId: postOwnerId,
+                senderId: userId,
+                postId: postId,
+                type: "liked",
+            }
             refetch()
+            // CREATING NOTIFICATION
+
+            try {
+                if (postOwnerId !== userId) {
+                    // await create_notification(notifyDetails)
+                    axiosinstance.post("/addnotification",notifyDetails, {
+                        headers: {
+                            "x-access-token": localStorage.getItem("token"),
+                        },
+                    })
+                    dispatch(NotifyUpdate(!notifyUpdate))
+                }
+            } catch (error) {
+                console.log(error, 'notification api error')
+            }
+
         }).catch((err) => {
             navigate('/error')
         })
@@ -471,11 +509,11 @@ const PostFormCard = () => {
                                             {
                                                 post.likes.includes(userIdData) ?
                                                     <>
-                                                        <button className='i' onClick={() => UnlikePost(post._id, post.userId.username, 1)}><IoMdHeart size={26} /></button>
+                                                        <button className='i' onClick={() => likePost(post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeart size={26} /></button>
                                                     </>
                                                     :
                                                     <>
-                                                        <button className='i' onClick={() => likePost(post._id, post.userId.username, 1, post.Images)}><IoMdHeartEmpty size={26} /></button>
+                                                        <button className='i' onClick={() => likePost(post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeartEmpty size={26} /></button>
                                                     </>
                                             }
                                             <h1 className='font-bold'>

@@ -11,7 +11,6 @@ import jwtDecode from 'jwt-decode'
 
 interface Socket_io {
     socket: any
-
 }
 
 const MessageMobileProfile = ({ socket }: Socket_io) => {
@@ -157,8 +156,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                                         className="w-8 h-8 rounded-full order-1" />
                                 </div>
                                 <div>
-                                    <div className='text-sm font-semibold'>Ajith R Thampittt</div>
-
+                                    <div className='text-sm font-semibold'>Ajith R Thampittt</div>  
                                 </div>
                             </div>
                         </div>

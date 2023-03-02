@@ -184,8 +184,7 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
         <>
             <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm 
          '>
-
-                <div className='max-h-full   overflow-y-scroll scrollbar-none   flex justify-center items-center md:pt-10 -mt-10    '>
+                <div className='max-h-full   overflow-y-scroll scrollbar-none   flex justify-center items-center md:pt-10 -mt-16    '>
                     <div className='md:w-[1000px] flex flex-col '>
 
                         <div className='bg-[#191819]  rounded text-white py-7 '>
@@ -211,37 +210,16 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
                                         </div>
                                         <div className=''>
                                             <div><h1>@ajithrthamp</h1></div>
-                                            {/* <div>
-                                                <label className='text-[#706b6bde] cursor-pointer'>
-                                                    <h3 
-                                                    onClick={addProfilePic}
-                                                    >change profile image</h3>
-                                                    <input
-                                                        type="file"
-                                                        name="Images"
-                                                        id="fileUpload"
-                                                        accept='image/*'
-                                                        onChange={fileUpload}
-                                                        className="w-0 h-0"
-                                                    />
-                                                </label>
-                                            </div> */}
+                                           
                                             <div>
                                                 <label className='text-[#706b6bde] cursor-pointer'>
                                                     <h3
                                                         onClick={() => setUpdatePicture(true)}
                                                     >change profile image</h3>
-                                                    {/* <input
-                                                        type="file"
-                                                        name="Images"
-                                                        id="fileUpload"
-                                                        accept='image/*'
-                                                        onChange={fileUpload}
-                                                        className="w-0 h-0"
-                                                    /> */}
+                                                   
                                                 </label>
                                             </div>
-                                            {/* <button className='' onClick={addProfilePic}>ljnk</button> */}
+                                           
                                         </div>
                                     </div>
                                     <div className="mt-8 text-xs border-b border-[#5b5858]   text-[#002D74]"></div>

@@ -98,7 +98,7 @@ const Post = () => {
         if (item.userId._id === userId) {
             navigate("/profile")
         } else {
-            dispatch(passfriendDetails(item))
+            dispatch(passfriendDetails(item.userId))
             navigate("/fried-Profile")
         }
     }
@@ -121,7 +121,7 @@ const Post = () => {
                         <>
                             <div className=' box-content h-auto  bg-[#2A2A2A] rounded-3xl px-4 py-3 '>
                                 <div className="container mx-auto grid grid-cols-4 xl:grid-cols-3 pt-6 gap-8">
-                                    <div className=' col-span-1 pl-'>
+                                    <div className=' col-span-1 pl-'  onClick={() => handleFriendProfile(post)}>
                                         {post.userId.Images ? <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover ' src={`/images/${post.userId.Images}`} alt="profilepic" />
                                             : <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover '
                                                 src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profile pic" />
@@ -129,7 +129,7 @@ const Post = () => {
                                     </div>
                                     <div className='-ml-4 col-span-2 space-y-3' >
                                         <div>
-                                            <p className='text-[#7e7e7e] text-sm ' onClick={() => handleFriendProfile(post)}>{post.userId.name}</p>
+                                            <p className='text-[#7e7e7e] text-sm '  onClick={() => handleFriendProfile(post)}>{post.userId.name}</p>
                                         </div>
                                         <div className=''>
                                             <h3 className='text-white text-lg font-semibold'>{post.userId.username}</h3>

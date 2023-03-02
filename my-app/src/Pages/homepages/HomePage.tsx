@@ -8,8 +8,12 @@ import Post from '../../Component/post/Post'
 import PostFormCard from '../../Component/post/PostFormCard'
 import Connection from '../userpages/connection/Connection'
 
+interface Socket_io {
+  socket: any
+  
+ }
 
-const HomePage = () => {
+const HomePage = ({socket}:Socket_io) => {
 
   const navigate = useNavigate()
 
@@ -40,7 +44,7 @@ const HomePage = () => {
         <Post />
         
         <Layout>
-          <PostFormCard />
+          <PostFormCard socket = {socket}  />
         </Layout>
         {/* <DownNavbar /> */}
       </div>

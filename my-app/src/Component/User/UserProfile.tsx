@@ -249,17 +249,16 @@ const UserProfile = () => {
                                         </div>
                                         <div className='flex gap-8 pt-3'>
                                             <div className='pl-6 text-white  text-center'>
-                                                <div className='text-lg' onClick={followersModal}>
+                                                <div className='text-xl' onClick={followersModal}>
                                                     {followers}
                                                 </div>
-                                                <div className='text-xs text-[#737373] font'>Followers</div>
+                                                <div className='text-sm text-[#d8d6d6] font'>Followers</div>
                                             </div>
-
                                             <div className='pl-6 text-white text-center'>
-                                                <div className='text-lg' onClick={followingsModal}>
+                                                <div className='text-xl' onClick={followingsModal}>
                                                     {following}
                                                 </div>
-                                                <div className='text-xs text-[#8b8282]'>Following</div>
+                                                <div className='text-sm text-[#d8d6d6]'>Following</div>
                                             </div>
                                         </div>
                                     </div>

@@ -15,6 +15,8 @@ interface PersonState {
   updateFollowCount:boolean
   updateCaptionModal:boolean
   PostDetails:any
+  notifi:boolean
+  followUnfollowUpdation:boolean
 
 }
 
@@ -27,7 +29,9 @@ const initalState:PersonState ={
    closeDeleteUpdateMOdal:false,
    updateFollowCount:false,
    updateCaptionModal:false,
-   PostDetails:[]
+   PostDetails:[],
+   notifi:false,
+   followUnfollowUpdation:false
 }
 
 export const PersonSlice = createSlice({
@@ -73,8 +77,16 @@ export const PersonSlice = createSlice({
         },
         updatePostDetails:(state, action) => {
             state.value.PostDetails = action.payload
-            console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);
+            console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);   
+        },
+        NotifyUpdate: (state, action) => {
+            state.value.notifi = action.payload
+            // console.log(" state.value.notifi/.,/.", state.value.notifi);
             
+        },
+        followUpdation:(state, action) => {
+            state.value.followUnfollowUpdation = action.payload;
+            console.log(" follow upation .,.,.,.", state.value.followUnfollowUpdation);
         }
     }  
 })
@@ -89,5 +101,7 @@ export const
     updateFollowData,
     updateCaptionIn,
     updatePostDetails,
+    NotifyUpdate,
+    followUpdation
 }
  = PersonSlice.actions

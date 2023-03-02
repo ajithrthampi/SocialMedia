@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux';
 import { passfriendDetails } from '../../redux/store/features/userSlice';
 import { Outlet, useLocation } from 'react-router-dom'
 import Notifi from '../../Pages/userpages/notification/Notification';
+import { RiArrowDropDownLine } from 'react-icons/ri';
+import "./navbar.css"
 
 
 
@@ -105,6 +107,7 @@ const Navbar = () => {
         })
     }
 
+
     // GO TO PROFILE ACCOUNT
 
     const handleFriendProfile = (item: any) => {
@@ -150,7 +153,7 @@ const Navbar = () => {
             <div>
 
 
-                <nav className="md:hidden px-2 py-2 bg-[#2A2A2A]   ">
+                <nav className="md:hidden px- py-2 bg-[#2A2A2A]   ">
                     <div className="container px-4 mx-auto ">
                         <div className="w-ful lg:w-auto lg:static lg:block lg:justify-start flex  items-center justify-between ">
                             <div
@@ -174,10 +177,9 @@ const Navbar = () => {
 
                                     </>
                                 )
-
                                     :
                                     <>
-                                        <div className="relative  flex-1 px-4 text-white flex justify-center items-center">
+                                        <div className="relative  flex-1 px-4 text-white flex justify-center items-center ">
 
                                             {/* Replace with your content */}
 
@@ -188,8 +190,8 @@ const Navbar = () => {
                                                             type="search"
                                                             onChange={handleSearch}
                                                             className="form-control relative flex-auto min-w-0 block w-full px-3 py-1 text-base font-normal
-                                                      text-gray-700 bg-[#7069695d] bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0
-                                                       focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                                                            text-gray-700 bg-[#7069695d] bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0
+                                                             focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                                                             placeholder="Search"
                                                             aria-label="Search"
                                                             aria-describedby="button-addon2"
@@ -197,10 +199,10 @@ const Navbar = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='absolute bg-[#1a1919] w-full'>
+                                            <div className='absolute bg-[#1a1919] w-full top-10 '>
 
                                                 {/* {searchResult?.length !== 0 ?
-                                <> */}
+                                               <> */}
                                                 {searchResult && searchResult?.map((item: any, index: number) => (
 
                                                     <div className=' flex p-2.5 gap-1'>
@@ -223,12 +225,12 @@ const Navbar = () => {
                             </div>
                             <div className='flex space-x-7'>
 
-                                <div className='text-white'>
+                                <div className='text-white '>
                                     {/* <CgMoreR size={25} /> */}
                                     <Menu as="div" className="relative inline-block text-left">
                                         <div>
                                             <Menu.Button className="inline-flex w-full justify-center bg-whie px-4 py-2 text-sm ">
-                                                <CgMoreR size={25} />
+                                                <RiArrowDropDownLine size={25} />
                                                 {/* <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />    */}
                                             </Menu.Button>
                                         </div>
@@ -292,27 +294,26 @@ const Navbar = () => {
                             See Chat
                         </a>
                     </div>
-                    {/* <div className='flex xl:space-x-20 xl:pl-10 md:space-x-12 md:pl- '>
-                        <div className='text-white text-lg gap-2'  > <HiHome size={28} /> </div>
-                        <div className='text-white text-lg gap-2'><Link to="/"><AiOutlineMessage size={28} /></Link></div>
-                        <div className='text-white text-lg gap-2' onClick={() => setOpen(true)}>
-                            <MdOutlineNotifications size={28} />
+                    <Notifi
+                        open={open}
+                        setOpen={setOpen}
+                        onClose={handleOnClose}
+                        title="Item Details"
+                        isOpen={isOpen}
+                    >
+                    </Notifi>
+                    {/* <div className='text-white relative'>
+                         <MdOutlineNotifications size={25} />
+                        <div className=' absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center'>
+                            <p className='text-xs text-white font-semibold'>244</p>
                         </div>
+                       
                     </div> */}
 
-                    <Notifi
-                            open={open}
-                            setOpen={setOpen}
-                            onClose={handleOnClose}
-                            title="Item Details"
-                            isOpen={isOpen}
-                        >
-                        </Notifi>
-                   
                     {profileDetails?.map((item: any, index: any) => (
                         <div className='flex justify-end items-center'>
                             <button className='bg-[#32313144] flex rounded-2xl  items-center  w-[170px] h-10'>
-                             
+
                                 {profileDetails[0].Images ?
                                     <>
                                         <div className='w-8 h-8 rounded-xl ml-1  overflow-hidden cursor-pointer'>
@@ -326,7 +327,7 @@ const Navbar = () => {
                                         </div>
                                     </>
                                 }
-                                   <div className='pl-5 text-white text-ellipsis  h-5 w-20 overflow-hidden'>{item?.name}</div>
+                                <div className='pl-5 text-white text-ellipsis  h-5 w-20 overflow-hidden'>{item?.name}</div>
                             </button>
                         </div>
                     ))}

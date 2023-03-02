@@ -1,23 +1,36 @@
 import axios from 'axios'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import axiosinstance from '../../axios/axiosinstance'
+import { UserContext } from '../context/Context'
 
 const Login = () => {
   const navigate = useNavigate()
 
   const [userExist, setUserExist] = useState(false)
   const [blockedUser, setBlockedUser] = useState(false)
-  const [user, setUser] = useState({
+  const [state, setState] = useState<boolean>(false)
+  const [userIid, setUseriID] = useState<any>()
+
+  const [userr, setUser] = useState({
     email: "",
     password: ""
   })
 
+  const { user } = useContext(UserContext)
+
+  if (user) {
+    var userId = user?.id
+}
+
+
+
   const handleChange = (e: any) => {
     const { name, value } = e.target
     setUser({
-      ...user,
+      ...userr,
       [name]: value
     })
   }
@@ -28,7 +41,7 @@ const Login = () => {
         "x-access-token": localStorage.getItem("token"),
       },
     }).then((response) => {
-      console.log(response, 'response jwt');
+      // console.log(response, 'response jwt');
       if (response.data.auth) {
         navigate('/home')
       }
@@ -37,17 +50,42 @@ const Login = () => {
     })
   }
 
+  useEffect(() => {
+    setUseriID(user?.name)
+  },[state])
+  console.log("userId.,.,.,.,.,.,.,.,", userIid);
+  
+
   const submit = (e: any) => {
     e.preventDefault()
-    const { email, password } = user
+    const { email, password } = userr
     try {
-      axiosinstance.post("/login", user).then((response) => {
-        console.log("submitted");
-        
-        console.log(response.data, 'response in login');
+      axiosinstance.post("/login", userr).then((response) => {
+        // console.log("submitted");
+      //  setState( response.data.user.email)
+        // console.log(response.data, 'response in login');
         if (response.data.auth) {
-          console.log('user', response.data.user);
+          // console.log('user.....', response.data.user.email);
+          console.log("state,.,.,",state)
+          setState(true)
           localStorage.setItem("token", response.data.token)
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+          
+          Toast.fire({
+            icon: 'success',
+            title: `Signed in successfully ${userIid}` 
+          })
           navigate('/home')
         } else {
           if (response.data.message == "Wrong username password") {
@@ -118,7 +156,9 @@ const Login = () => {
             <div className="mt-5 text-xs border-b border-[#002D74] py-4 text-[#002D74]">
             </div>
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
-              <Link to="/home"> <p className="text-xs mt-4 md:px-0 px-7 text-[#2b4e86]">If you are not a user ! please register   </p> </Link>
+              {/* <Link to="/home">  */}
+              <p className="text-xs mt-4 md:px-0 px-7 text-[#2b4e86] cursor-default">If you are not a user ! please register   </p> 
+              {/* </Link> */}
 
               <Link to="/signup">
                 <button
