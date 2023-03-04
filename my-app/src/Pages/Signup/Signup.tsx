@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
+import axiosinstance from '../../axios/axiosinstance'
 
 
 
@@ -27,7 +28,7 @@ const Signup = () => {
   }
 
   const authCheck = () => {
-    axios.get("http://localhost:4000/isUserAuth", {
+    axiosinstance.get("/isUserAuth", {
       headers: {
         "x-access-token": localStorage.getItem("token"),
       },
@@ -49,7 +50,7 @@ const Signup = () => {
 
       const { username, email, password, name } = user
       if (username && email && password && name) {
-        axios.post("http://localhost:4001/signup", user).then((response) => {
+        axiosinstance.post("/signup", user).then((response) => {
           console.log(response.data.msg);
           if (response.data.msg == "User exist") {
             setUserExist(!userExist)
