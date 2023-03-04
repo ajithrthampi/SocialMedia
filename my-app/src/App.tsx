@@ -30,7 +30,7 @@ import Dashboard from './Pages/admin/Pages/Dashboard';
 import UserManagement from './Pages/admin/Pages/UserManagement';
 import PostManagement from './Pages/admin/Pages/PostManagement';
 
-const socketio = require('socket.io-client')("ws://localhost:8000")
+const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com/")
 
 function App() {
 
