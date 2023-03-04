@@ -17,6 +17,8 @@ import FollowListModal from '../user-modal/FollowListModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { openModalFollowers, updatePostDetails } from '../../redux/store/features/userSlice';
 import PostModal from '../user-modal/PostModal';
+import { followersListss, followingListss, following_count, post_details, viewProfilePostss, view_post, view_Profile_Details } from '../../services/UserApi';
+import SkeletonElement from '../../skeleton/SkeletonElement';
 
 
 const UserProfile = () => {
@@ -49,7 +51,7 @@ const UserProfile = () => {
 
     const isUpdatePostyDetails = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
 
-    console.log("><>>>>>><><><><><><><><><><", isUpdatePostyDetails);
+
 
 
 
@@ -75,24 +77,28 @@ const UserProfile = () => {
 
     }, [editModal, statee, openPostModal, postModal])
 
-    const viewPost = () => {
+    const viewPost = async () => {
 
-        // const userId = user?.id
+        // axiosinstance.get("/viewprofilepost/" + userIdData, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
 
-        axiosinstance.get("/viewprofilepost/" + userIdData, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
+        //     setState(response.data)
+        //     setProfilePosts(response.data)
+        //     // console.log("updateDeletePost>><><><><><><><",updateDeletePost);
+        // }).catch((err) => {
+        //     // navigate('/error')
+        //     console.log("view Image", err);
 
-            setState(response.data)
-            setProfilePosts(response.data)
-            // console.log("updateDeletePost>><><><><><><><",updateDeletePost);
-        }).catch((err) => {
-            // navigate('/error')
-            console.log("view Image", err);
+        // })
 
-        })
+        const viewProfile_Post = await viewProfilePostss(userIdData)
+        if (viewProfile_Post) {
+            setState(viewProfile_Post)
+            setProfilePosts(viewProfile_Post)
+        }
     }
     // console.log("profile details///././././././././././././.", profilePosts);
 
@@ -100,23 +106,32 @@ const UserProfile = () => {
     // USER DATA
 
     useEffect(() => {
-        try {
-            // const userId = user.id
-            axiosinstance.get("/viewprofiledetails/" + userIdData, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                // console.log(response.data[0].name, 'yesyesyesyes');
-                setProfileDetails(response.data)
-            })
-        } catch (err) {
-            // navigate('/error')
-            console.log("Eror message...", err);
+        // try {
 
-        }
+        // axiosinstance.get("/viewprofiledetails/" + userIdData, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     // console.log(response.data[0].name, 'yesyesyesyes');
+        //     setProfileDetails(response.data)
+        // })
+
+        // } catch (err) {
+        //     // navigate('/error')
+        //     console.log("Eror message...", err);
+
+        // } 
+        viewProdile_Details(userIdData)
     }, [statee, state, editModal])
-    console.log("User profile><><><><><><><>/ ", profileDetails);
+
+    const viewProdile_Details = async (userIdData: any) => {
+        const viewDetails = await view_Profile_Details(userIdData)
+        if (viewDetails) {
+            setProfileDetails(viewDetails)
+        }
+    }
+
 
 
     // USER POST DATA
@@ -129,22 +144,32 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
-        const viewImagePosts = (postId: any) => {
-            console.log(postId, 'id in comment click');
-            axiosinstance.get("/postdetails/" + postId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
+        // const viewImagePosts = (postId: any) => {
+        //     console.log(postId, 'id in comment click');
+        //     axiosinstance.get("/postdetails/" + postId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setOpenPostModal(true)
+        //         setEachPost(response.data)
+        //         dispatch(updatePostDetails(response.data))
+        //     }).catch((err) => {
+        //         // navigate('/error')
+        //     })
+        // }
+
+        const viewImagePosts = async (postId: any) => {
+            const view_ImagePost = await post_details(postId)
+
+            if (view_ImagePost) {
                 setOpenPostModal(true)
-                setEachPost(response.data)
-                dispatch(updatePostDetails(response.data))
-            }).catch((err) => {
-                // navigate('/error')
-            })
+                setEachPost(view_ImagePost)
+                dispatch(updatePostDetails(view_ImagePost))
+            }
         }
         viewImagePosts(hi)
-    }, [isUpdatePostyDetails,up])
+    }, [isUpdatePostyDetails, up])
 
 
     // console.log("Each Post data..................", eachPost);
@@ -162,66 +187,106 @@ const UserProfile = () => {
     }, [user, following, followers])
 
     useEffect(() => {
-        try {
+        // try {
 
-            axiosinstance.get("/followingcount/" + currentUserId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setfFollowing(response.data.count.following)
-                setFollowers(response.data.count.followers)
-            })
-        } catch (err) {
-            // navigate('error')
-            console.log(err);
-        }
+        //     axiosinstance.get("/followingcount/" + currentUserId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setfFollowing(response.data.count.following)
+        //         setFollowers(response.data.count.followers)
+        //     })
+        // } catch (err) {
+        //     // navigate('error')
+        //     console.log(err);
+        // }
+
+        followingCount(currentUserId)
 
     }, [currentUserId, user, followModal])
+
+    const followingCount = async (currentUserId: any) => {
+        const following_Counts = await following_count(currentUserId)
+        if (following_Counts) {
+            setfFollowing(following_Counts.count.following)
+            setFollowers(following_Counts.count.followers)
+        }
+    }
 
     //FOLLOW MODAL
 
 
 
     const followersModal = () => {
-        try {
-            const userId = user.id
-            axiosinstance.get("/followerslist/" + userId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setFollowersLists(response.data)
-                setFollowModal(true)
-                setStateFollowers("Followers")
-            })
+        // try {
 
-        } catch (err) {
-            // navigate('/error')
-            console.log(err);
+        //     axiosinstance.get("/followerslist/" + userId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setFollowersLists(response.data)
+        //         setFollowModal(true)
+        //         setStateFollowers("Followers")
+        //     })
+
+        // } catch (err) {
+        //     // navigate('/error')
+        //     console.log(err);
+        // }
+        const userId = user.id
+        followers_Lists(userId)
+    }
+    const followers_Lists = async (userId: any) => {
+        const followers_All_lists = await followersListss(userId)
+        if (followers_All_lists) {
+            setFollowModal(true)
+            setFollowersLists(followers_All_lists)
+            setStateFollowers("Followers")
         }
     }
-    // console.log("setFollowersLists",followersLists);
 
 
     const followingsModal = () => {
-        try {
-            const userId = user.id
-            axiosinstance.get("/followinglist/" + userId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setFollowersLists(response.data)
-                setFollowModal(true)
-                setStateFollowers("Remove")
-            })
+        // try {
+        //     const userId = user.id
+        //     axiosinstance.get("/followinglist/" + userId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setFollowersLists(response.data)
+        //         setFollowModal(true)
+        //         setStateFollowers("Remove")
+        //     })
 
-        } catch (err) {
-            // navigate('/error')
-            console.log(err);
+        // } catch (err) {
+        //     // navigate('/error')
+        //     console.log(err);
+        // }
+
+        const userId = user.id
+        following_Lists(userId)
+    }
+
+    const following_Lists = async (userId: any) => {
+        const following_All_Lists = await followingListss(userId)
+        if (following_All_Lists) {
+            setFollowersLists(following_All_Lists)
+            setFollowModal(true)
+            setStateFollowers("Remove")
         }
     }
+
+
+    const { data, isLoading, refetch } = useQuery(["Id"], () =>
+
+        view_post()
+    );
+
+    console.log("+++++++++++++++++++++++++++++++++++++", data);
+    console.log("><>>>>>><><><><><><><><><><", profilePosts);
 
 
 
@@ -343,9 +408,7 @@ const UserProfile = () => {
                                                 <>
                                                     <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`/images/${profileDetails[0]?.Images}`} alt="" />
                                                 </>
-
                                                 :
-
                                                 <>
                                                     <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
                                                 </>
@@ -430,8 +493,21 @@ const UserProfile = () => {
                                                     <div className='flex flex-row gap-2'>
                                                         <AiOutlineComment size={25} />
                                                         <h1>
-                                                            {/* {item.length} */}
-                                                            {/* {item?.comment[0]?.comment?.length === 0 ? 'comments' : item?.comment[0]?.comment?.length} */}
+                                                            {data?.map((post: any, index: number) => (<>
+                                                                <div>
+                                                                    {item?._id === post?._id ?
+                                                                        <>
+                                                                            {post?.comment[0]?.comment?.length === 0 ? 'comments' : post?.comment[0]?.comment?.length}
+                                                                        </>
+                                                                        :
+                                                                        <>
+
+                                                                        </>
+                                                                    }
+                                                                </div>
+                                                            </>
+                                                            ))}
+
                                                         </h1>
                                                     </div>
                                                 </div>

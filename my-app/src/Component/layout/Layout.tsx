@@ -5,6 +5,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
 import Connection from '../../Pages/userpages/connection/Connection'
+import { view_post, view_Profile_Details } from '../../services/UserApi'
 import Navbar from '../navbar/Navbar'
 import PostFormCard from '../post/PostFormCard'
 import ThirdFormDetails from '../post/ThirdFormDetails'
@@ -38,40 +39,55 @@ const Layout = ({ children }: any) => {
 
   // USER DATA
 
-  const { data, isLoading, refetch } = useQuery(["Id"], () => {
-    return axiosinstance.get("viewpost", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((res) => res.data)
-      .catch((err) => {
-        // navigate("/error")
-      })
-  });
+  const { data, isLoading, refetch } = useQuery(["Id"], () => 
+    // return axiosinstance.get("viewpost", {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((res) => res.data)
+    //   .catch((err) => {
+    //     // navigate("/error")
+    //   })
+    view_post()
+  );
+
+  console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm..,.>,./,",data);
+  
+
+
+
+  //PROFILE DETAILS SENDING
+
+  // useEffect(() => {
+  //   try {
+  //     // const userId = user?.id
+  //     console.log("userId userId userId userId",userIdData);
+      
+  //     axiosinstance.get("/viewprofiledetails/" + userIdData, {
+  //       headers: {
+  //         "x-access-token": localStorage.getItem("token"),
+  //       },
+  //     }).then((response) => {
+        
+  //       setProfileDetails(response.data)
+  //       refetch()
+
+  //     })
+  //   } catch (err) {
+  
+  //   }
+  // }, [state])
 
   useEffect(() => {
-    try {
-      // const userId = user?.id
-      console.log("userId userId userId userId",userIdData);
-      
-      axiosinstance.get("/viewprofiledetails/" + userIdData, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }).then((response) => {
-        // console.log(response.data[0].name, 'yesyesyesyes');
-        setProfileDetails(response.data)
-        refetch()
 
-      })
-    } catch (err) {
-      // navigate('/error')
-      // console.log("Eror message...", err);
+    viewProfileDetails(userIdData)
+}, [user,state])
 
-    }
-  }, [state])
-
-
+const viewProfileDetails = async (userIdData:any) => {
+   const viewProfileDetailsResponce = await view_Profile_Details(userIdData)
+   setProfileDetails(viewProfileDetailsResponce)
+ console.log("Navbar details....", viewProfileDetailsResponce);
+}
   return (
     <div className='hidden md:block  px-8  '>
       <div className='flex -mt-3  mx-auto gap-6  '>

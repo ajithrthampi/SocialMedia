@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../context/Context'
 import { passfriendDetails } from '../../../redux/store/features/userSlice'
 import Post from '../../../Component/post/Post'
+import { search_user } from '../../../services/UserApi'
 
 interface search {
   setSearchOpen: any
@@ -49,18 +50,20 @@ const { data } = useQuery(["Id"], () => {
 
   const debouncedValue = useDebounce(searchName, 500)
 
-  const { data: searchResult, isLoading, refetch } = useQuery(["searchUserValues", debouncedValue], () => {
-    return axiosinstance.get("/searchuser/" + debouncedValue, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((res) => res.data)
-      .catch((err) => {
-        // navigate("/error")
-        console.log(err);
+  const { data: searchResult, isLoading, refetch } = useQuery(["searchUserValues", debouncedValue], () => 
+    // return axiosinstance.get("/searchuser/" + debouncedValue, {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((res) => res.data)
+    //   .catch((err) => {
+    //     // navigate("/error")
+    //     console.log(err);
 
-      })
-  });
+    //   })
+    search_user(debouncedValue)
+
+  )
   // console.log("dataaaa", searchResult);
 
 

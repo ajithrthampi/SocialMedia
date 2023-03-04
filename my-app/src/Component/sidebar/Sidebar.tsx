@@ -14,6 +14,7 @@ import Notifi from '../../Pages/userpages/notification/Notification';
 import Search from '../../Pages/userpages/search/Search';
 import { useSelector } from 'react-redux';
 import axiosinstance from '../../axios/axiosinstance';
+import { get_notification_count, get_Notofication } from '../../services/UserApi';
 
 
 const Sidebar = () => {
@@ -39,49 +40,53 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        try {
-            // axiosinstance.get("/getnotifications", {
-            //     headers: {
-            //         "x-access-token": localStorage.getItem("token"),
-            //     },
-            // }).then((res) => {
-            //     console.log("Notification", res);
+        // try {
+        //     axiosinstance.get("/getnotifications", {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((res) => {
+        //         console.log("Nitification", res);
 
-            // })
-            axiosinstance.get("/getnotifications", {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((res) => {
-                console.log("Nitification", res);
-
-            })
-                .catch((err) => {
-                    navigate("/error")
-                })
-        } catch (error) {
-            console.log(error);
-        }
+        //     })
+        //         .catch((err) => {
+        //             navigate("/error")
+        //         })
+        // } catch (error) {
+        //     console.log(error);
+        // }
+        getNofification()
     }, [notifyUpdate])
+
+    const getNofification = async () => {
+        const seeAllNotification = await get_Notofication()
+    }
 
     //NOTIFICATION COUNT
 
     useEffect(() => {
-        try {
-              axiosinstance.get("/getnotificationscount", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((res) => {
-            console.log("Nitification--Count", res.data.length);
-            setNotoficationCount(res.data.length)
-        })
-            .catch((err) => {
-                navigate("/error")
-            })
-        } catch (error) {   
-        }
+        // try {
+        //       axiosinstance.get("/getnotificationscount", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((res) => {
+        //     console.log("Nitification--Count", res.data.length);
+        //     setNotoficationCount(res.data.length)
+        // })
+        //     .catch((err) => {
+        //         navigate("/error")
+        //     })
+        // } catch (error) {   
+        // }
+        notificationCountAll()
     }, [notifyUpdate])
+
+    const notificationCountAll = async () => {
+       const get_allNotificationCountAll = await get_notification_count()
+       setNotoficationCount(get_allNotificationCountAll.length)
+    }
+
 
 
     const activeElement = 'flex gap-4 py-4 items-center bg-[#1E1E1]  -mx-12 px-10  rounded-md hover:shadow-md hover:shadow-[#585858]';

@@ -11,6 +11,7 @@ import { MdDelete } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
+import { chat_user, comment_comment, get_comment, view_Profile_Details } from '../../services/UserApi'
 import DeleteModal from './DeleteModal'
 
 interface modal {
@@ -45,41 +46,61 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
 
     useEffect(() => {
         const Id = postPassDetails.userId
-        axiosinstance.get("/chatusers/" + Id, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            setUserName(response.data.username)
-            // console.log("logggggggg", response);
-            // console.log("........................................");
-        }).catch((err) => {
-            // navigate('/error')
-            // console.log("xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-            console.log(err);
-        })
+        // axiosinstance.get("/chatusers/" + Id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     setUserName(response.data.username)
+        //     // console.log("logggggggg", response);
+        //     // console.log("........................................");
+        // }).catch((err) => {
+        //     // navigate('/error')
+        //     // console.log("xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        //     console.log(err);
+        // })
+        chat_USers(Id)
     }, [postPassDetails])
+
+    const chat_USers = async(Id:any) => {
+      const cgat_users = await chat_user(Id)
+      if(cgat_users){
+        setUserName(cgat_users.username)
+      }
+    }
 
 
     // View Post
 
-    useEffect(() => {
-        try {
-            const userId = user.id
-            axiosinstance.get("/viewprofiledetails/" + userId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                // console.log(response.data[0].name, 'yesyesyesyes');
-                setCore(response.data)
+    // useEffect(() => {
+    //     try {
+    //         const userId = user.id
+    //         axiosinstance.get("/viewprofiledetails/" + userId, {
+    //             headers: {
+    //                 "x-access-token": localStorage.getItem("token"),
+    //             },
+    //         }).then((response) => {
+    //             // console.log(response.data[0].name, 'yesyesyesyes');
+    //             setCore(response.data)
 
-            })
-        } catch (err) {
-            // navigate('/error')
-            console.log("Eror message...", err);
-        }
-    }, [user])
+    //         })
+    //     } catch (err) {
+    //         // navigate('/error')
+    //         console.log("Eror message...", err);
+    //     }
+
+    //     // const userId = user.id
+    //     // view_ProfileDetailss(userId)
+    // }, [user])
+
+    // // const view_ProfileDetailss = async(userId:any) => {
+    // //   const viewUserProfileDetails = await view_Profile_Details(userId)
+    // //   if(viewUserProfileDetails){
+    // //     setCore(viewUserProfileDetails)
+    // //   }
+    // // }
+
+
 
     // COMMENT ONCHANGE
     const handleComment = (e: any) => {
@@ -90,7 +111,7 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         })
     }
 
-    const submitComment = (postId: string, type: number) => {
+    const submitComment = async(postId: string, type: number) => {
         const Images = postPassDetails.Images
         const userId = user.id
         const id = { userId, postId, comment }
@@ -98,45 +119,61 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         // console.log(userId, postId, comment, "scsdcscscsssddddddddd............");
 
         if (comment) {
-            axiosinstance.post("/comment", id, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setComment("")
+            // axiosinstance.post("/comment", id, {
+            //     headers: {
+            //         "x-access-token": localStorage.getItem("token"),
+            //     },
+            // }).then((response) => {
+            //     setComment("")
 
-                setCommentStatus(response)
-                // console.log("Submittded success data", response.data);
+            //     setCommentStatus(response)
+            //     // console.log("Submittded success data", response.data);
 
-            }).catch((err) => {
-                navigate('/error')
-            })
+            // }).catch((err) => {
+            //     navigate('/error')
+            // })
+           
+                const addComment =  await comment_comment(id)
+                if(addComment){
+                    setComment("")
+                    setCommentStatus(addComment)
+                }
         }
-        setComment("")
+       
     }
 
     //  GET COMMENT
 
     useEffect(() => {
         const postId = postPassDetails._id
-        axiosinstance.get("/getcomment/" + postId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            setGetComment(response.data)
+        // axiosinstance.get("/getcomment/" + postId, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     setGetComment(response.data)
 
-            // console.log("..................................................");
-            // console.log("reponse....", response.data);
+        //     // console.log("..................................................");
+        //     // console.log("reponse....", response.data);
 
 
-        }).catch((err) => {
-            // navigate('/error')'
-            console.log(err);
+        // }).catch((err) => {
+        //     // navigate('/error')'
+        //     console.log(err);
 
-            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-        })
+        //     console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+        // })
+
+        getAllComment(postId)
     }, [postPassDetails, commentStatus, modalDelete])
+
+    const getAllComment = async(postId:any) => {
+       const allComment = await get_comment(postId)
+       if(allComment){
+        setGetComment(allComment)
+
+       }
+    }
 
 
     const openModalData = (commentId: any) => {

@@ -20,6 +20,8 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Notifi from '../../Pages/userpages/notification/Notification';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import "./navbar.css"
+import { search_user, view_Profile_Details } from '../../services/UserApi';
+
 
 
 
@@ -44,7 +46,6 @@ const Navbar = () => {
     const navigate = useNavigate()
     const debouncedValue = useDebounce(searchName, 500)
     const [profileDetails, setProfileDetails] = useState<any>()
-
     const [open, setOpen] = useState<boolean>(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const dispatch = useDispatch()
@@ -65,18 +66,19 @@ const Navbar = () => {
     }, [])
 
 
-    const { data: searchResult, isLoading, refetch } = useQuery(["searchUserValues", debouncedValue], () => {
-        return axiosinstance.get("/searchuser/" + debouncedValue, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((res) => res.data)
-            .catch((err) => {
-                // navigate("/error")
-                console.log(err);
+    const { data: searchResult, isLoading, refetch } = useQuery(["searchUserValues", debouncedValue], () => 
+        // return axiosinstance.get("/searchuser/" + debouncedValue, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((res) => res.data)
+        //     .catch((err) => {
+        //         // navigate("/error")
+        //         console.log(err);
 
-            })
-    })
+        //     })   
+        search_user(debouncedValue)
+    )
 
     const handleSearch = (e: any) => {
         if (e.target.value) {
@@ -124,28 +126,29 @@ const Navbar = () => {
     // Navbar Profile
 
     useEffect(() => {
-        try {
-            // const userId = user?.id
-            console.log("userId userId userId userId", userId);
+        // try {
+          
 
-            axiosinstance.get("/viewprofiledetails/" + userId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
+        //     axiosinstance.get("/viewprofiledetails/" + userId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
 
-                setProfileDetails(response.data)
-                refetch()
-            })
-        } catch (err) {
+        //         setProfileDetails(response.data)
+        //         refetch()
+        //     })
+        // } catch (err) {
 
-            console.log("Eror message...", err);
-        }
+        //     console.log("Eror message...", err);
+        // }
+        viewProfileDetails(userId)
     }, [user])
-    console.log("profileDetails", profileDetails);
-
-
-
+   
+    const viewProfileDetails = async (userId:any) => {
+       const viewProfileDetailsResponce = await view_Profile_Details(userId)
+       setProfileDetails(viewProfileDetailsResponce)
+    }
 
     return (
         <>

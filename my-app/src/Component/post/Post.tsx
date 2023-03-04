@@ -10,11 +10,12 @@ import axiosinstance from '../../axios/axiosinstance';
 import moment from 'moment';
 import { UserContext } from '../../Pages/context/Context';
 import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
-import axios from 'axios';
+
 import CommentModal from '../user-modal/CommentModal';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import { passfriendDetails } from '../../redux/store/features/userSlice';
 import ReportPostModal from '../user-modal/ReportPostModal';
+import { like_post, post_details, view_post } from '../../services/UserApi';
 
 
 
@@ -32,63 +33,72 @@ const Post = () => {
         var userId = user.id
     }
 
-    const { data, isLoading, refetch } = useQuery(["Id"], () => {
-        return axiosinstance.get("viewpost", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((res) => res.data)
-            .catch((err) => {
-                navigate("/error")
-            })
-    });
+    const { data, isLoading, refetch } = useQuery(["Id"], () =>
+        // return axiosinstance.get("viewpost", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((res) => res.data)
+        //     .catch((err) => {
+        //         navigate("/error")
+        //     })
+        view_post()
+    );
 
     // LIKE POST
-    const likePost = (postId: string, username: string, type: number, images: any) => {
+    const likePost = async (postId: string, username: string, type: number, images: any) => {
         const userId = user.id
         const id = { postId, userId }
-        axios.post("http://localhost:4001/likepost", id, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            refetch()
-        }).catch((err) => {
-            navigate('/error')
-        })
+        // axios.post("http://localhost:4001/likepost", id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     refetch()
+        // }).catch((err) => {
+        //     navigate('/error')
+        // })
+        const like_Post = await like_post(id)
+        refetch()
+
     }
 
     // UNLIKE POST
 
-    const UnlikePost = (postId: string, username: string, type: number) => {
+    const UnlikePost = async (postId: string, username: string, type: number) => {
         const userId = user.id
         const id = { postId, userId }
 
-        axios.post("http://localhost:4001/likepost", id, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            refetch()
-        }).catch((err) => {
-            navigate('/error')
-        })
+        // axios.post("http://localhost:4001/likepost", id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     refetch()
+        // }).catch((err) => {
+        //     navigate('/error')
+        // })
+        const like_Post = await like_post(id)
+        refetch()
     }
 
     // OPEN COMMENT
 
-    const openCommentModal = (postId: any) => {
-        console.log(postId, 'id in comment click');
-        axios.get("http://localhost:4001/postdetails/" + postId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            setCommentModal(!commentModal)
-            setPostPassDetails(response.data)
-        }).catch((err) => {
-            navigate('/error')
-        })
+    const openCommentModal = async(postId: any) => {
+       
+        // axios.get("http://localhost:4001/postdetails/" + postId, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     setCommentModal(!commentModal)
+        //     setPostPassDetails(response.data)
+        // }).catch((err) => {
+        //     navigate('/error')
+        // })
+        const open_Comment_Modal = await post_details(postId)
+        setCommentModal(!commentModal)
+        setPostPassDetails(open_Comment_Modal)
 
     }
 
@@ -121,7 +131,7 @@ const Post = () => {
                         <>
                             <div className=' box-content h-auto  bg-[#2A2A2A] rounded-3xl px-4 py-3 '>
                                 <div className="container mx-auto grid grid-cols-4 xl:grid-cols-3 pt-6 gap-8">
-                                    <div className=' col-span-1 pl-'  onClick={() => handleFriendProfile(post)}>
+                                    <div className=' col-span-1 pl-' onClick={() => handleFriendProfile(post)}>
                                         {post.userId.Images ? <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover ' src={`/images/${post.userId.Images}`} alt="profilepic" />
                                             : <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover '
                                                 src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profile pic" />
@@ -129,7 +139,7 @@ const Post = () => {
                                     </div>
                                     <div className='-ml-4 col-span-2 space-y-3' >
                                         <div>
-                                            <p className='text-[#7e7e7e] text-sm '  onClick={() => handleFriendProfile(post)}>{post.userId.name}</p>
+                                            <p className='text-[#7e7e7e] text-sm ' onClick={() => handleFriendProfile(post)}>{post.userId.name}</p>
                                         </div>
                                         <div className=''>
                                             <h3 className='text-white text-lg font-semibold'>{post.userId.username}</h3>

@@ -21,7 +21,8 @@ interface openPost {
 const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPost) => {
 
     const updateDeletePost = useSelector((state: any) => state.userDetails.value.closeDeleteUpdateMOdal)
-    // console.log("?????????????????reduc", postPassDetails);
+   
+    
 
     const [userName, setUserName] = useState([])
     const [comment, setComment] = useState<any>()
@@ -36,12 +37,18 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
     const [statee, setStatee] = useState(false)
     const [userIdData, setUserIdData] = useState<any>()
 
+    if (user) {
+        var userId = user?.id
+    }
+
     // const isFriendPostModals = useSelector((state: any) => state.userDetails.value.friendDetails)
     // console.log("is modalll datalkadlsf.fds//.././././",is   s);
+    console.log("?????????????????reduc", postPassDetails);
+    console.log("//////////////////////",userId);
 
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
-    const isUpdateCaption = useSelector((state:any) => state.userDetails.value.updateCaptionModal)
-    const isPostDetails = useSelector((state:any) =>  state.userDetails.value.PostDetails)
+    const isUpdateCaption = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
+    const isPostDetails = useSelector((state: any) => state.userDetails.value.PostDetails)
     // console.log("isUpdateCaptionisUpdateCaption",isUpdateCaption);
 
     useEffect(() => {
@@ -116,7 +123,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
             console.log(err);
         })
-    }, [postPassDetails,isUpdateCaption])
+    }, [postPassDetails, isUpdateCaption])
     // console.log("logggggggg", userName);
 
     useEffect(() => {
@@ -201,10 +208,18 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                             </div>
                                             <div className='text-sm'>{userName}</div>
                                         </div>
+                                        {userId=== postPassDetails.userId ?
+                                            <>
+                                                <div className='' onClick={() => EachPostModal(postPassDetails._id)}>
+                                                    <HiOutlineDotsHorizontal size={20} />
+                                                </div>
+                                            </>
+                                            :
+                                            <>
 
-                                        <div className='' onClick={() => EachPostModal(postPassDetails._id)}>
-                                            <HiOutlineDotsHorizontal size={20} />
-                                        </div>
+                                            </>
+                                        }
+
                                     </div>
 
                                     <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
@@ -311,7 +326,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                         </div>
                         {/* <div className=" text-xs  border border-[#5b5858] w-ful  mt-2 text-[#002D74]"></div>/ */}
                         <p className='text-sm my-3 pl-2 text-white '>
-                        {postPassDetails.caption}
+                            {postPassDetails.caption}
                         </p>
                     </div>
 

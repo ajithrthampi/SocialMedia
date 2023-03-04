@@ -35,6 +35,7 @@ import ThirdFormDetails from './ThirdFormDetails';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import { NotifyUpdate, passfriendDetails } from '../../redux/store/features/userSlice';
 import { useSelector } from 'react-redux';
+import { add_notification, following_count, like_post, users_users, view_all_following, view_post, view_Profile_Details } from '../../services/UserApi';
 
 
 
@@ -108,44 +109,51 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
     // FETCHING POST
 
-    const { data, isLoading, refetch } = useQuery(["Id"], () => {
-        return axiosinstance.get("viewpost", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((res) => res.data)
-            .catch((err) => {
-                navigate("/error")
-            })
-    });
+    const { data, isLoading, refetch } = useQuery(["Id"], () => 
+        // return axiosinstance.get("viewpost", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((res) => res.data)
+        //     .catch((err) => {
+        //         navigate("/error")
+        //     })
+        view_post()
+    );
     // console.log("jquery dat", data)
 
     // SUGGESTION USRER DETAILS
 
     useEffect(() => {
-        axiosinstance.get("/users", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            refetch()
-            // console.log("User redponce./././././././././", response);
-            setSuggestionUser(response.data)
-            refetch()
-
-        }).catch((err) => {
-            navigate('/error')
-        })
-
+        // axiosinstance.get("/users", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     refetch()
+        //     // console.log("User redponce./././././././././", response);
+        //     setSuggestionUser(response.data)
+        //     refetch()
+        // }).catch((err) => {
+        //     navigate('/error')
+        // })
+        userDetsils()
     }, [user])
-    // console.log("User redponce./././././././././", suggestionUser);
+    
+    const userDetsils = async () => {
+        const user_details = await users_users()
+        setSuggestionUser(user_details)
+        refetch()
+    }
+
+    
 
 
 
 
     //  LIKE POST
 
-    const likePost = (postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
+    const likePost = async (postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
         const userId = user?.id
         const id = { postId, userId }
         // setTimeout( async () => {
@@ -156,11 +164,13 @@ const PostFormCard = ({ socket }: Socket_io) => {
             userDp: DP,
             read: false
         }
-        axiosinstance.post("/likepost", id, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
+        // axiosinstance.post("/likepost", id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // })
+        const like_Post = await like_post(id)
+        .then(async (response) => {
             socket?.emit("sendNotification", details)
             let notifyDetails = {
                 receiverId: postOwnerId,
@@ -174,11 +184,12 @@ const PostFormCard = ({ socket }: Socket_io) => {
             try {
                 if (postOwnerId !== userId) {
                     // await create_notification(notifyDetails)
-                    axiosinstance.post("/addnotification",notifyDetails, {
-                        headers: {
-                            "x-access-token": localStorage.getItem("token"),
-                        },
-                    })
+                    // axiosinstance.post("/addnotification",notifyDetails, {
+                    //     headers: {
+                    //         "x-access-token": localStorage.getItem("token"),
+                    //     },
+                    // })
+                    const get_Notification = await add_notification(notifyDetails)
                     dispatch(NotifyUpdate(!notifyUpdate))
                 }
             } catch (error) {
@@ -231,24 +242,35 @@ const PostFormCard = ({ socket }: Socket_io) => {
     // USER DATA
 
     useEffect(() => {
-        try {
-            const userId = user.id
-            axiosinstance.get("/viewprofiledetails/" + userId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                console.log(response.data[0].name, 'yesyesyesyes');
-                setProfileDetails(response.data)
-                refetch()
+        // try {
+        //     const userId = user.id
+        //     axiosinstance.get("/viewprofiledetails/" + userId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         console.log(response.data[0].name, 'yesyesyesyes');
+        //         setProfileDetails(response.data)
+        //         refetch()
 
-            })
-        } catch (err) {
-            // navigate('/error')
-            console.log("Eror message...", err);
+        //     })
+        // } catch (err) {
+        //     // navigate('/error')
+        //     console.log("Eror message...", err);
 
-        }
+        // }
+        // viewProfileDetails(userId)
+        viewProfileDetails(userId)
     }, [user, commentModal])
+
+    const viewProfileDetails = async (userId:any) => {
+        const viewProfileDetailsResponce = await view_Profile_Details(userId)
+        setProfileDetails(viewProfileDetailsResponce)
+        refetch()
+     }
+
+     console.log("nnnnnnnnnnnnnnnnnnnnnnnnnn",profileDetails);
+     
 
     // FOLLOW FRIEND
 
@@ -289,19 +311,21 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
     }, [user, followUser,])
 
-    const ViewAllFollowing = (userId: any) => {
-        axiosinstance.get("/viewallfollowing/" + userId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
-            setViewAllFollowing(response.data.following)
-            // refetch()
-        }).catch((err) => {
-            // navigate('/error')
-            console.log(err);
-        })
+    const ViewAllFollowing = async(userId: any) => {
+        // axiosinstance.get("/viewallfollowing/" + userId, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
+        //     setViewAllFollowing(response.data.following)
+        //     // refetch()
+        // }).catch((err) => {
+        //     // navigate('/error')
+        //     console.log(err);
+        // })
+        const viewFollowing = await view_all_following(userId)
+        setViewAllFollowing(viewFollowing)
     }
 
 
@@ -317,22 +341,32 @@ const PostFormCard = ({ socket }: Socket_io) => {
     }, [user, following, followers, viewAllFollowing])
 
     useEffect(() => {
-        try {
+        // try {
 
-            axiosinstance.get("/followingcount/" + currentUserId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setfFollowing(response.data.count.following)
-                setFollowers(response.data.count.followers)
-            })
-        } catch (err) {
-            // navigate('error')
-            console.log(err);
-        }
+        //     axiosinstance.get("/followingcount/" + currentUserId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setfFollowing(response.data.count.following)
+        //         setFollowers(response.data.count.followers)
+        //     })
+        // } catch (err) {
+        //     // navigate('error')
+        //     console.log(err);
+        // }
+       followingCounts(currentUserId)
 
     }, [currentUserId, viewAllFollowing])
+
+    const followingCounts = async (currentUserId:any) => {
+        const ViewAllCounts = await following_count(currentUserId)
+        setfFollowing(ViewAllCounts.count.following)
+        setFollowers(ViewAllCounts.count.followers)
+    }
+    // console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",following);
+    
+
 
     //REPORT 
 
@@ -367,7 +401,8 @@ const PostFormCard = ({ socket }: Socket_io) => {
                             <div className='flex gap-3 '>
                                 <div>
                                     <div className='w-12 h-12 rounded-xl overflow-hidden mt-2'>
-                                        {profileDetails[0].Images ?
+                                        {profileDetails[0]?.Images ?
+                                        
                                             <img className='' src={`/images/${profileDetails[0].Images}`} alt="" />
                                             :
                                             <>

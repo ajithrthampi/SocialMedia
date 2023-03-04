@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance';
 import { UserContext } from '../../Pages/context/Context';
 import Notifi from '../../Pages/userpages/notification/Notification';
+import { view_Profile_Details } from '../../services/UserApi';
 
 interface mode {
     children: any
@@ -56,24 +57,33 @@ const DownNavbar = () => {
 
     //PROFILE IMAGE
 
+    // useEffect(() => {
+    //     try {
+
+    //         axiosinstance.get("/viewprofiledetails/" + userIdData, {
+    //             headers: {
+    //                 "x-access-token": localStorage.getItem("token"),
+    //             },
+    //         }).then((response) => {
+
+    //             setProfileImage(response.data)
+    //         })
+    //     } catch (err) {
+    //         // navigate('/error')
+    //         console.log("Eror message...", err);
+    //     }
+    // }, [user, userIdData])
+
     useEffect(() => {
-        try {
+        viewProfileDetails(userIdData)
+    }, [user,userIdData])
 
-            axiosinstance.get("/viewprofiledetails/" + userIdData, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-
-                setProfileImage(response.data)
-            })
-        } catch (err) {
-            // navigate('/error')
-            console.log("Eror message...", err);
-        }
-    }, [user, userIdData])
-
-
+    const viewProfileDetails = async (userIdData:any) => {
+        const viewProfileDetailsResponce = await view_Profile_Details(userIdData)
+        setProfileImage(viewProfileDetailsResponce)
+      console.log("Navbar details....", viewProfileDetailsResponce);
+     }
+ 
     return (
         <>
             <div className=' md:hidden relative z-10'>

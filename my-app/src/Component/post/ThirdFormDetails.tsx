@@ -6,6 +6,7 @@ import { UserContext } from '../../Pages/context/Context'
 import { useNavigate } from 'react-router-dom'
 import { passfriendDetails } from '../../redux/store/features/userSlice'
 import { useDispatch } from 'react-redux'
+import { following_count, follow_unfollow, users_users, view_all_following } from '../../services/UserApi'
 
 interface details {
     profileDetails: any
@@ -39,39 +40,49 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
     // suggestion user
 
     useEffect(() => {
-        axiosinstance.get("/users", {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            // refetch()
-            // console.log("User redponce./././././././././", response);
-            setSuggestionUser(response.data)
-            // refetch()
+        // axiosinstance.get("/users", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     // refetch()
+        //     // console.log("User redponce./././././././././", response);
+        //     setSuggestionUser(response.data)
+        //     // refetch()
 
-        }).catch((err) => {
-            // navigate('/error')
-        })
+        // }).catch((err) => {
+        //     // navigate('/error')
+        // })
+        userDetsils()
 
     }, [user, data, viewAllFollowing])
 
-    const follow = (friendFollowId: any) => {
+    const userDetsils = async () => {
+        const user_details = await users_users()
+        setSuggestionUser(user_details)
+    }
+
+    const follow = async(friendFollowId: any) => {
         const userId = user?.id
         const friendId = friendFollowId
         try {
             const id = { userId, friendId }
-            axiosinstance.post("/follow", id, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                if (response.data.msg == "follow") {
-                    setFollowUser(response.data.msg)
-                    // refetch()
-                } else {
-                    setFollowUser(response.data.msg)
-                }
-            })
+            // axiosinstance.post("/follow", id, {
+            //     headers: {
+            //         "x-access-token": localStorage.getItem("token"),
+            //     },
+            // }).then((response) => {
+            //     if (response.data.msg == "follow") {
+            //         setFollowUser(response.data.msg)
+            //         // refetch()
+            //     } else {
+            //         setFollowUser(response.data.msg)
+            //     }
+            // })
+
+            const followUnfollow = await follow_unfollow(id)
+            setFollowUser(followUnfollow.msg)
+            
         } catch (err) {
             // navigate('/error')
         }
@@ -86,40 +97,47 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
 
     }, [user, followUser,])
 
-    const ViewAllFollowing = (userId: any) => {
-        axiosinstance.get("/viewallfollowing/" + userId, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
-            // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
-            setViewAllFollowing(response.data.following)
-            // refetch()
-        }).catch((err) => {
-            // navigate('/error')
-            console.log(err);
-        })
+    const ViewAllFollowing = async(userId: any) => {
+        // axiosinstance.get("/viewallfollowing/" + userId, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
+        //     setViewAllFollowing(response.data.following)
+        //     // refetch()
+        // }).catch((err) => {
+        //     // navigate('/error')
+        //     console.log(err);
+        // })
+        const viewFollowing = await view_all_following(userId)
+        setViewAllFollowing(viewFollowing.following)
     }
 
     // VIEW ALL FOLLOWERS
 
     useEffect(() => {
-        try {
-
-            axiosinstance.get("/followingcount/" + currentUserId, {
-                headers: {
-                    "x-access-token": localStorage.getItem("token"),
-                },
-            }).then((response) => {
-                setfFollowing(response.data.count.following)
-                setFollowers(response.data.count.followers)
-            })
-        } catch (err) {
-            // navigate('error')
-            console.log(err);
-        }
+        // try {
+        //     axiosinstance.get("/followingcount/" + currentUserId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+        //         setfFollowing(response.data.count.following)
+        //         setFollowers(response.data.count.followers)
+        //     })
+        // } catch (err) {
+        //     // navigate('error')
+        //     console.log(err);
+        // }
+        followingCounts(currentUserId)
 
     }, [currentUserId, viewAllFollowing])
+    const followingCounts = async (currentUserId:any) => {
+        const ViewAllCounts = await following_count(currentUserId)
+        setfFollowing(ViewAllCounts.count.following)
+        setFollowers(ViewAllCounts.count.followers)
+    }
 
 
     //CURENT USER ID
@@ -147,8 +165,6 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
             navigate("/fried-Profile")
         }
     }
-
-
 
     return (
         <>

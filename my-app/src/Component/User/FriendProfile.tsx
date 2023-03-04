@@ -13,6 +13,7 @@ import OpenPostModal from '../user-modal/OpenPostModal'
 import { useNavigate } from 'react-router-dom'
 import FollowListModal from '../user-modal/FollowListModal'
 import jwtDecode from 'jwt-decode'
+import { conversationUser, followersListss, followingListss, following_count, follow_unfollow, post_details, viewProfilePostss, view_all_following } from '../../services/UserApi'
 
 const FriendProfile = () => {
 
@@ -28,7 +29,7 @@ const FriendProfile = () => {
   const [eachPost, setEachPost] = useState([])
   const [userIdd, setUserIdd] = useState<any>()
   const [followUser, setFollowUser] = useState()
- const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [followersLists, setFollowersLists] = useState<any>()
   const [followModal, setFollowModal] = useState<boolean>(false)
@@ -37,7 +38,7 @@ const FriendProfile = () => {
   const isprofileDetails = useSelector((state: any) => state.userDetails.value.friendDetails)
   const followUnfollowUpdations = useSelector((state: any) => state.userDetails.value.followUnfollowUpdation)
 
- 
+
   console.log("userr id In friend", followUser);
 
   useEffect(() => {
@@ -58,22 +59,28 @@ const FriendProfile = () => {
 
 
   useEffect(() => {
-    try {
+    // try {
 
-      axiosinstance.get("/followingcount/" + reduxState?._id, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }).then((response) => {
-        setfFollowing(response.data.count.following)
-        setFollowers(response.data.count.followers)
-      })
-    } catch (err) {
-      // navigate('error')
-      console.log(err);
-    }
+    //   axiosinstance.get("/followingcount/" + reduxState?._id, {
+    //     headers: {
+    //       "x-access-token": localStorage.getItem("token"),
+    //     },
+    //   }).then((response) => {
+    //     setfFollowing(response.data.count.following)
+    //     setFollowers(response.data.count.followers)
+    //   })
+    // } catch (err) {
+    //   // navigate('error')
+    //   console.log(err);
+    // }
+    followingCounts(reduxState?._id)
 
-  }, [editModal, reduxState,followUnfollowUpdations,viewAllFollowing  ])
+  }, [editModal, reduxState, followUnfollowUpdations, viewAllFollowing])
+  const followingCounts = async (currentUserId: any) => {
+    const ViewAllCounts = await following_count(currentUserId)
+    setfFollowing(ViewAllCounts.count.following)
+    setFollowers(ViewAllCounts.count.followers)
+  }
 
   // console.log("User details in redixtoolkit", reduxState?.userId?._id);
 
@@ -84,74 +91,88 @@ const FriendProfile = () => {
 
 
   const viewPost = () => {
+    // const userId = user?.id
+    // axiosinstance.get("/viewprofilepost/" + reduxState?._id, {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((response) => {
 
-    const userId = user?.id
+    //   setState(response.data)
+    //   setProfilePosts(response.data)
+    // }).catch((err) => {
+    //   // navigate('/error')
+    // })
+    seeProfilePost(reduxState?._id)
 
-    axiosinstance.get("/viewprofilepost/" + reduxState?._id, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
-
-      setState(response.data)
-      setProfilePosts(response.data)
-    }).catch((err) => {
-      // navigate('/error')
-    })
   }
-  // console.log("Profile pistyyy..", profilePosts);
+  const seeProfilePost = async (friendId: any) => {
+    const viewEachPost = await viewProfilePostss(friendId)
+    setProfilePosts(viewEachPost)
+  }
 
 
   // FRIEND USER DATA
 
-  const viewImagePost = (postId: any) => {
-    console.log("hiii");
+  const viewImagePost = async (postId: any) => {
 
-    axiosinstance.get("/postdetails/" + postId, {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
+
+    // axiosinstance.get("/postdetails/" + postId, {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((response) => {
+    //   setOpenPostModal(true)
+    //   setEachPost(response.data)
+    //   console.log(response.data);
+
+
+    //   // dispatch(friendEachPost(response.data))
+    //   console.log("success");
+
+
+    // }).catch((err) => {
+    //   // navigate('/error')
+    //   console.log(err);
+
+    // })
+    try {
+      const post_Details = await post_details(postId)
       setOpenPostModal(true)
-      setEachPost(response.data)
-      console.log(response.data);
+      setEachPost(post_Details)
+    } catch (error) {
+      console.log("error", error);
+
+    }
 
 
-      // dispatch(friendEachPost(response.data))
-      console.log("success");
-
-
-    }).catch((err) => {
-      // navigate('/error')
-      console.log(err);
-
-    })
   }
 
-  const startConversation = () => {
+  const startConversation = async () => {
     const userId = user?.id
     try {
 
       const friendId = isprofileDetails?._id
       const id = { userId, friendId }
 
-      setTimeout(() => {
+      // setTimeout(() => {
 
-        axiosinstance.post("/conversation", id, {
-          headers: {
-            "x-access-token": localStorage.getItem("token"),
-          },
-        }).then((response) => {
-          navigate('/message')
-        }).catch((err) => {
-          navigate('/error')
-          console.log(err);
+      //   axiosinstance.post("/conversation", id, {
+      //     headers: {
+      //       "x-access-token": localStorage.getItem("token"),
+      //     },
+      //   }).then((response) => {
+      //    
+      //   }).catch((err) => {
+      //     navigate('/error')
+      //     console.log(err);
 
-        })
+      //   })
 
-      }, 1000)
-
-
+      // }, 1000)
+      const allConversation = await conversationUser(id).then((res) => {
+        navigate('/message')
+      })
     } catch (error) {
       console.log(error);
 
@@ -160,18 +181,26 @@ const FriendProfile = () => {
 
   //FOLLOW MODAL
 
-  const followersModal = () => {
+  const followersModal =async () => {
     try {
       const userId = isprofileDetails._id
-      console.log("friend id", userId);
-      axiosinstance.get("/followerslist/" + userId, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }).then((response) => {
-        setFollowersLists(response.data)
+      // console.log("friend id", userId);
+      // axiosinstance.get("/followerslist/" + userId, {
+      //   headers: {
+      //     "x-access-token": localStorage.getItem("token"),
+      //   },
+      // }).then((response) => {
+      //   setFollowersLists(response.data)
+      //   setFollowModal(true)
+      // })
+
+      const followersallList = await followersListss(userId)
+      if(followersallList) {
+          setFollowersLists(followersallList)
         setFollowModal(true)
-      })
+      } else {
+        
+      }
     } catch (err) {
       console.log("Follower", err);
     }
@@ -179,17 +208,25 @@ const FriendProfile = () => {
 
   //FOLLOWING MODAL
 
-  const followingsModal = () => {
+  const followingsModal = async () => {
     try {
       const userId = isprofileDetails._id
-      axiosinstance.get("/followinglist/" + userId, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }).then((response) => {
-        setFollowersLists(response.data)
+      // axiosinstance.get("/followinglist/" + userId, {
+      //   headers: {
+      //     "x-access-token": localStorage.getItem("token"),
+      //   },
+      // }).then((response) => {
+      //   setFollowersLists(response.data)
+      //   setFollowModal(true)
+      // })
+
+      const followingllList = await followingListss(userId)
+      if(followingllList) {
+          setFollowersLists(followingllList)
         setFollowModal(true)
-      })
+      } else {
+        
+      }
 
     } catch (err) {
       // navigate('/error')
@@ -199,28 +236,39 @@ const FriendProfile = () => {
 
   //FOLLOW UNFOLLOW
 
-  const followUnFollow = () => {
-  
+  const followUnFollow = async() => {
+
     const userId = user?.id
     const friendId = isprofileDetails._id
-    try {  
-     
+    try {
+
       const id = { userId, friendId }
-      axiosinstance.post("/follow", id, {
-        headers: {
-          "x-access-token": localStorage.getItem("token"),
-        },
-      }).then((response) => {
-         dispatch(followUpdation(true))
-        if (response.data.msg == "follow") {
-        
-          setFollowUser(response.data.msg)
-          
-          // refetch()
+      // axiosinstance.post("/follow", id, {
+      //   headers: {
+      //     "x-access-token": localStorage.getItem("token"),
+      //   },
+      // }).then((response) => {
+      //   dispatch(followUpdation(true))
+      //   if (response.data.msg == "follow") {
+
+      //     setFollowUser(response.data.msg)
+
+      //     // refetch()
+      //   } else {
+      //     setFollowUser(response.data.msg)
+      //   }
+      // })
+
+      const seeFollow = await follow_unfollow(id)
+        dispatch(followUpdation(true))
+        if (seeFollow == "follow") {
+          setFollowUser(seeFollow.msg)
         } else {
-          setFollowUser(response.data.msg)
+          setFollowUser(seeFollow.msg)
         }
-      })
+      
+  
+
     } catch (err) {
       // navigate('/error')
     }
@@ -232,29 +280,34 @@ const FriendProfile = () => {
   useEffect(() => {
     const data = localStorage.getItem('token')
     if (data != null) {
-        const userData: any = jwtDecode(data)
-        const userId = userData?.id
-        ViewAllFollowing(userId)
+      const userData: any = jwtDecode(data)
+      const userId = userData?.id
+      ViewAllFollowing(userId)
     }
 
-}, [user, followUser,reduxState])
+  }, [user, followUser, reduxState])
 
   //VIEW ALL FOLLOWING
 
-  const ViewAllFollowing = (userId: any) => {
-    axiosinstance.get("/viewallfollowing/" + userId, {
-        headers: {
-            "x-access-token": localStorage.getItem("token"),
-        },
-    }).then((response) => {
-        // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
-        setViewAllFollowing(response.data.following)
-        // refetch()
-    }).catch((err) => {
-        // navigate('/error')
-        console.log(err);
-    })
-}
+  const ViewAllFollowing = async(userId: any) => {
+    // axiosinstance.get("/viewallfollowing/" + userId, {
+    //   headers: {
+    //     "x-access-token": localStorage.getItem("token"),
+    //   },
+    // }).then((response) => {
+    //   // console.log("rrrrrrrrrrreeeeeeeeeeeeddddddddddd",response.data);
+    //   setViewAllFollowing(response.data.following)
+    //   // refetch()
+    // }).catch((err) => {
+    //   // navigate('/error')
+    //   console.log(err);
+    // })
+
+    const viewAllFollowing  = await view_all_following(userId)
+    if(viewAllFollowing){
+      setViewAllFollowing(viewAllFollowing.following)
+    }
+  }
 
 
 
@@ -379,6 +432,16 @@ const FriendProfile = () => {
                   <>
                     <div className='xl:flex gap-12   xl:space-y-0 space-y-5 text-lg'>
                       <div>{reduxState?.username}</div>
+                      {!viewAllFollowing?.includes(reduxState._id) ?
+                      <>
+                        <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>follow</div>
+                      </>
+                      :
+                      <>
+                        <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>Following</div>
+                      </>
+                    }
+
                       <button className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={startConversation}>Message</button>
 
                     </div>
