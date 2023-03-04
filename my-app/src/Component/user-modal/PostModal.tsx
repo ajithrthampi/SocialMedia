@@ -16,6 +16,7 @@ import { UserContext } from '../../Pages/context/Context';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import axiosinstance from '../../axios/axiosinstance';
 
 
 
@@ -120,7 +121,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
        PostData.append("user", userIdData)
        const { caption, Images } = imageForm
        if (caption || Images) {
-           axios.post("http://localhost:4001/addpost", PostData, {
+           axiosinstance.post("/addpost", PostData, {
                headers: {
                    "x-access-token": localStorage.getItem("token"),
                },

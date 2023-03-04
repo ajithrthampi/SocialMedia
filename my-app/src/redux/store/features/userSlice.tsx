@@ -65,7 +65,7 @@ export const PersonSlice = createSlice({
         },
         closeDeleteModal:(state, action) =>{
             state.value.closeDeleteUpdateMOdal = action.payload
-            // console.log(" state.value.closeDeleteUpdateMOdal><><>>>><>..........", state.value.closeDeleteUpdateMOdal);
+            console.log("0000000000000000000000000000000000000000000000000000", state.value.closeDeleteUpdateMOdal);
         },
         updateFollowData:(state, action) => {
             state.value.updateFollowCount = action.payload
