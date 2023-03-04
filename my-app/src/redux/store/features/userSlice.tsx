@@ -17,6 +17,7 @@ interface PersonState {
   PostDetails:any
   notifi:boolean
   followUnfollowUpdation:boolean
+  chatProfilePic:any
 
 }
 
@@ -31,7 +32,8 @@ const initalState:PersonState ={
    updateCaptionModal:false,
    PostDetails:[],
    notifi:false,
-   followUnfollowUpdation:false
+   followUnfollowUpdation:false,
+   chatProfilePic:[]
 }
 
 export const PersonSlice = createSlice({
@@ -87,6 +89,11 @@ export const PersonSlice = createSlice({
         followUpdation:(state, action) => {
             state.value.followUnfollowUpdation = action.payload;
             console.log(" follow upation .,.,.,.", state.value.followUnfollowUpdation);
+        },
+        chatUserProfile:(state, action) => {
+            state.value.chatProfilePic = action.payload;
+            console.log("121212121212121212212121121212",state.value.chatProfilePic);
+            
         }
     }  
 })
@@ -102,6 +109,7 @@ export const
     updateCaptionIn,
     updatePostDetails,
     NotifyUpdate,
-    followUpdation
+    followUpdation,
+    chatUserProfile,
 }
  = PersonSlice.actions

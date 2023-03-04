@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs'
 import axiosinstance from '../../../../axios/axiosinstance';
 import moment from 'moment';
+import { useDispatch } from 'react-redux';
+import { chatUserProfile } from '../../../../redux/store/features/userSlice';
 
 interface modal {
 
@@ -14,6 +16,7 @@ interface modal {
 const MessageMobile = ({ message, own, pic }: modal) => {
 
     const [profilepic, setProfilePic] = useState<any>()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -25,6 +28,7 @@ const MessageMobile = ({ message, own, pic }: modal) => {
                     },
                 }).then((response) => {
                     setProfilePic(response.data.Images)
+                    dispatch(chatUserProfile(response.data.Images))
                 })
 
             }

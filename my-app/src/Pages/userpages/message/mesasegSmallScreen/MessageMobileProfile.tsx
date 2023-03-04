@@ -8,6 +8,7 @@ import MessageMobile from './MessageMobile'
 import MessageMobileCategory from './MessageMobileCategory'
 import { io } from "socket.io-client"
 import jwtDecode from 'jwt-decode'
+import { useSelector } from 'react-redux'
 
 interface Socket_io {
     socket: any
@@ -26,6 +27,11 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
     const [newMessage, setNewMessage] = useState<any>()
+
+    const chatUserPicture = useSelector((state:any)  => state.userDetails.value.chatProfilePic)
+
+    // console.log("6565656565665656565656566565656656565656",chatUserPicture);
+    
 
     if (user) {
         var userId = user?.id
@@ -183,8 +189,10 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                             />
                             <div className='flex gap-2'>
                                 <div>
-                                    <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
-                                        className="w-8 h-8 rounded-full order-1" />
+                                {chatUserPicture ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${chatUserPicture}`} />
+                                                    :
+                                                    <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
+                                                }
                                 </div>
                                 <div>
                                     <div className='text-sm font-semibold'>Ajith R Thampirrr</div>
