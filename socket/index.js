@@ -60,4 +60,4 @@ io.on("connection", (socket) => {
   })    
 });    
 
-io.listen(8000);             
+io.listen(8000, () => console.log("Socket i running"));             
