@@ -39,6 +39,7 @@ import { add_notification, following_count, like_post, users_users, view_all_fol
 // import Swal from 'sweetalert2';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import postsImages from '../../services/imageApi';
+import MainSkeleton from '../../skeleton/MainSkeleton';
 
 
 
@@ -79,9 +80,9 @@ const PostFormCard = ({ socket }: Socket_io) => {
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
 
-    const notifyUpdate = useSelector((state:any) => state.userDetails.value.notifi)
+    const notifyUpdate = useSelector((state: any) => state.userDetails.value.notifi)
     // console.log('notifyUpdate.,.,/./,/.,/',notifyUpdate);
-    
+
 
     console.log("USer, user", user);
 
@@ -125,7 +126,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                 navigate("/error")
             })
         // view_post()
-});
+    });
     // console.log("jquery dat", data)
 
     // SUGGESTION USRER DETAILS
@@ -145,14 +146,14 @@ const PostFormCard = ({ socket }: Socket_io) => {
         // })
         userDetsils()
     }, [user])
-    
+
     const userDetsils = async () => {
         const user_details = await users_users()
         setSuggestionUser(user_details)
         refetch()
     }
 
-    
+
 
 
 
@@ -176,59 +177,59 @@ const PostFormCard = ({ socket }: Socket_io) => {
         //     },
         // })
         const like_Post = await like_post(id)
-        .then(async (response) => {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'bottom-left',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+            .then(async (response) => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'bottom-left',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'You liked this post'
+                })
+
+                socket?.emit("sendNotification", details)
+                let notifyDetails = {
+                    receiverId: postOwnerId,
+                    senderId: userId,
+                    postId: postId,
+                    type: "liked",
                 }
-              })
-              
-              Toast.fire({
-                icon: 'success',
-                title: 'You liked this post'
-              })
+                refetch()
+                // CREATING NOTIFICATION
 
-            socket?.emit("sendNotification", details)
-            let notifyDetails = {
-                receiverId: postOwnerId,
-                senderId: userId,
-                postId: postId,
-                type: "liked",
-            }
-            refetch()
-            // CREATING NOTIFICATION
-
-            try {
-                if (postOwnerId !== userId) {
-                    // await create_notification(notifyDetails)
-                    // axiosinstance.post("/addnotification",notifyDetails, {
-                    //     headers: {
-                    //         "x-access-token": localStorage.getItem("token"),
-                    //     },
-                    // })
-                    const get_Notification = await add_notification(notifyDetails)
-                    dispatch(NotifyUpdate(!notifyUpdate))
+                try {
+                    if (postOwnerId !== userId) {
+                        // await create_notification(notifyDetails)
+                        // axiosinstance.post("/addnotification",notifyDetails, {
+                        //     headers: {
+                        //         "x-access-token": localStorage.getItem("token"),
+                        //     },
+                        // })
+                        const get_Notification = await add_notification(notifyDetails)
+                        dispatch(NotifyUpdate(!notifyUpdate))
+                    }
+                } catch (error) {
+                    console.log(error, 'notification api error')
                 }
-            } catch (error) {
-                console.log(error, 'notification api error')
-            }
 
-        }).catch((err) => {
-            navigate('/error')
-        })
+            }).catch((err) => {
+                navigate('/error')
+            })
         // },1000)
 
     }
 
     //  UNLIKE POST
 
-    const UnlikePost = async(postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
+    const UnlikePost = async (postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
 
         const userId = user?.id
         const id = { postId, userId }
@@ -246,52 +247,52 @@ const PostFormCard = ({ socket }: Socket_io) => {
         //     },
         // })
         const like_Post = await like_post(id)
-        .then(async (response) => {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'bottom-left',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.addEventListener('mouseenter', Swal.stopTimer)
-                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+            .then(async (response) => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'bottom-left',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Removed like'
+                })
+
+                socket?.emit("sendNotification", details)
+                let notifyDetails = {
+                    receiverId: postOwnerId,
+                    senderId: userId,
+                    postId: postId,
+                    type: "liked",
                 }
-              })
-              
-              Toast.fire({
-                icon: 'success',
-                title: 'Removed like'
-              })
+                refetch()
+                // CREATING NOTIFICATION
 
-            socket?.emit("sendNotification", details)
-            let notifyDetails = {
-                receiverId: postOwnerId,
-                senderId: userId,
-                postId: postId,
-                type: "liked",
-            }
-            refetch()
-            // CREATING NOTIFICATION
-
-            try {
-                if (postOwnerId !== userId) {
-                    // await create_notification(notifyDetails)
-                    // axiosinstance.post("/addnotification",notifyDetails, {
-                    //     headers: {
-                    //         "x-access-token": localStorage.getItem("token"),
-                    //     },
-                    // })
-                    const get_Notification = await add_notification(notifyDetails)
-                    dispatch(NotifyUpdate(!notifyUpdate))
+                try {
+                    if (postOwnerId !== userId) {
+                        // await create_notification(notifyDetails)
+                        // axiosinstance.post("/addnotification",notifyDetails, {
+                        //     headers: {
+                        //         "x-access-token": localStorage.getItem("token"),
+                        //     },
+                        // })
+                        const get_Notification = await add_notification(notifyDetails)
+                        dispatch(NotifyUpdate(!notifyUpdate))
+                    }
+                } catch (error) {
+                    console.log(error, 'notification api error')
                 }
-            } catch (error) {
-                console.log(error, 'notification api error')
-            }
 
-        }).catch((err) => {
-            navigate('/error')
-        })
+            }).catch((err) => {
+                navigate('/error')
+            })
         // },1000)
         // // const userId = user.id
         // const id = { postId, userId }
@@ -350,14 +351,14 @@ const PostFormCard = ({ socket }: Socket_io) => {
         viewProfileDetails(userId)
     }, [user, commentModal])
 
-    const viewProfileDetails = async (userId:any) => {
+    const viewProfileDetails = async (userId: any) => {
         const viewProfileDetailsResponce = await view_Profile_Details(userId)
         setProfileDetails(viewProfileDetailsResponce)
         refetch()
-     }
+    }
 
-     console.log("nnnnnnnnnnnnnnnnnnnnnnnnnn",profileDetails);
-     
+    console.log("nnnnnnnnnnnnnnnnnnnnnnnnnn", profileDetails);
+
 
     // FOLLOW FRIEND
 
@@ -398,7 +399,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
     }, [user, followUser,])
 
-    const ViewAllFollowing = async(userId: any) => {
+    const ViewAllFollowing = async (userId: any) => {
         // axiosinstance.get("/viewallfollowing/" + userId, {
         //     headers: {
         //         "x-access-token": localStorage.getItem("token"),
@@ -442,17 +443,17 @@ const PostFormCard = ({ socket }: Socket_io) => {
         //     // navigate('error')
         //     console.log(err);
         // }
-       followingCounts(currentUserId)
+        followingCounts(currentUserId)
 
     }, [currentUserId, viewAllFollowing])
 
-    const followingCounts = async (currentUserId:any) => {
+    const followingCounts = async (currentUserId: any) => {
         const ViewAllCounts = await following_count(currentUserId)
         setfFollowing(ViewAllCounts.count.following)
         setFollowers(ViewAllCounts.count.followers)
     }
     // console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",following);
-    
+
 
 
     //REPORT 
@@ -483,51 +484,60 @@ const PostFormCard = ({ socket }: Socket_io) => {
         <>
             <div className='lg:w-4/5 xl:lg:w-3/5  w-1/2 sm:w-full  '>
                 <div className='max-h-screen overflow-y-scroll scroll-smooth scrollbar-none pb-24'>
-                    <div className='shadow-md rounded-3xl  p-4 mb-5 bg-[#2A2A2A] text-white   '>
-                        {profileDetails?.map((item: any, index: number) => (
-                            <div className='flex gap-3 '>
-                                <div>
-                                    <div className='w-12 h-12 rounded-xl overflow-hidden mt-2'>
-                                        {profileDetails[0]?.Images ?
-                                        
-                                            <img className='' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
-                                            :
-                                            <>
-                                                <div className='pt-1'>
-                                                    <img className=" mx-auto  w-9 justify-content-center h-9 rounded-full ring-2 ring-gray-300" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
-                                                </div>
-                                            </>
-                                        }
+                    {!isLoading ?
+                        <>
+                            <div className='shadow-md rounded-3xl  p-4 mb-5 bg-[#2A2A2A] text-white   '>
+                                {profileDetails?.map((item: any, index: number) => (
+                                    <div className='flex gap-3 '>
+                                        <div>
+                                            <div className='w-12 h-12 rounded-xl overflow-hidden mt-2'>
+                                                {profileDetails[0]?.Images ?
 
+                                                    <img className='' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
+                                                    :
+                                                    <>
+                                                        <div className='pt-1'>
+                                                            <img className=" mx-auto  w-9 justify-content-center h-9 rounded-full ring-2 ring-gray-300" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
+                                                        </div>
+                                                    </>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <textarea className='rounded-xl grow p-1 pl-5 mt-2 bg-[#111111] h-12 ' placeholder={'What on your mind!!!'} />
                                     </div>
-                                </div>
-                                <textarea className='rounded-xl grow p-1 pl-5 mt-2 bg-[#111111] h-12 ' placeholder={'What on your mind!!!'} />
-                            </div>
-                        ))}
+                                ))}
 
-                        <div className='flex gap-5 items-center mt-5 '>
-                            <div className=''>
-                                <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1 '>
-                                    <FcStackOfPhotos />
-                                    Photo</button>
-                            </div>
-                            {/* <div className=''>
+                                <div className='flex gap-5 items-center mt-5 '>
+                                    <div className=''>
+                                        <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1 '>
+                                            <FcStackOfPhotos />
+                                            Photo</button>
+                                    </div>
+                                    {/* <div className=''>
                                 <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1'>
                                     <FcVideoCall />
                                     Video</button>
                             </div> */}
-                            <div className='grow text-right'>
-                                <button className='text-black bg-[#FFFF1A] px-6 py-1 rounded-xl'
-                                    onClick={() => setPostModal(true)}
-                                >
-                                    Post
-                                </button>
+                                    <div className='grow text-right'>
+                                        <button className='text-black bg-[#FFFF1A] px-6 py-1 rounded-xl'
+                                            onClick={() => setPostModal(true)}
+                                        >
+                                            Post
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                        :
+                        <>
+                            <SkeletonElement />
+                        </>
+                    }
+
 
                     {/* MAIN POST */}
-                    {data ?
+                    {!isLoading ?
                         <>
                             {query?.map((post: any, index: number) => (<>
                                 <div key={index} className='shadow-md rounded-3xl  p-4 mb-5 bg-[#2A2A2A] text-white  '>
@@ -631,7 +641,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                             {
                                                 post.likes.includes(userIdData) ?
                                                     <>
-                                                        <button className='i' onClick={() =>UnlikePost (post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeart size={26} /></button>
+                                                        <button className='i' onClick={() => UnlikePost(post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeart size={26} /></button>
                                                     </>
                                                     :
                                                     <>
@@ -654,9 +664,12 @@ const PostFormCard = ({ socket }: Socket_io) => {
                         </>
                         :
                         <>
-                            <SkeletonElement />
+                            <MainSkeleton />
                         </>
                     }
+
+
+
 
                     {/* <div className='pt-10 bg-red-500'>hello</div> */}
                 </div>

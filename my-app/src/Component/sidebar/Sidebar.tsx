@@ -15,6 +15,7 @@ import Search from '../../Pages/userpages/search/Search';
 import { useSelector } from 'react-redux';
 import axiosinstance from '../../axios/axiosinstance';
 import { get_notification_count, get_Notofication } from '../../services/UserApi';
+import SidebarSkeleton from '../../skeleton/SidebarSkeleton';
 
 
 const Sidebar = () => {
@@ -26,6 +27,7 @@ const Sidebar = () => {
     const [open, setOpen] = useState<boolean>(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
     const [notificationCount, setNotoficationCount] = useState()
+    const [loading, setLoading] = useState(false)
 
     const [searchOpen, setSearchOpen] = useState(false)
 
@@ -60,6 +62,9 @@ const Sidebar = () => {
 
     const getNofification = async () => {
         const seeAllNotification = await get_Notofication()
+        if (seeAllNotification) {
+            setLoading(true)
+        }
     }
 
     //NOTIFICATION COUNT
@@ -83,8 +88,8 @@ const Sidebar = () => {
     }, [notifyUpdate])
 
     const notificationCountAll = async () => {
-       const get_allNotificationCountAll = await get_notification_count()
-       setNotoficationCount(get_allNotificationCountAll.length)
+        const get_allNotificationCountAll = await get_notification_count()
+        setNotoficationCount(get_allNotificationCountAll.length)
     }
 
 
@@ -93,96 +98,106 @@ const Sidebar = () => {
     const nonActiveElement = 'flex gap-4 py-4 items-center cursor-pointer hover:bg-[#1E1E1E] hover:opacity-70 -mx-4 px- my-2  rounded-md transition-all hover:scale-110  hover:shadow-md hover:shadow-[#585858]';
     return (
         <>
-            <div className='xl:w-1/5 hidd xl:max-w-[280px] xl:min-w-[270px]  '>
-                <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[270px] h-[643px] '>
-                    <div className='px-10 text-lg pt-5 pb-7 '>
-                        <Link to="/home">
-                            <div className={nonActiveElement} >
+            {loading ?
+                <>
+                    <div className='xl:w-1/5 hidd xl:max-w-[280px] xl:min-w-[270px]  '>
+                        <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[270px] h-[643px] '>
+                            <div className='px-10 text-lg pt-5 pb-7 '>
+                                <Link to="/home">
+                                    <div className={nonActiveElement} >
 
-                                <HiHome size={25} />
-                                <div className='hidden xl:block '>
-                                    Home
+                                        <HiHome size={25} />
+                                        <div className='hidden xl:block '>
+                                            Home
+                                        </div>
+                                    </div>
+                                </Link>
+                                <div className={nonActiveElement} onClick={() => setSearchOpen(true)}>
+                                    <BiSearch size={25} />
+                                    <div className='hidden xl:block'>
+                                        Search
+                                    </div>
+
                                 </div>
-                            </div>
-                        </Link>
-                        <div className={nonActiveElement} onClick={() => setSearchOpen(true)}>
-                            <BiSearch size={25} />
-                            <div className='hidden xl:block'>
-                                Search
-                            </div>
+                                <Link to="/message">
+                                    <div className={nonActiveElement}>
+                                        <AiOutlineMessage size={25} />
+                                        <div className='hidden xl:block'>
+                                            Message
+                                        </div>
 
+                                    </div>
+                                </Link>
+
+                                <div className={nonActiveElement} onClick={() => setOpen(true)}  >
+                                    <div className='text-white relative'>
+                                        <MdOutlineNotifications size={25} />
+                                        {notificationCount ?
+                                            <>
+                                                <div className=' absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center'>
+                                                    <p className='text-xs text-white font-semibold'>
+                                                        {notificationCount}
+                                                    </p>
+                                                </div>
+                                            </>
+                                            :
+                                            <>
+
+                                            </>
+                                        }
+
+
+                                    </div>
+                                    <div className='hidden xl:block'>
+                                        Notification
+                                    </div>
+                                </div>
+
+                                <Link to="/profile">
+                                    <div className={nonActiveElement}>
+                                        <CgProfile size={25} />
+                                        <div className='hidden xl:block'>
+                                            Profile
+                                        </div>
+
+                                    </div>
+                                </Link>
+                                <div className={nonActiveElement}
+                                    onClick={logout}
+                                >
+                                    <FiLogOut size={25} />
+                                    <div className='hidden xl:block'>
+                                        Logout
+                                    </div>
+
+                                </div>
+                                <Notifi
+                                    open={open}
+                                    setOpen={setOpen}
+                                    onClose={handleOnClose}
+                                    title="Item Details"
+                                    isOpen={isOpen}
+                                >
+                                </Notifi>
+
+                                <Search
+                                    open={searchOpen}
+                                    setSearchOpen={setSearchOpen}
+                                    onClose={handleSearchOnClose}
+                                    tele="hi there"
+                                >
+                                </Search>
+                            </div>
                         </div>
-                        <Link to="/message">
-                            <div className={nonActiveElement}>
-                                <AiOutlineMessage size={25} />
-                                <div className='hidden xl:block'>
-                                    Message
-                                </div>
-
-                            </div>
-                        </Link>
-
-                        <div className={nonActiveElement} onClick={() => setOpen(true)}  >
-                            <div className='text-white relative'>
-                                <MdOutlineNotifications size={25} />
-                                {notificationCount ? 
-                                <>
-                                 <div className=' absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center'>
-                                    <p className='text-xs text-white font-semibold'>
-                                       {notificationCount}
-                                    </p>
-                                </div>
-                                </>
-                                 :
-                                 <>
-                                 
-                                 </>
-                            }
-                               
-
-                            </div>
-                            <div className='hidden xl:block'>
-                                Notification
-                            </div>
-                        </div>
-
-                        <Link to="/profile">
-                            <div className={nonActiveElement}>
-                                <CgProfile size={25} />
-                                <div className='hidden xl:block'>
-                                    Profile
-                                </div>
-
-                            </div>
-                        </Link>
-                        <div className={nonActiveElement}
-                            onClick={logout}
-                        >
-                            <FiLogOut size={25} />
-                            <div className='hidden xl:block'>
-                                Logout
-                            </div>
-
-                        </div>
-                        <Notifi
-                            open={open}
-                            setOpen={setOpen}
-                            onClose={handleOnClose}
-                            title="Item Details"
-                            isOpen={isOpen}
-                        >
-                        </Notifi>
-
-                        <Search
-                            open={searchOpen}
-                            setSearchOpen={setSearchOpen}
-                            onClose={handleSearchOnClose}
-                            tele="hi there"
-                        >
-                        </Search>
                     </div>
-                </div>
-            </div>
+                </>
+                :
+                <>
+                    <SidebarSkeleton />
+                </>
+            }
+
+
 
 
         </>

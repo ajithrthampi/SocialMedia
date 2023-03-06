@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL:"https://seechat.onrender.com/"
-    // baseURL:"http://localhost:4001"
+    // baseURL:"https://seechat.onrender.com/"
+        
+    baseURL:"http://localhost:4001" 
 })
 axios.interceptors.request.use(
     function(config){
@@ -16,4 +17,4 @@ export default  {
     get:instance.get,
     post:instance.post,
     delete:instance.delete,
-}
+}                                                                                                                                                   

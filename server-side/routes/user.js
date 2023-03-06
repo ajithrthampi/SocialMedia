@@ -13,6 +13,7 @@ const createpost = require('../models/posts')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
+
 router.post('/signup',userController.doSignup)
 
 router.get('/isUserAuth', verifyJWT , userController.userAuth)
