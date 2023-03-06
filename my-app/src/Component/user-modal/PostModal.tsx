@@ -140,7 +140,9 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
               
                
            }).catch((err) => {
-               navigate('/error')
+            //    navigate('/error')
+            console.log(err);
+            
            })
        }
     },[ isLoading ,state])
