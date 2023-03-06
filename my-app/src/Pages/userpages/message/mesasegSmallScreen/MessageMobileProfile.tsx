@@ -9,6 +9,7 @@ import MessageMobileCategory from './MessageMobileCategory'
 import { io } from "socket.io-client"
 import jwtDecode from 'jwt-decode'
 import { useSelector } from 'react-redux'
+import postsImages from '../../../../services/imageApi'
 
 interface Socket_io {
     socket: any
@@ -189,7 +190,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                             />
                             <div className='flex gap-2'>
                                 <div>
-                                {chatUserPicture ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${chatUserPicture}`} />
+                                {chatUserPicture ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${chatUserPicture}`} />
                                                     :
                                                     <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
                                                 }

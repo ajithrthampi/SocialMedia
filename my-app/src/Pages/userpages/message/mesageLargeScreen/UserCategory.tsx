@@ -1,5 +1,8 @@
 import React,{useState,useEffect} from 'react'
+import { useDispatch } from 'react-redux'
 import axiosinstance from '../../../../axios/axiosinstance'
+import { messageUserName } from '../../../../redux/store/features/nameSlice'
+import postsImages from '../../../../services/imageApi'
 
 
 interface ChategoryUser {
@@ -10,8 +13,9 @@ interface ChategoryUser {
 
 const UserCategory = ({ conversations, currentUser }:ChategoryUser) => {
     // console.log("Category usermmmmmmmmmmmmmmmmmmmm",currentUser);
-    
+     const dispatch = useDispatch()
     const [users, setUser] = useState<any>()
+   
 
     useEffect(() => {
         const friendId = conversations.members.find((m:any) => m !== currentUser)
@@ -23,13 +27,15 @@ const UserCategory = ({ conversations, currentUser }:ChategoryUser) => {
             }).then((res) => {
 
                 setUser(res.data)
+                dispatch(messageUserName(res.data))
             })
         } catch (err) {
             console.log("userChategory,,.",err);  
         }
     
     }, [currentUser,conversations])
-    // console.log(users);
+    // console.log("54454545454545454545454.5.45.4.544.5.54.54.",users);
+
     
  
     
@@ -39,7 +45,7 @@ const UserCategory = ({ conversations, currentUser }:ChategoryUser) => {
                 <div className='flex gap-3 p-3 justify-between'>
                     <div className='flex gap-4'>
                         <div className='lg:w-12 lg:h-12 md:w-8 md:h-8 rounded-full overflow-hidden cursor-pointer'>
-                            {users && users.Images ?  <img src={`/images/${users.Images}`} />
+                            {users && users.Images ?  <img src={`${postsImages}/${users.Images}`} />
                             :
                             <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profilepic" />
                             }

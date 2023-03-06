@@ -21,6 +21,7 @@ import Notifi from '../../Pages/userpages/notification/Notification';
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import "./navbar.css"
 import { search_user, view_Profile_Details } from '../../services/UserApi';
+import postsImages from '../../services/imageApi';
 
 
 
@@ -212,7 +213,7 @@ const Navbar = () => {
                                                         <div>
                                                             <img
                                                                 onClick={() => handleFriendProfile(item)}
-                                                                className=" w-8 h-8 rounded-full object-cover  dark:ring-gray-500" src={`/images/${item?.Images}`} alt="Bordered avatar" />
+                                                                className=" w-8 h-8 rounded-full object-cover  dark:ring-gray-500" src={`${postsImages}/${item?.Images}`} alt="Bordered avatar" />
                                                         </div>
                                                         <div>
                                                             <div className='text-xs text-gray-300'>{item?.username}</div>
@@ -320,7 +321,7 @@ const Navbar = () => {
                                 {profileDetails[0].Images ?
                                     <>
                                         <div className='w-8 h-8 rounded-xl ml-1  overflow-hidden cursor-pointer'>
-                                            <img src={`/images/${profileDetails[0].Images}`} alt="" />
+                                            <img src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
                                         </div>
                                     </>
                                     :

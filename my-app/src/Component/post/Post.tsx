@@ -27,23 +27,24 @@ const Post = () => {
     const [postPassDetails, setPostPassDetails] = useState([])
     const [reportModal, setReportModal] = useState<boolean>(false)
     const [reportState, setReportState] = useState()
+    const [state, setState] = useState<any>()
     const dispatch = useDispatch()
 
     if (user) {
         var userId = user.id
     }
 
-    const { data, isLoading, refetch } = useQuery(["Id"], () =>
-        // return axiosinstance.get("viewpost", {
-        //     headers: {
-        //         "x-access-token": localStorage.getItem("token"),
-        //     },
-        // }).then((res) => res.data)
-        //     .catch((err) => {
-        //         navigate("/error")
-        //     })
-        view_post()
-    );
+    const { data, isLoading, refetch } = useQuery(["Id"], () =>{
+        return axiosinstance.get("viewpost", {
+            headers: {
+                "x-access-token": localStorage.getItem("token"),
+            },
+        }).then((res) => res.data)
+            .catch((err) => {
+                navigate("/error")
+            })
+        // view_post()
+        });
 
     // LIKE POST
     const likePost = async (postId: string, username: string, type: number, images: any) => {

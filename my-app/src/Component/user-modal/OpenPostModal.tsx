@@ -10,6 +10,7 @@ import EachPostModalDetails from './EachPostModalDetails'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import jwtDecode from 'jwt-decode'
 import { BiDotsVerticalRounded } from 'react-icons/bi'
+import postsImages from '../../services/imageApi'
 
 interface openPost {
     isVisible: boolean
@@ -165,10 +166,10 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                md:flex justify-center items-center md:pt-20 '>
 
                 <div className='w-[1000px] fle flex-col hidden md:block'>
-                    <button className='text-white text-xl place-self-end'
+                    {/* <button className='text-white text-xl place-self-end'
                         onClick={() => onClose()} >
                         <IoMdClose size={25} />
-                    </button>
+                    </button> */}
                     <div className='bg-[#191819]  rounded text-white'>
                         <div className='p-4 ' >
                             <div onClick={() => onClose()} className="cursor-pointer" >
@@ -184,7 +185,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                 <div className="aspect-w-16 aspect-h-16 ">
                                     <div>
                                         <img
-                                            src={`/images/${postPassDetails.Images}`}
+                                            src={`${postsImages}/${postPassDetails.Images}`}
                                             alt="uploaded image"
                                             className='w-full h-full object-cover'
                                         />

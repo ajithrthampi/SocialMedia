@@ -3,6 +3,7 @@ import { PersonSlice } from './features/userSlice'
 import storage from 'redux-persist/lib/storage'
 import { persistReducer } from 'redux-persist'
 import { combineReducers } from '@reduxjs/toolkit'
+import { UserPersonName } from './features/nameSlice'
 
 const persistConfig = {
   key: "root",
@@ -11,7 +12,8 @@ const persistConfig = {
 }
 
 const reducer = combineReducers({
-  userDetails:PersonSlice.reducer
+  userDetails:PersonSlice.reducer,
+  userMeName:UserPersonName.reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer)

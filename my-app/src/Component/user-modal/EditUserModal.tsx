@@ -8,6 +8,7 @@ import { UserContext } from '../../Pages/context/Context';
 import axios from 'axios';
 import axiosinstance from '../../axios/axiosinstance';
 import jwtDecode from 'jwt-decode';
+import postsImages from '../../services/imageApi';
 
 interface editmodal {
     isVisible: boolean
@@ -96,6 +97,8 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
 
                 console.log("..................................................");
                 console.log("reponse....", response.data);
+                // setImage(" ")
+                // setform(" ")
             }).catch((err) => {
                 // navigate('/error')'
                 console.log(err);
@@ -113,6 +116,7 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
         event.preventDefault()
         setIsLoading(true)
         setUpdatePicture(false)
+     
     }
 
     //ONCHANGE INPUT
@@ -197,7 +201,7 @@ const EditUserModal = ({ isVisible, onClose, children }: editmodal) => {
                                         <div className='  rounded-full  cursor-pointer'>
                                             {/* <img className='rounded-full md:w-36 md:h-36 w-20 h-20    object-cover overflow-hidden' src="https://images.pexels.com/photos/4612113/pexels-photo-4612113.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
                                             {profileDetails && profileDetails ? <>
-                                                <img className='w-36 h-36 box-border   rounded-full object-cover ' src={`/images/${profileDetails[0].Images}`} alt="" />
+                                                <img className='w-36 h-36 box-border   rounded-full object-cover ' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
                                             </>
                                                 :
                                                 <>

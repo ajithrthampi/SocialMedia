@@ -19,6 +19,7 @@ import { openModalFollowers, updatePostDetails } from '../../redux/store/feature
 import PostModal from '../user-modal/PostModal';
 import { followersListss, followingListss, following_count, post_details, viewProfilePostss, view_post, view_Profile_Details } from '../../services/UserApi';
 import SkeletonElement from '../../skeleton/SkeletonElement';
+import postsImages from '../../services/imageApi';
 
 
 const UserProfile = () => {
@@ -406,7 +407,7 @@ const UserProfile = () => {
                                         <div className='  rounded-full  cursor-pointer'>
                                             {profileDetails[0].Images ?
                                                 <>
-                                                    <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`/images/${profileDetails[0]?.Images}`} alt="" />
+                                                    <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`${postsImages}/${profileDetails[0]?.Images}`} alt="" />
                                                 </>
                                                 :
                                                 <>
@@ -480,7 +481,7 @@ const UserProfile = () => {
                                                     <div className='h-64  overflow-hidden'>
                                                         {/* <img className='object-cover h-64 w-full' src="https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
 
-                                                        <img className='object-cover h-64 w-full' src={`/images/${item?.Images}`} alt="" />
+                                                          <img className='object-cover h-64 w-full' src={`${postsImages}/${item?.Images}`} alt="" />
 
                                                     </div>
                                                 </div>

@@ -5,6 +5,7 @@ import axiosinstance from '../../../../axios/axiosinstance';
 import moment from 'moment';
 import { useDispatch } from 'react-redux';
 import { chatUserProfile } from '../../../../redux/store/features/userSlice';
+import postsImages from '../../../../services/imageApi';
 
 interface modal {
 
@@ -56,7 +57,7 @@ const MessageMobile = ({ message, own, pic }: modal) => {
                                         <div
                                             className="flex items-center justify-center h-10 w-10 rounded-full  flex-shrink-0"
                                         >
-                                            {pic ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${pic}`} />
+                                            {pic ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${pic}`} />
 
                                                 : <img className='rounded-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
                                             }
@@ -79,7 +80,7 @@ const MessageMobile = ({ message, own, pic }: modal) => {
                                             <div
                                                 className="flex items-center justify-center h-10 w-10 rounded-full  flex-shrink-0"
                                             >
-                                                {profilepic ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${profilepic}`} />
+                                                {profilepic ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${profilepic}`} />
                                                     :
                                                     <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
                                                 }

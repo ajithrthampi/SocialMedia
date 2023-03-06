@@ -35,7 +35,7 @@ const Signup = () => {
     }).then((response) => {
       console.log(response, 'response jwt');
       if (!response.data.auth) {
-        navigate('/user/home')
+        // navigate('/user/home')
       }
     })
   }

@@ -1,8 +1,10 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect, useContext} from 'react'
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import "./userChat.css"
 import axiosinstance from '../../../../axios/axiosinstance';
+import postsImages from '../../../../services/imageApi';
+import { UserContext } from '../../../context/Context';
 
 interface UserChat {
     message: any
@@ -12,11 +14,15 @@ interface UserChat {
 
 const Userchat = ({ message, own, pic }: UserChat) => {
     
-    const [profilepic, setProfilePic] = useState<any>()
+    const [profilepicc, setProfilePic] = useState<any>()
     const navigate = useNavigate() 
 
     const Id = message.senderId
-    // console.log("idconst Id = message.senderId",Id);
+    console.log("idconst Id = message.senderId",message);
+    const { user } = useContext(UserContext)
+
+    console.log("``````````````````````````````````````````````````````23```",user?.profilePic);
+    
     
     useEffect(() => {
         try {
@@ -34,6 +40,8 @@ const Userchat = ({ message, own, pic }: UserChat) => {
             navigate('/error')
         }
     }, [message, own, pic ])
+    // console.log("23234-------------------------==============================================",profilepic);
+    
     
 
 
@@ -100,7 +108,10 @@ const Userchat = ({ message, own, pic }: UserChat) => {
                                     <div
                                         className="flex items-center justify-center h-10 w-10 rounded-full  flex-shrink-0"
                                     >
-                                        {pic ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${pic}`} />
+                                        {pic ? <img className='rounded-full w-10 h-10 object-cover' 
+                                           src={`${postsImages}/${user?.profilePic}`}
+                                        //    src={`${postsImages}/${user?.profilePic}`}
+                                         />
                                         
                                         :<img className='rounded-full' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
                                         }
@@ -108,7 +119,7 @@ const Userchat = ({ message, own, pic }: UserChat) => {
                                     <div
                                         className=" mr-3 text-sm bg-[#FFFF1A] py-2 px-4 shadow rounded-xl"
                                     >
-                                        <div className='text-gray-600 font-semibold'>{message.text}</div>
+                                        <div className='text-gray-600 font-semibold'>{message.text} </div>
 
                                     </div>
 
@@ -123,7 +134,7 @@ const Userchat = ({ message, own, pic }: UserChat) => {
                                         <div
                                             className="flex items-center justify-center h-10 w-10 rounded-full  flex-shrink-0"
                                         >
-                                            {profilepic ? <img className='rounded-full w-10 h-10 object-cover' src={`/images/${profilepic}`} />
+                                            {profilepicc ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${profilepicc}`} />
                                             : 
                                             <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
                                             } 

@@ -17,6 +17,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import axiosinstance from '../../axios/axiosinstance';
+import Swal from 'sweetalert2';
 
 
 
@@ -128,7 +129,15 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
            }).then((response) => {
                // setChange(response)
             //    setImages("")
+            Swal.fire({
+                // position: 'top-end',
+                icon: 'success',
+                title: 'Your post has been added',
+                showConfirmButton: false,
+                timer: 2000
+              })
                onClose()
+              
                
            }).catch((err) => {
                navigate('/error')

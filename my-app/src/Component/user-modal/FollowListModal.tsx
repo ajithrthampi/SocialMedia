@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux/es/hooks/useDispatch'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
 import { openModalFollowers, updateFollowData } from '../../redux/store/features/userSlice'
+import postsImages from '../../services/imageApi'
 
 interface followFollowing {
     isVisible: boolean
@@ -119,7 +120,7 @@ const FollowListModal = ({ isVisible, onClose, followersLists, stateFollowers }:
                                         <div>
                                             {item?.list?.Images ?
                                                 <>
-                                                    <img src={`/images/${item?.list?.Images}`} alt="My profile"
+                                                    <img src={`${postsImages}/${item?.list?.Images}`} alt="My profile"
                                                         className="w-12 h-12 rounded-full order-1 object-cover" />
                                                 </>
                                                 :

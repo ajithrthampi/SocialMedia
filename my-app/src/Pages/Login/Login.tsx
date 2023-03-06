@@ -84,7 +84,7 @@ const Login = () => {
           
           Toast.fire({
             icon: 'success',
-            title: `Signed in successfully ${userIid}` 
+            title: `Signed in successfully` 
           })
           navigate('/home')
         } else {

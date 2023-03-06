@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axiosinstance from '../../../../axios/axiosinstance'
+import postsImages from '../../../../services/imageApi'
 
 interface ChategoryUser {
     conversations: any
@@ -40,7 +41,7 @@ const MessageMobileCategory = ({ conversations, currentUser }: ChategoryUser) =>
                 <div className='w-12 h-12  rounded-full overflow-hidden cursor-pointer'>
                     {users?.Images ? 
                     <>
-                     <img src={`/images/${users?.Images}`} alt="profilepic" />
+                     <img src={`${postsImages}/${users?.Images}`} alt="profilepic" />
                     </>
                      :
                      <>

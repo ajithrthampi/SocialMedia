@@ -2,6 +2,7 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL:"https://seechat.onrender.com/"
+    // baseURL:"http://localhost:4001"
 })
 axios.interceptors.request.use(
     function(config){

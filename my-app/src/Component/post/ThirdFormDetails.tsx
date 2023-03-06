@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { passfriendDetails } from '../../redux/store/features/userSlice'
 import { useDispatch } from 'react-redux'
 import { following_count, follow_unfollow, users_users, view_all_following } from '../../services/UserApi'
+import postsImages from '../../services/imageApi'
 
 interface details {
     profileDetails: any
@@ -178,7 +179,7 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
                                     {/* <img className='object-cover' src="https://images.pexels.com/photos/5397723/pexels-photo-5397723.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
                                     {profileDetails[0].Images ?
 
-                                        <img className='object-cover' src={`/images/${profileDetails[0].Images}`} alt="" />
+                                        <img className='object-cover' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
                                         :
                                         <>
                                             <img className='object-cover' src="https://images.pexels.com/photos/5397723/pexels-photo-5397723.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
@@ -261,7 +262,7 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
                                             <div className='w-12 h-12 rounded-full overflow-hidden cursor-pointer'>
                                                 {/* <img src="https://images.pexels.com/photos/4612113/pexels-photo-4612113.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
                                                 {item.Images ? <>
-                                                    <img className='w-10 h-10 box-border    rounded-full object-cover ' onClick={() => handleFriendProfile(item)} src={`/images/${item.Images}`} alt="" />
+                                                    <img className='w-10 h-10 box-border    rounded-full object-cover ' onClick={() => handleFriendProfile(item)} src={`${postsImages}/${item.Images}`} alt="" />
                                                 </>
                                                     :
                                                     <>

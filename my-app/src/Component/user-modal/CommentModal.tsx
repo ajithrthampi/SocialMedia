@@ -11,6 +11,7 @@ import { MdDelete } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
+import postsImages from '../../services/imageApi'
 import { chat_user, comment_comment, get_comment, view_Profile_Details } from '../../services/UserApi'
 import DeleteModal from './DeleteModal'
 
@@ -214,7 +215,7 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                                 <div className="aspect-w-16 aspect-h-16 ">
                                     <div>
                                         <img
-                                            src={`/images/${postPassDetails.Images}`}
+                                            src={`${postsImages}/${postPassDetails.Images}`}
                                             alt="uploaded image"
                                             className='w-full h-full object-cover' />
                                     </div>
@@ -260,7 +261,7 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                                                     <div key={index} className='flex'>
                                                         <div key={index} className=' flex items-cente gap-3 pl-3 p-2' >
                                                             <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                                                <img src={`/images/${comment.commentList.Images}`} alt="" />
+                                                                <img src={`${postsImages}/${comment.commentList.Images}`} alt="" />
                                                             </div>
                                                             <div className='text-xs font-bold space-y-2 '>
                                                                 <div className=''>

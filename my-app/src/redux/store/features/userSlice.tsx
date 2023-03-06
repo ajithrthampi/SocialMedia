@@ -18,6 +18,7 @@ interface PersonState {
   notifi:boolean
   followUnfollowUpdation:boolean
   chatProfilePic:any
+  messageName:any
 
 }
 
@@ -33,7 +34,8 @@ const initalState:PersonState ={
    PostDetails:[],
    notifi:false,
    followUnfollowUpdation:false,
-   chatProfilePic:[]
+   chatProfilePic:[],
+   messageName:[]
 }
 
 export const PersonSlice = createSlice({
@@ -67,19 +69,19 @@ export const PersonSlice = createSlice({
         },
         closeDeleteModal:(state, action) =>{
             state.value.closeDeleteUpdateMOdal = action.payload
-            console.log("0000000000000000000000000000000000000000000000000000", state.value.closeDeleteUpdateMOdal);
+            // console.log("0000000000000000000000000000000000000000000000000000", state.value.closeDeleteUpdateMOdal);
         },
         updateFollowData:(state, action) => {
             state.value.updateFollowCount = action.payload
-            console.log(" state.value.updateFollowCoun.,.,.,.,.," ,state.value.updateFollowCount);
+            // console.log(" state.value.updateFollowCoun.,.,.,.,.," ,state.value.updateFollowCount);
         },
         updateCaptionIn:(state, action) => {
             state.value.updateCaptionModal = action.payload;
-            console.log("state.value.updateCaptionModal   state.value.updateCaptionModal",state.value.updateCaptionModal);
+            // console.log("state.value.updateCaptionModal   state.value.updateCaptionModal",state.value.updateCaptionModal);
         },
         updatePostDetails:(state, action) => {
             state.value.PostDetails = action.payload
-            console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);   
+            // console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);   
         },
         NotifyUpdate: (state, action) => {
             state.value.notifi = action.payload
@@ -88,13 +90,17 @@ export const PersonSlice = createSlice({
         },
         followUpdation:(state, action) => {
             state.value.followUnfollowUpdation = action.payload;
-            console.log(" follow upation .,.,.,.", state.value.followUnfollowUpdation);
+            // console.log(" follow upation .,.,.,.", state.value.followUnfollowUpdation);
         },
         chatUserProfile:(state, action) => {
             state.value.chatProfilePic = action.payload;
-            console.log("121212121212121212212121121212",state.value.chatProfilePic);
+            // console.log("121212121212121212212121121212",state.value.chatProfilePic);
+        },
+        // messageUserName: (state, action) => {
+        //     state.value.messageName = action.payload;
+        //     // console.log("--------------------=-=-=-mesage", state.value.messageName);
             
-        }
+        // }
     }  
 })
 export default PersonSlice.reducer;
@@ -111,5 +117,6 @@ export const
     NotifyUpdate,
     followUpdation,
     chatUserProfile,
+    // messageUserName
 }
  = PersonSlice.actions

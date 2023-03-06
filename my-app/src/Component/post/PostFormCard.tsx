@@ -36,6 +36,9 @@ import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import { NotifyUpdate, passfriendDetails } from '../../redux/store/features/userSlice';
 import { useSelector } from 'react-redux';
 import { add_notification, following_count, like_post, users_users, view_all_following, view_post, view_Profile_Details } from '../../services/UserApi';
+// import Swal from 'sweetalert2';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+import postsImages from '../../services/imageApi';
 
 
 
@@ -68,6 +71,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
     const [followers, setFollowers] = useState<any>()
     const [reportState, setReportState] = useState()
     const navigate = useNavigate()
+    const [query, setQuery] = useState<any>()
     const [time, setTime] = useState<any>()
     const { user } = useContext(UserContext)
     const dispatch = useDispatch()
@@ -109,17 +113,19 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
     // FETCHING POST
 
-    const { data, isLoading, refetch } = useQuery(["Id"], () => 
-        // return axiosinstance.get("viewpost", {
-        //     headers: {
-        //         "x-access-token": localStorage.getItem("token"),
-        //     },
-        // }).then((res) => res.data)
-        //     .catch((err) => {
-        //         navigate("/error")
-        //     })
-        view_post()
-    );
+    const { data, isLoading, refetch } = useQuery(["Id"], () => {
+        return axiosinstance.get("viewpost", {
+            headers: {
+                "x-access-token": localStorage.getItem("token"),
+            },
+        }).then((res) => {
+            setQuery(res.data)
+        })
+            .catch((err) => {
+                navigate("/error")
+            })
+        // view_post()
+});
     // console.log("jquery dat", data)
 
     // SUGGESTION USRER DETAILS
@@ -171,6 +177,23 @@ const PostFormCard = ({ socket }: Socket_io) => {
         // })
         const like_Post = await like_post(id)
         .then(async (response) => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'bottom-left',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'success',
+                title: 'You liked this post'
+              })
+
             socket?.emit("sendNotification", details)
             let notifyDetails = {
                 receiverId: postOwnerId,
@@ -205,19 +228,83 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
     //  UNLIKE POST
 
-    const UnlikePost = (postId: string, username: string, type: number) => {
-        // const userId = user.id
-        const id = { postId, userId }
+    const UnlikePost = async(postId: string, username: string, type: number, Images: any, postOwnerId: any, DP: any) => {
 
-        axios.post("http://localhost:4001/likepost", id, {
-            headers: {
-                "x-access-token": localStorage.getItem("token"),
-            },
-        }).then((response) => {
+        const userId = user?.id
+        const id = { postId, userId }
+        // setTimeout( async () => {
+        let details = {
+            receiverId: postOwnerId,
+            userName: username,
+            type: "liked",
+            userDp: DP,
+            read: false
+        }
+        // axiosinstance.post("/likepost", id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // })
+        const like_Post = await like_post(id)
+        .then(async (response) => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'bottom-left',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer)
+                  toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+              })
+              
+              Toast.fire({
+                icon: 'success',
+                title: 'Removed like'
+              })
+
+            socket?.emit("sendNotification", details)
+            let notifyDetails = {
+                receiverId: postOwnerId,
+                senderId: userId,
+                postId: postId,
+                type: "liked",
+            }
             refetch()
+            // CREATING NOTIFICATION
+
+            try {
+                if (postOwnerId !== userId) {
+                    // await create_notification(notifyDetails)
+                    // axiosinstance.post("/addnotification",notifyDetails, {
+                    //     headers: {
+                    //         "x-access-token": localStorage.getItem("token"),
+                    //     },
+                    // })
+                    const get_Notification = await add_notification(notifyDetails)
+                    dispatch(NotifyUpdate(!notifyUpdate))
+                }
+            } catch (error) {
+                console.log(error, 'notification api error')
+            }
+
         }).catch((err) => {
             navigate('/error')
         })
+        // },1000)
+        // // const userId = user.id
+        // const id = { postId, userId }
+
+        // axios.post("http://localhost:4001/likepost", id, {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((response) => {
+        //     refetch()
+        // }).catch((err) => {
+        //     navigate('/error')
+        // })
 
     }
 
@@ -403,7 +490,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                     <div className='w-12 h-12 rounded-xl overflow-hidden mt-2'>
                                         {profileDetails[0]?.Images ?
                                         
-                                            <img className='' src={`/images/${profileDetails[0].Images}`} alt="" />
+                                            <img className='' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
                                             :
                                             <>
                                                 <div className='pt-1'>
@@ -424,11 +511,11 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                     <FcStackOfPhotos />
                                     Photo</button>
                             </div>
-                            <div className=''>
+                            {/* <div className=''>
                                 <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1'>
                                     <FcVideoCall />
                                     Video</button>
-                            </div>
+                            </div> */}
                             <div className='grow text-right'>
                                 <button className='text-black bg-[#FFFF1A] px-6 py-1 rounded-xl'
                                     onClick={() => setPostModal(true)}
@@ -442,13 +529,13 @@ const PostFormCard = ({ socket }: Socket_io) => {
                     {/* MAIN POST */}
                     {data ?
                         <>
-                            {data?.map((post: any, index: number) => (<>
+                            {query?.map((post: any, index: number) => (<>
                                 <div key={index} className='shadow-md rounded-3xl  p-4 mb-5 bg-[#2A2A2A] text-white  '>
                                     <div className="flex ">
                                         <div>
                                             <div>
                                                 <div className='w-10 h-10 rounded-full overflow-hidden cursor-pointer'>
-                                                    {post.userId.Images ? <img src={`/images/${post.userId.Images}`} alt="profilepic" />
+                                                    {post.userId.Images ? <img src={`${postsImages}/${post.userId.Images}`} alt="profilepic" />
                                                         : <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profilepic" />
                                                     }
 
@@ -536,7 +623,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                         </p>
                                         <div className='rounded-xl overflow-hidden mt-5'>
                                             {/* <img className='w-full object-cover max-h-[500px]' src="https://images.pexels.com/photos/161154/stained-glass-spiral-circle-pattern-161154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
-                                            <img className='w-full object-cover max-h-[400px]' src={`/images/${post.Images}`} alt="" />
+                                            <img className='w-full object-cover max-h-[400px]' src={`${postsImages}/${post.Images}`} alt="" />
                                         </div>
                                     </div>
                                     <div className='flex gap-8'>
@@ -544,7 +631,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                             {
                                                 post.likes.includes(userIdData) ?
                                                     <>
-                                                        <button className='i' onClick={() => likePost(post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeart size={26} /></button>
+                                                        <button className='i' onClick={() =>UnlikePost (post?._id, post?.userId.username, 1, post?.Images, post?.userId?._id, post?.userId?.Images)}><IoMdHeart size={26} /></button>
                                                     </>
                                                     :
                                                     <>
@@ -585,7 +672,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
             </PostModal>
 
-            <CommentModal postPassDetails={postPassDetails} data={data} onClose={() => setCommentModal(false)} isVisible={commentModal} >
+            <CommentModal postPassDetails={postPassDetails} data={query} onClose={() => setCommentModal(false)} isVisible={commentModal} >
 
             </CommentModal>
 
