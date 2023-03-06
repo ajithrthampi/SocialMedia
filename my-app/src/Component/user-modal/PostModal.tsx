@@ -138,6 +138,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
               })
                onClose()
               
+               console.log("Succedd");
                
            }).catch((err) => {
             //    navigate('/error')
