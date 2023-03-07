@@ -12,6 +12,7 @@ import { UserContext } from '../../context/Context'
 import { passfriendDetails } from '../../../redux/store/features/userSlice'
 import Post from '../../../Component/post/Post'
 import { search_user } from '../../../services/UserApi'
+import postsImages from '../../../services/imageApi'
 
 interface search {
   setSearchOpen: any
@@ -189,7 +190,7 @@ const { data } = useQuery(["Id"], () => {
                             {/* {data?.map((Post:any) => (
                               <> */}
                               <div>
-                              <img onClick={() => handleFriendProfile(item)} className=" w-14 h-14 rounded-full object-cover  dark:ring-gray-500" src={`/images/${item?.Images}`} alt="Bordered avatar" />
+                              <img onClick={() => handleFriendProfile(item)} className=" w-14 h-14 rounded-full object-cover  dark:ring-gray-500" src={`${postsImages}/${item?.Images}`} alt="Bordered avatar" />
                             </div> 
                               {/* </>
                             ))} */}

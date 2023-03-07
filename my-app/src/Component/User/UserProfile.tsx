@@ -21,6 +21,7 @@ import { followersListss, followingListss, following_count, post_details, viewPr
 import SkeletonElement from '../../skeleton/SkeletonElement';
 import postsImages from '../../services/imageApi';
 import ProfileSkeleton from '../../skeleton/ProfileSkeleton';
+import ProfileMobileSkeleton from '../../skeleton/ProfileMobileSkeleton';
 
 
 const UserProfile = () => {
@@ -297,103 +298,126 @@ const UserProfile = () => {
             <Navbar />
 
             {/* MOBILE SCREEN */}
+            {profileDetails ?
+                <>
 
-            <div className='md:hidden '>
-                <div className='max-h-screen overflow-y-scroll scrollbar-none space-y-5 '>
-                    <div className='md:hidden sm:px-10   pt- space-y-6' >
-                        {profileDetails?.map((item: any, index: number) => (
-                            <>
-                                <div className=' box-content h-auto  bg-[2A2A2A] rounded-3xl px-4 py-3'>
-                                    <div className=' grid grid-cols-3'>
-                                        <div>
-                                            {profileDetails[0].Images ?
-                                                <img className="p-1 mx-aut  w-20 justify-content-center h-20 rounded-full ring-1 object-cover
-                                             ring-gray-300 dark:ring-gray-500" src={`/images/${profileDetails[0].Images}`} alt="Bordered avatar" />
-                                                : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full
+
+                    <div className='md:hidden '>
+                        <div className='max-h-screen overflow-y-scroll scrollbar-none space-y-5 '>
+                            <div className='md:hidden sm:px-10   pt- space-y-6' >
+                                {profileDetails?.map((item: any, index: number) => (
+                                    <>
+                                        <div className=' box-content h-auto  bg-[2A2A2A] rounded-3xl px-4 py-3'>
+                                            <div className=' grid grid-cols-3'>
+                                                <div>
+                                                    {profileDetails[0].Images ?
+                                                        <img className="p-1 mx-aut  w-20 justify-content-center h-20 rounded-full ring-1 object-cover
+                                             ring-gray-300 dark:ring-gray-500" src={`${postsImages}/${profileDetails[0].Images}`} alt="Bordered avatar" />
+                                                        : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full
                                                  ring-2 ring-gray-300 dark:ring-gray-500"
-                                                    src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU'
-                                                    alt="Bordered avatar" />}
-                                        </div>
-                                        <div className='flex gap-8 pt-3'>
-                                            <div className='pl-6 text-white  text-center'>
-                                                <div className='text-xl' onClick={followersModal}>
-                                                    {followers}
+                                                            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU'
+                                                            alt="Bordered avatar" />}
                                                 </div>
-                                                <div className='text-sm text-[#d8d6d6] font'>Followers</div>
-                                            </div>
-                                            <div className='pl-6 text-white text-center'>
-                                                <div className='text-xl' onClick={followingsModal}>
-                                                    {following}
+                                                <div className='flex gap-8 pt-3'>
+                                                    <div className='pl-6 text-white  text-center'>
+                                                        <div className='text-xl' onClick={followersModal}>
+                                                            {followers}
+                                                        </div>
+                                                        <div className='text-sm text-[#d8d6d6] font'>Followers</div>
+                                                    </div>
+                                                    <div className='pl-6 text-white text-center'>
+                                                        <div className='text-xl' onClick={followingsModal}>
+                                                            {following}
+                                                        </div>
+                                                        <div className='text-sm text-[#d8d6d6]'>Following</div>
+                                                    </div>
                                                 </div>
-                                                <div className='text-sm text-[#d8d6d6]'>Following</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* NAME */}
-                                    <div className=''>
-                                        <div className='sm:px-10 px-'>
-                                            <div className='text-white pt-6'>
-                                                <h1>{profileDetails[0].name}</h1>
-                                                <h3 className='text-sm text-[#737373] '>{profileDetails[0].username}</h3>
                                             </div>
 
-                                            {/* BIO */}
-                                            <div className='text-white font-semibold'>{profileDetails[0].bio}</div>
+                                            {/* NAME */}
+                                            <div className=''>
+                                                <div className='sm:px-10 px-'>
+                                                    <div className='text-white pt-6'>
+                                                        <h1>{profileDetails[0].name}</h1>
+                                                        <h3 className='text-sm text-[#737373] '>{profileDetails[0].username}</h3>
+                                                    </div>
 
-                                            {/* EDIT PROFILE */}
-                                        </div>
-                                        <div className='py-5 '>
-                                            <button type="button" className="mb-2  w-full inline-block px-6 py-2.5 bg-[#2A2A2A] font-bold
+                                                    {/* BIO */}
+                                                    <div className='text-white font-semibold'>{profileDetails[0].bio}</div>
+
+                                                    {/* EDIT PROFILE */}
+                                                </div>
+                                                <div className='py-5 '>
+                                                    <button type="button" className="mb-2  w-full inline-block px-6 py-2.5 bg-[#2A2A2A] font-bold
                                                  text-xs leading-normal uppercase rounded-lg shadow-md hover:shadow-lg focus:bg-[#FFFF1A] focus:text-black
                                                    focus:shadow-lg focus:outline-none focus:ring-0  transition duration-150 ease-in-out text-white"
-                                                onClick={() => setEditModal(true)}
-                                            >
-                                                Edit Profile
-                                            </button>
-                                            <div className='flex flex-col justify-center ' onClick={() => setPostModal(true)}>
-                                                <button className='bg-[#FFFF1A] px-5 py-1  rounded-md font-semibold '>Add Post</button>
+                                                        onClick={() => setEditModal(true)}
+                                                    >
+                                                        Edit Profile
+                                                    </button>
+                                                    <div className='flex flex-col justify-center ' onClick={() => setPostModal(true)}>
+                                                        <button className='bg-[#FFFF1A] px-5 py-1  rounded-md font-semibold '>Add Post</button>
+                                                    </div>
+                                                    <div className=" text-xs border-b border-[#616161] py-4 text-[#747474]"></div>
+                                                </div>
+
                                             </div>
-                                            <div className=" text-xs border-b border-[#616161] py-4 text-[#747474]"></div>
                                         </div>
-
-                                    </div>
-                                </div>
-                            </>
-                        ))}
-                    </div>
-
-                    {/* POST */}
-
-                    <div className='grid grid-cols-3 gap-0.5 px-1  pb-32'>
-                        {profilePosts?.map((item: any, index: number) => (
-                            <div key={index} className="overflow-hidden " onClick={() => viewImagePost(item._id)}>
-                                <div className='relative group cursor-pointer z-0 '>
-                                    <div className='relative '>
-                                        <div className='h-28 sm:h-40 overflow-hidden' >
-                                            <img className='object-cover h-28 sm:h-40 w-full' src={`/images/${item?.Images}`} alt="" />
-                                        </div>
-                                    </div>
-                                    <div className=' absolute top-0 opacity-0 group-hover:opacity-100 left-1/2
-                                             -translate-x-1/2 w-full md:h-full h-full bg-black-rgba flex flex-row gap-5 text-white justify-center items-center'>
-                                        <div className='flex md:flex-row flex-col gap-2 '>
-                                            <AiOutlineHeart className='md:text-xl text-lg' />
-
-                                            <h1>{item.likes.length}</h1>
-                                        </div>
-                                        <div className='flex md:flex-row flex-col gap-2'>
-                                            <AiOutlineComment className='md:text-xl text-lg' />
-                                            <h1 className='hidden md:block'>234 comment</h1>
-                                            <h1>210</h1>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                </div>
-            </div>
+                            {/* POST */}
+
+                            <div className='grid grid-cols-3 gap-0.5 px-1  pb-32'>
+                                {profilePosts?.map((item: any, index: number) => (
+                                    <div key={index} className="overflow-hidden " onClick={() => viewImagePost(item._id)}>
+                                        <div className='relative group cursor-pointer z-0 '>
+                                            <div className='relative '>
+                                                <div className='h-28 sm:h-40 overflow-hidden' >
+                                                    <img className='object-cover h-28 sm:h-40 w-full' src={`${postsImages}/${item?.Images}`} alt="" />
+                                                </div>
+                                            </div>
+                                            <div className=' absolute top-0 opacity-0 group-hover:opacity-100 left-1/2
+                                             -translate-x-1/2 w-full md:h-full h-full bg-black-rgba flex flex-row gap-5 text-white justify-center items-center'>
+                                                <div className='flex md:flex-row flex-col gap-2 '>
+                                                    <AiOutlineHeart className='md:text-xl text-lg' />
+
+                                                    <h1>{item.likes.length}</h1>
+                                                </div>
+                                                <div className='flex md:flex-row flex-col gap-2'>
+                                                    <AiOutlineComment className='md:text-xl text-lg' />
+                                                    <h1 className='hidden md:block'>234 comment</h1>
+                                                    <h1>  {data?.map((post: any, index: number) => (<>
+                                                        <div>
+                                                            {item?._id === post?._id ?
+                                                                <>
+                                                                    {post?.comment[0]?.comment?.length === 0 ? 'comments' : post?.comment[0]?.comment?.length}
+                                                                </>
+                                                                :
+                                                                <>
+
+                                                                </>
+                                                            }
+                                                        </div>
+                                                    </>
+                                                    ))}
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                        </div>
+                    </div>
+                </>
+                :
+                <>
+                 <ProfileMobileSkeleton/>
+                </>
+            }
 
             {/* Large Profile */}
 
@@ -541,7 +565,7 @@ const UserProfile = () => {
 
             </EditUserModal>
 
-            <OpenPostModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal}>
+            <OpenPostModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal} profileDetails={profileDetails} >
 
             </OpenPostModal>
 

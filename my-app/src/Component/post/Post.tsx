@@ -16,6 +16,8 @@ import { useDispatch } from 'react-redux/es/hooks/useDispatch';
 import { passfriendDetails } from '../../redux/store/features/userSlice';
 import ReportPostModal from '../user-modal/ReportPostModal';
 import { like_post, post_details, view_post } from '../../services/UserApi';
+import postsImages from '../../services/imageApi';
+import { useSelector } from 'react-redux';
 
 
 
@@ -30,11 +32,17 @@ const Post = () => {
     const [state, setState] = useState<any>()
     const dispatch = useDispatch()
 
+    const commentCountSta = useSelector((state:any) => state.userDetails.value.CommentCountStatus)
+    // console.log("000000000000-----------------000000000000000000-----------------",commentCountSta);
+    
+
     if (user) {
         var userId = user.id
     }
 
+
     const { data, isLoading, refetch } = useQuery(["Id"], () =>{
+    // enabled:refetch()
         return axiosinstance.get("viewpost", {
             headers: {
                 "x-access-token": localStorage.getItem("token"),
@@ -42,9 +50,17 @@ const Post = () => {
         }).then((res) => res.data)
             .catch((err) => {
                 navigate("/error")
+                
             })
         // view_post()
+      
         });
+
+
+    if(commentCountSta === true) {
+        refetch()
+    }
+
 
     // LIKE POST
     const likePost = async (postId: string, username: string, type: number, images: any) => {
@@ -133,7 +149,7 @@ const Post = () => {
                             <div className=' box-content h-auto  bg-[#2A2A2A] rounded-3xl px-4 py-3 '>
                                 <div className="container mx-auto grid grid-cols-4 xl:grid-cols-3 pt-6 gap-8">
                                     <div className=' col-span-1 pl-' onClick={() => handleFriendProfile(post)}>
-                                        {post.userId.Images ? <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover ' src={`/images/${post.userId.Images}`} alt="profilepic" />
+                                        {post.userId.Images ? <img className='w-14 h-14  rounded-full object-cover ' src={`${postsImages}/${post.userId.Images}`} alt="profilepic" />
                                             : <img className='w-14 h-14 box-border border-2 bg-red-100 rounded-2xl object-cover '
                                                 src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profile pic" />
                                         }
@@ -163,7 +179,7 @@ const Post = () => {
                                     {/* IMAGE  */}
                                     <div className='pt-6 '>
                                         <div className='box-border h- w-full '>
-                                            <img className='rounded-3xl h-[400px] w-full object-cover ' src={`/images/${post.Images}`} alt="" />
+                                            <img className='rounded-3xl h-[400px] w-full object-cover ' src={`${postsImages}/${post.Images}`} alt="" />
                                         </div>
                                     </div>
                                 </div>
@@ -198,9 +214,7 @@ const Post = () => {
                                     </div>
                                     {/* <div className='flex justify-center items col-span-2  items-center'><BiShare className='' size={28} /></div> */}
                                 </div>
-                                {/* <div className='font-bold text-white pl-3'>
-                                    {post.likesCount ? <> {post.likesCount} Like </> : <> </>}
-                                </div> */}
+                              
                             </div>
 
                         </>

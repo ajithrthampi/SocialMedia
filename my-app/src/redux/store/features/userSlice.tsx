@@ -19,6 +19,7 @@ interface PersonState {
   followUnfollowUpdation:boolean
   chatProfilePic:any
   messageName:any
+  CommentCountStatus:any
 
 }
 
@@ -35,7 +36,8 @@ const initalState:PersonState ={
    notifi:false,
    followUnfollowUpdation:false,
    chatProfilePic:[],
-   messageName:[]
+   messageName:[],
+   CommentCountStatus:false
 }
 
 export const PersonSlice = createSlice({
@@ -96,11 +98,11 @@ export const PersonSlice = createSlice({
             state.value.chatProfilePic = action.payload;
             // console.log("121212121212121212212121121212",state.value.chatProfilePic);
         },
-        // messageUserName: (state, action) => {
-        //     state.value.messageName = action.payload;
-        //     // console.log("--------------------=-=-=-mesage", state.value.messageName);
+        commentCountUpdateStatus: (state, action) => {
+            state.value.CommentCountStatus = action.payload;
+            // console.log("--------------------=-=-=-mesage",   state.value.CommentCountStatus);
             
-        // }
+        }
     }  
 })
 export default PersonSlice.reducer;
@@ -117,6 +119,6 @@ export const
     NotifyUpdate,
     followUpdation,
     chatUserProfile,
-    // messageUserName
+    commentCountUpdateStatus
 }
  = PersonSlice.actions

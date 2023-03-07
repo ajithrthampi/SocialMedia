@@ -17,9 +17,10 @@ interface openPost {
     children: any
     onClose: () => void
     postPassDetails: any
+    profileDetails:any
 }
 
-const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPost) => {
+const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileDetails }: openPost) => {
 
     const updateDeletePost = useSelector((state: any) => state.userDetails.value.closeDeleteUpdateMOdal)
    
@@ -44,8 +45,8 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
 
     // const isFriendPostModals = useSelector((state: any) => state.userDetails.value.friendDetails)
     // console.log("is modalll datalkadlsf.fds//.././././",is   s);
-    console.log("?????????????????reduc", postPassDetails);
-    console.log("//////////////////////",userId);
+    console.log("?????????????????reduc", profileDetails);
+    // console.log("//////////////////////",userId);
 
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
     const isUpdateCaption = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
@@ -204,7 +205,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                             <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
                                                 <img
                                                     className='object-cove'
-                                                    src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                                    src={`${postsImages}/${profileDetails[0].Images}`}
                                                     alt="" />
                                             </div>
                                             <div className='text-sm'>{userName}</div>
@@ -229,7 +230,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                         <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
                                             <img
                                                 className='object-cove'
-                                                src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                                src={`${postsImages}/${profileDetails[0].Images}`}
                                                 alt="" />
                                         </div>
                                         <div className='text-sm'> {userName}</div>
@@ -246,7 +247,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                                                     <div key={index} className='flex'>
                                                         <div key={index} className=' flex items-cente gap-3 pl-3 p-2' >
                                                             <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                                                <img src={`/images/${comment.commentList.Images}`} alt="" />
+                                                                <img src={`${postsImages}/${comment.commentList.Images}`} alt="" />
                                                             </div>
                                                             <div className='text-xs font-bold space-y-2 '>
                                                                 <div className=''>
@@ -313,7 +314,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                             <div className='flex gap-3 items-center '>
                                 <img
                                     className='object-cover w-10 h-10 rounded-full '
-                                    src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                    src={`${postsImages}/${profileDetails[0].Images}`}
                                     alt="" />
                                 <div>
                                     <div className='text-sm text-white'>name</div>
@@ -334,7 +335,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails }: openPo
                     <div>
                         <div className='pt-10 px-3 '>
                             <div className='box-border  w-full '>
-                                <img className='rounded-3xl h-[370px] w-full object-cover ' src={`/images/${postPassDetails.Images}`} alt="" />
+                                <img className='rounded-3xl h-[370px] w-full object-cover ' src={`${postsImages}/${postPassDetails.Images}`} alt="" />
                             </div>
                         </div>
                     </div>

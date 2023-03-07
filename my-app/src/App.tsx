@@ -2,7 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import UserProfile from './Component/User/UserProfile';
-import HomePage from './Pages/homepages/HomePage';
+// import HomePage from './Pages/homepages/HomePage';
+
+
 import Login from './Pages/Login/Login';
 import Signup from './Pages/Signup/Signup';
 import AdminLogin from './Pages/admin/AdminLogin';
@@ -31,6 +33,9 @@ import UserManagement from './Pages/admin/Pages/UserManagement';
 import PostManagement from './Pages/admin/Pages/PostManagement';
 import ForgotPassword from './Pages/forgotPassword/ForgotPassword';
 import ForgotPasswordOpt from './Pages/forgotPassword/ForgotPasswordOpt';
+import Loading from './Component/lazyLoading/Loading';
+const LazyAbout = React.lazy(() => import('./Pages/homepages/HomePage'))
+
 
 const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com/")
 
@@ -40,7 +45,7 @@ function App() {
   const { user } = useContext(UserContext)
   const [userIdData, setUserIdData] = useState<any>()
   const [state, setState] = useState<boolean>()
-  
+
 
   useEffect(() => {
     try {
@@ -57,12 +62,12 @@ function App() {
 
   }, [state])
   // console.log("LOgged datatass", userIdData);
-//  console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllll  ", user);
+  //  console.log("lllllllllllllllllllllllllllllllllllllllllllllllllllll  ", user);
 
 
   useEffect(() => {
     socketio?.emit("addUser", userIdData?.id, userIdData?.name)
-   
+
   }, [state])
 
 
@@ -85,10 +90,14 @@ function App() {
               <Route path="*" element={<Error />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/" element={<Login />} />
-              <Route path="forgotpassword" element={<ForgotPassword/>} />
-              <Route path="otp" element={<ForgotPasswordOpt/>} />
+              <Route path="forgotpassword" element={<ForgotPassword />} />
+              <Route path="otp" element={<ForgotPasswordOpt />} />
 
-              <Route path="/home" element={<HomePage  socket={socketio}  />} />
+              {/* <Route path="/home" element={<HomePage  socket={socketio}  />} /> */}
+              <Route path="/home" element={<React.Suspense fallback= {<Loading/>  }>
+                <LazyAbout socket={socketio} />
+              </React.Suspense>} />
+
               <Route path="/profile" element={<Profile />} />
               <Route path="/message" element={<Message socket={socketio} />} />
               <Route path="/connection" element={<Connection />} />

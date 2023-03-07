@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance';
 import { UserContext } from '../../Pages/context/Context';
 import Notifi from '../../Pages/userpages/notification/Notification';
+import postsImages from '../../services/imageApi';
 import { view_Profile_Details } from '../../services/UserApi';
 
 interface mode {
@@ -123,7 +124,7 @@ const DownNavbar = () => {
                                             {profileImage[0].Images ?
                                                 <img
                                                     className="p-1 mx-auto  w-9 justify-content-center h-9 rounded-full"
-                                                    src={`/images/${profileImage[0].Images}`} alt="Bordered avatar"
+                                                    src={`${postsImages}/${profileImage[0].Images}`} alt="Bordered avatar"
                                                 />
                                                 :
                                                 <CgProfile size={28} />

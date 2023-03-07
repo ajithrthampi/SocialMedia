@@ -43,7 +43,7 @@ const ForgotPassword = () => {
             <div>
                 <section className="b h-screen  flex items-center justify-center  bg-gradient-to-r from-[#191819] to-[#3d3d3d] md:px-0 px-4">
                     <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5   items-center">
-                        <div className='w-[550px]  h-[250px]'>
+                        <div className='md:w-[550px]  md:h-[250px] w-[300px] h-[200px]'>
                             <form onSubmit={handleSubmit(submit)}>
                                 <div className='mt-10 px-5'>
                                 {error && <h1 className=' flex justify-center items-center mx-28 mb-4 text-red-600'>Invalid Email Address</h1>}

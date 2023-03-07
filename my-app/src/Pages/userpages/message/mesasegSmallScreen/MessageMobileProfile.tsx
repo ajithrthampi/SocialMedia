@@ -10,6 +10,7 @@ import { io } from "socket.io-client"
 import jwtDecode from 'jwt-decode'
 import { useSelector } from 'react-redux'
 import postsImages from '../../../../services/imageApi'
+import MobileMessageCategorySkeleton from '../../../../skeleton/MobileMessageCategorySkeleton'
 
 interface Socket_io {
     socket: any
@@ -29,10 +30,10 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
     const [state, setState] = useState<boolean>()
     const [newMessage, setNewMessage] = useState<any>()
 
-    const chatUserPicture = useSelector((state:any)  => state.userDetails.value.chatProfilePic)
+    const chatUserPicture = useSelector((state: any) => state.userDetails.value.chatProfilePic)
 
     // console.log("6565656565665656565656566565656656565656",chatUserPicture);
-    
+
 
     if (user) {
         var userId = user?.id
@@ -115,125 +116,134 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
     const handleSubmit = (e: any) => {
         e.preventDefault()
         const message = {
-          senderId: userId,
-          text: newMessage,
-          conversationId: currentChat?._id
+            senderId: userId,
+            text: newMessage,
+            conversationId: currentChat?._id
         }
         const receiverId = currentChat.members.find((member: any) => member !== userId)
-        socket ?. emit("sendMessage", {
-          senderId: user ?. id,
-          receiverId,
-          text: newMessage
-      })
+        socket?.emit("sendMessage", {
+            senderId: user?.id,
+            receiverId,
+            text: newMessage
+        })
         try {
-          if (newMessage) {
-            axiosinstance.post("/message", message, {
-              headers: {
-                "x-access-token": localStorage.getItem("token"),
-              },
-            }).then((response) => {
-              setMessages([...messages, response.data])
-              setNewMessage('')
-              console.log("chat,..", response);
-    
-            })
-          }
+            if (newMessage) {
+                axiosinstance.post("/message", message, {
+                    headers: {
+                        "x-access-token": localStorage.getItem("token"),
+                    },
+                }).then((response) => {
+                    setMessages([...messages, response.data])
+                    setNewMessage('')
+                    console.log("chat,..", response);
+
+                })
+            }
         } catch (error) {
-          console.log("chat submit ", error)
+            console.log("chat submit ", error)
         }
-      }
-     
-      const closeMessage = () => {
+    }
+
+    const closeMessage = () => {
         navigate("/home")
-      }
+    }
 
     return (
         <>
             {/* MODAL Message */}
             <div className='md:hidden'>
-            {!currentChat ?
-                <>
-                    <div className=''>
-                        <div className='w-full text-white p-2 bg-[#111111] flex  items-center gap-5 h-14'
-                        >
-                            <BsArrowLeft size={25} onClick={closeMessage} />
-                            <div className='flex gap-2 justify-center '>
-                                <div>
-                                    <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
-                                        className="w-8 h-8 rounded-full order-1" />
-                                </div>
-                                <div>
-                                    <div className='text-sm font-semibold'>Ajith R Thampittt</div>  
+                {!currentChat ?
+                    <>
+                        <div className=''>
+                            <div className='w-full text-white p-2 bg-[#111111] flex  items-center gap-5 h-14'
+                            >
+                                <BsArrowLeft size={25} onClick={closeMessage} />
+                                <div className='flex gap-2 justify-center '>
+                                    <div>
+                                        <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
+                                            className="w-8 h-8 rounded-full order-1" />
+                                    </div>
+                                    <div>
+                                        <div className='text-sm font-semibold'>Ajith R Thampittt</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {/* First Page  */}
-                        <div>
-                            <div className='text-white p-2'>Messages</div>
+                            {/* First Page  */}
+                            {conversations ?
+                                <>
+                                    <div>
+                                        <div className='text-white p-2'>Messages</div>
 
-                            {conversations?.map((item: any) => (
-                                <div
-                                    onClick={() => setCurrentChat(item)}
-                                >
-                                    <MessageMobileCategory conversations={item} currentUser={userId} />
-                                </div>
-                            ))}
+                                        {conversations?.map((item: any) => (
+                                            <div
+                                                onClick={() => setCurrentChat(item)}
+                                            >
+                                                <MessageMobileCategory conversations={item} currentUser={userId} />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </>
+                                :
+                                <>
+                                    <MobileMessageCategorySkeleton />
+                                </>
+                            }
+
                         </div>
-                    </div>
-                </>
-                :
-                <>
-                    <div className=' overflow-hidden '>
-                        <div className='w-full text-white p-2 bg-[#111111] flex items-center gap-5 '>
-                            <BsArrowLeft size={25}
-                                onClick={() => setCurrentChat(false)}
-                            />
-                            <div className='flex gap-2'>
-                                <div>
-                                {chatUserPicture ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${chatUserPicture}`} />
-                                                    :
-                                                    <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
-                                                }
-                                </div>
-                                <div>
-                                    <div className='text-sm font-semibold'>Ajith R Thampirrr</div>
-                                    <div className='text-xs'>Active now</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='h-screen max-h-[500px] overflow-y-scroll  scrollbar-none'>
-                            {messages?.map((m: any) => (
-                                <div onClick={() => setMessageModal(true)} >
-                                    <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
-                                </div>
-                            ))}
-                        </div>
-                        <div className=" p-3 ">
-                            <div className=" text-xs border border-[#5b5858]  text-[#002D74]"></div>
-                            <div className='flex absolut '>
-                              <div className='mr-2 flex grow gap-3'>
-                                <input
-                                  type="text"
-                                  name='comment'
-                                  className='w-full p-1 pl-5 mt-2 h-10'
-                                  placeholder='Write something..'
-                                  value={newMessage}
-                                  onChange={(e => setNewMessage(e.target.value))}
-                                  style={{ backgroundColor: "#313131" }}
+                    </>
+                    :
+                    <>
+                        <div className=' overflow-hidden '>
+                            <div className='w-full text-white p-2 bg-[#111111] flex items-center gap-5 '>
+                                <BsArrowLeft size={25}
+                                    onClick={() => setCurrentChat(false)}
                                 />
-                              </div>
-                              <div className='p mt-2 bg-[#FFFF1A] flex justify-center items-center rounded-lg  cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-[rgb(254,254,16)] duration-300'>
-                                <button className='  text-black  text-sm font-semibold px-5 py-2 '
-                                  onClick={handleSubmit}
-                                >
-                                  Send
-                                </button>
-                              </div>
+                                <div className='flex gap-2'>
+                                    <div>
+                                        {chatUserPicture ? <img className='rounded-full w-10 h-10 object-cover' src={`${postsImages}/${chatUserPicture}`} />
+                                            :
+                                            <img className='rounded-full w-10 h-10' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' />
+                                        }
+                                    </div>
+                                    <div>
+                                        <div className='text-sm font-semibold'>Ajith R Thampirrr</div>
+                                        <div className='text-xs'>Active now</div>
+                                    </div>
+                                </div>
                             </div>
-                          </div>
-                    </div>
-                </>
-            }
+                            <div className='h-screen max-h-screen overflow-y-scroll  scrollbar-none'>
+                                {messages?.map((m: any) => (
+                                    <div onClick={() => setMessageModal(true)} >
+                                        <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
+                                    </div>
+                                ))}
+                            </div>
+                            <div className=" p-3 relative bottom-48">
+                                <div className=" text-xs border border-[#5b5858]  text-[#002D74]"></div>
+                                <div className='flex absolut '>
+                                    <div className='mr-2 flex grow gap-3'>
+                                        <input
+                                            type="text"
+                                            name='comment'
+                                            className='w-full p-1 pl-5 mt-2 h-10'
+                                            placeholder='Write something..'
+                                            value={newMessage}
+                                            onChange={(e => setNewMessage(e.target.value))}
+                                            style={{ backgroundColor: "#313131" }}
+                                        />
+                                    </div>
+                                    <div className='p mt-2 bg-[#FFFF1A] flex justify-center items-center rounded-lg  cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-[rgb(254,254,16)] duration-300'>
+                                        <button className='  text-black  text-sm font-semibold px-5 py-2 '
+                                            onClick={handleSubmit}
+                                        >
+                                            Send
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }
             </div>
         </>
     )

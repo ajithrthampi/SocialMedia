@@ -13,7 +13,9 @@ import OpenPostModal from '../user-modal/OpenPostModal'
 import { useNavigate } from 'react-router-dom'
 import FollowListModal from '../user-modal/FollowListModal'
 import jwtDecode from 'jwt-decode'
-import { conversationUser, followersListss, followingListss, following_count, follow_unfollow, post_details, viewProfilePostss, view_all_following } from '../../services/UserApi'
+import { conversationUser, followersListss, followingListss, following_count, follow_unfollow, post_details, viewProfilePostss, view_all_following, view_post } from '../../services/UserApi'
+import postsImages from '../../services/imageApi'
+import { useQuery } from '@tanstack/react-query'
 
 const FriendProfile = () => {
 
@@ -54,6 +56,11 @@ const FriendProfile = () => {
   }, [following])
 
   const dispatch = useDispatch();
+
+  const { data, isLoading, refetch } = useQuery(["Id"], () =>
+
+  view_post   ()
+);
 
 
 
@@ -181,7 +188,7 @@ const FriendProfile = () => {
 
   //FOLLOW MODAL
 
-  const followersModal =async () => {
+  const followersModal = async () => {
     try {
       const userId = isprofileDetails._id
       // console.log("friend id", userId);
@@ -195,11 +202,11 @@ const FriendProfile = () => {
       // })
 
       const followersallList = await followersListss(userId)
-      if(followersallList) {
-          setFollowersLists(followersallList)
+      if (followersallList) {
+        setFollowersLists(followersallList)
         setFollowModal(true)
       } else {
-        
+
       }
     } catch (err) {
       console.log("Follower", err);
@@ -221,11 +228,11 @@ const FriendProfile = () => {
       // })
 
       const followingllList = await followingListss(userId)
-      if(followingllList) {
-          setFollowersLists(followingllList)
+      if (followingllList) {
+        setFollowersLists(followingllList)
         setFollowModal(true)
       } else {
-        
+
       }
 
     } catch (err) {
@@ -236,7 +243,7 @@ const FriendProfile = () => {
 
   //FOLLOW UNFOLLOW
 
-  const followUnFollow = async() => {
+  const followUnFollow = async () => {
 
     const userId = user?.id
     const friendId = isprofileDetails._id
@@ -260,14 +267,14 @@ const FriendProfile = () => {
       // })
 
       const seeFollow = await follow_unfollow(id)
-        dispatch(followUpdation(true))
-        if (seeFollow == "follow") {
-          setFollowUser(seeFollow.msg)
-        } else {
-          setFollowUser(seeFollow.msg)
-        }
-      
-  
+      dispatch(followUpdation(true))
+      if (seeFollow == "follow") {
+        setFollowUser(seeFollow.msg)
+      } else {
+        setFollowUser(seeFollow.msg)
+      }
+
+
 
     } catch (err) {
       // navigate('/error')
@@ -289,7 +296,7 @@ const FriendProfile = () => {
 
   //VIEW ALL FOLLOWING
 
-  const ViewAllFollowing = async(userId: any) => {
+  const ViewAllFollowing = async (userId: any) => {
     // axiosinstance.get("/viewallfollowing/" + userId, {
     //   headers: {
     //     "x-access-token": localStorage.getItem("token"),
@@ -303,8 +310,8 @@ const FriendProfile = () => {
     //   console.log(err);
     // })
 
-    const viewAllFollowing  = await view_all_following(userId)
-    if(viewAllFollowing){
+    const viewAllFollowing = await view_all_following(userId)
+    if (viewAllFollowing) {
       setViewAllFollowing(viewAllFollowing.following)
     }
   }
@@ -325,7 +332,7 @@ const FriendProfile = () => {
               <div className=' box-content h-auto  bg-[2A2A2A] rounded-3xl px-4 py-3'>
                 <div className=' grid grid-cols-3'>
                   <div>
-                    {reduxState ? <img className="p-1 mx-auto object-cover w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`images/${reduxState?.Images}`} alt="Bordered " />
+                    {reduxState ? <img className="p-1 mx-auto object-cover w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src={`${postsImages}/${reduxState?.Images}`} alt="Bordered " />
                       : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />}
                   </div>
 
@@ -433,14 +440,14 @@ const FriendProfile = () => {
                     <div className='xl:flex gap-12   xl:space-y-0 space-y-5 text-lg'>
                       <div>{reduxState?.username}</div>
                       {!viewAllFollowing?.includes(reduxState._id) ?
-                      <>
-                        <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>follow</div>
-                      </>
-                      :
-                      <>
-                        <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>Following</div>
-                      </>
-                    }
+                        <>
+                          <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>follow</div>
+                        </>
+                        :
+                        <>
+                          <div className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={followUnFollow}>Following</div>
+                        </>
+                      }
 
                       <button className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl' onClick={startConversation}>Message</button>
 
@@ -492,8 +499,20 @@ const FriendProfile = () => {
                         <div className='flex flex-row gap-2'>
                           <AiOutlineComment size={25} />
                           <h1>
-                            {/* {item.length} */}
-                            {/* {item?.comment[0]?.comment?.length === 0 ? 'comments' : item?.comment[0]?.comment?.length} */}
+                            {data?.map((post: any, index: number) => (<>
+                              <div>
+                                {item?._id === post?._id ?
+                                  <>
+                                    {post?.comment[0]?.comment?.length === 0 ? 'comments' : post?.comment[0]?.comment?.length}
+                                  </>
+                                  :
+                                  <>
+
+                                  </>
+                                }
+                              </div>
+                            </>
+                            ))}
                           </h1>
                         </div>
                       </div>
@@ -512,7 +531,7 @@ const FriendProfile = () => {
 
       </EditUserModal>
 
-      <OpenPostModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal}>
+      <OpenPostModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal} profileDetails={isprofileDetails}>
 
       </OpenPostModal>
 

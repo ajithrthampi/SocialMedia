@@ -41,7 +41,7 @@ const ForgotPasswordOpt = () => {
             <div>
                 <section className="b h-screen  flex items-center justify-center  bg-gradient-to-r from-[#191819] to-[#3d3d3d] md:px-0 px-4">
                     <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5   items-center">
-                        <div className='w-[500px] '>
+                        <div className='md:w-[500px] w-[300px]'>
 
                         
                             <div className='py-5 px-5 flex flex-col gap-4'>

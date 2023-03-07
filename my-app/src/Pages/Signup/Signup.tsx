@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import axiosinstance from '../../axios/axiosinstance'
+import Loading from '../../Component/lazyLoading/Loading'
 
 
 
 const Signup = () => {
   const navigate = useNavigate()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { register, formState: { errors }, handleSubmit, } = useForm()
   const [user, setUser] = useState({
     username: '',
@@ -45,7 +47,8 @@ const Signup = () => {
   }, [])
 
   const onSubmit = (data: any, e: any) => {
-    console.log("data", data);
+    // console.log("data", data);
+    setIsLoading(true)
     try {
 
       const { username, email, password, name } = user
@@ -71,8 +74,14 @@ const Signup = () => {
 
   return (
     <>
-
-      <section className="b h-screen w-screen flex items-center justify-center  bg-gradient-to-r from-[#191819] to-[#3d3d3d] md:px-0 px-4">
+    {
+      isLoading ? 
+      <>
+      <Loading/>
+      </>
+       :
+       <>
+       <section className="b h-screen w-screen flex items-center justify-center  bg-gradient-to-r from-[#191819] to-[#3d3d3d] md:px-0 px-4">
 
         <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5   items-center">
           <div className="md:w-1/2 px-8 md:px-16">
@@ -191,6 +200,10 @@ const Signup = () => {
         </div>
 
       </section>
+       </>
+    }
+
+      
 
     </>
   )

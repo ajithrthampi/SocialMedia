@@ -8,9 +8,11 @@ import { GoLocation } from 'react-icons/go'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import { IoMdClose, IoMdPhotos } from 'react-icons/io'
 import { MdDelete } from 'react-icons/md'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
+import { commentCountUpdateStatus } from '../../redux/store/features/userSlice'
 import postsImages from '../../services/imageApi'
 import { chat_user, comment_comment, get_comment, view_Profile_Details } from '../../services/UserApi'
 import DeleteModal from './DeleteModal'
@@ -38,6 +40,7 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
     const { user } = useContext(UserContext)
     const space = /\s/
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
     // console.log("Comment  data", data);
@@ -138,6 +141,7 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                 if(addComment){
                     setComment("")
                     setCommentStatus(addComment)
+                    dispatch(commentCountUpdateStatus(true))
                 }
         }
        
