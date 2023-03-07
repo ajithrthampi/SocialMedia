@@ -98,7 +98,7 @@ const Sidebar = () => {
     const nonActiveElement = 'flex gap-4 py-4 items-center cursor-pointer hover:bg-[#1E1E1E] hover:opacity-70 -mx-4 px- my-2  rounded-md transition-all hover:scale-110  hover:shadow-md hover:shadow-[#585858]';
     return (
         <>
-            {loading ?
+            {       loading ?
                 <>
                     <div className='xl:w-1/5 hidd xl:max-w-[280px] xl:min-w-[270px]  '>
                         <div className=' shadow-md rounded-3xl   mb-5 bg-[#2A2A2A] text-white 2xl:w-[270px] h-[643px] '>

@@ -20,6 +20,7 @@ import PostModal from '../user-modal/PostModal';
 import { followersListss, followingListss, following_count, post_details, viewProfilePostss, view_post, view_Profile_Details } from '../../services/UserApi';
 import SkeletonElement from '../../skeleton/SkeletonElement';
 import postsImages from '../../services/imageApi';
+import ProfileSkeleton from '../../skeleton/ProfileSkeleton';
 
 
 const UserProfile = () => {
@@ -398,127 +399,136 @@ const UserProfile = () => {
 
             <div>
                 <Layout>
-                    <div className='w-5/6  grow xl:-ml-2.5 '>
-                        <div className='shadow-md rounded-3xl mb-5 bg-[#2A2A2A] text-white overflow-hidden '>
-                            <div className='max-h-screen overflow-y-scroll scrollbar-none'>
-                                <div className='flex  lg:p-10 p-5 gap-12 lg:pl-40 pl-32'>
-                                    {profileDetails?.map((item: any, index: number) => (
+                    {profileDetails ?
+                        <>
+                            <div className='w-5/6  grow xl:-ml-2.5 '>
+                                <div className='shadow-md rounded-3xl mb-5 bg-[#2A2A2A] text-white overflow-hidden '>
+                                    <div className='max-h-screen overflow-y-scroll scrollbar-none'>
+                                        <div className='flex  lg:p-10 p-5 gap-12 lg:pl-40 pl-32'>
+                                            {profileDetails?.map((item: any, index: number) => (
 
-                                        <div className='  rounded-full  cursor-pointer'>
-                                            {profileDetails[0].Images ?
-                                                <>
-                                                    <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`${postsImages}/${profileDetails[0]?.Images}`} alt="" />
-                                                </>
-                                                :
-                                                <>
-                                                    <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
-                                                </>
-                                            }
+                                                <div className='  rounded-full  cursor-pointer'>
+                                                    {profileDetails[0].Images ?
+                                                        <>
+                                                            <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`${postsImages}/${profileDetails[0]?.Images}`} alt="" />
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full ring-2 ring-gray-300 dark:ring-gray-500" src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="Bordered avatar" />
+                                                        </>
+                                                    }
 
-                                        </div>
-
-                                    ))}
-
-                                    <div>
-                                        {profileDetails?.map((item: any, index: number) => (
-                                            <>
-                                                <div key={index} className='xl:flex gap-12   xl:space-y-0 space-y-5 text-lg'>
-
-                                                    <div>{profileDetails[0].username}</div>
-
-                                                    <button className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl'
-                                                        onClick={() => setEditModal(true)}
-                                                    >
-                                                        Edit Profile
-                                                    </button>
-                                                    {/* </NavLink> */}
-                                                    {/* <FiSettings size={25} /> */}
                                                 </div>
-                                                <div className='flex xl:gap-10 gap-4 mt-4 lg:text-md text-xs'>
-                                                    {/* <div>40 Post</div> */}
 
-                                                    <div
-                                                        onClick={followersModal}
-                                                        // onClick={() => dispatch(openModalFollowers(true))}
+                                            ))}
 
-                                                        className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{followers}</span> followers</div>
-                                                    <div
-                                                        onClick={followingsModal}
-                                                        className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{following}</span> following</div>
-                                                </div>
-                                                <div className='xl:mt-5 mt-3    '>
-                                                    <h1>{profileDetails[0].name}</h1>
-                                                    <h4 className='text-[#c9c6c6b1]'>{profileDetails[0].bio}</h4>
-                                                </div>
-                                            </>
+                                            <div>
+                                                {profileDetails?.map((item: any, index: number) => (
+                                                    <>
+                                                        <div key={index} className='xl:flex gap-12   xl:space-y-0 space-y-5 text-lg'>
 
-                                        ))}
+                                                            <div>{profileDetails[0].username}</div>
 
-                                    </div>
-                                </div>
+                                                            <button className='text-black bg-[#ffffff] text-sm   font-semibold xl:px-7 px-5  py-2 rounded-xl'
+                                                                onClick={() => setEditModal(true)}
+                                                            >
+                                                                Edit Profile
+                                                            </button>
+                                                            {/* </NavLink> */}
+                                                            {/* <FiSettings size={25} /> */}
+                                                        </div>
+                                                        <div className='flex xl:gap-10 gap-4 mt-4 lg:text-md text-xs'>
+                                                            {/* <div>40 Post</div> */}
 
-                                <div className=' px-14 py-5 '>
-                                    <div className='flex justify-center items-center text-md font-semibold'
-                                        onClick={() => setPostModal(true)}
-                                    >
-                                        <button className=' px-3 py-1 rounded-md bg-[#FFFF1A] text-black'>
-                                            Add Post
-                                        </button>
-                                    </div>
-                                    <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
-                                </div>
+                                                            <div
+                                                                onClick={followersModal}
+                                                                // onClick={() => dispatch(openModalFollowers(true))}
 
-                                {/* Image Post */}
+                                                                className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{followers}</span> followers</div>
+                                                            <div
+                                                                onClick={followingsModal}
+                                                                className='cursor-pointer text-base'><span className='bg-[#1A1A1A] px-3 py-1 rounded-md text-base'>{following}</span> following</div>
+                                                        </div>
+                                                        <div className='xl:mt-5 mt-3    '>
+                                                            <h1>{profileDetails[0].name}</h1>
+                                                            <h4 className='text-[#c9c6c6b1]'>{profileDetails[0].bio}</h4>
+                                                        </div>
+                                                    </>
 
+                                                ))}
 
-                                <div className='grid grid-cols-3 gap-3 px-5 p-4 min-h-[346px]'
-                                // onClick={() => setOpenPostModal(true)}
-                                >
-                                    {profilePosts?.map((item: any, index: number) => (
-                                        <div key={index} className="overflow-hidden h-64" onClick={() => viewImagePost(item._id)}>
-                                            <div className='relative group cursor-pointer'>
-                                                <div className='relative h-64'>
-                                                    <div className='h-64  overflow-hidden'>
-                                                        {/* <img className='object-cover h-64 w-full' src="https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
-
-                                                          <img className='object-cover h-64 w-full' src={`${postsImages}/${item?.Images}`} alt="" />
-
-                                                    </div>
-                                                </div>
-                                                <div className=' absolute top-0 opacity-0 group-hover:opacity-100 left-1/2
-                                             -translate-x-1/2 w-full h-full bg-black-rgba flex flex-row gap-5 text-white justify-center items-center'>
-                                                    <div className='flex flex-row gap-2'>
-                                                        <AiOutlineHeart size={25} />
-                                                        <h1>{item.likes.length} likes</h1>
-                                                    </div>
-                                                    <div className='flex flex-row gap-2'>
-                                                        <AiOutlineComment size={25} />
-                                                        <h1>
-                                                            {data?.map((post: any, index: number) => (<>
-                                                                <div>
-                                                                    {item?._id === post?._id ?
-                                                                        <>
-                                                                            {post?.comment[0]?.comment?.length === 0 ? 'comments' : post?.comment[0]?.comment?.length}
-                                                                        </>
-                                                                        :
-                                                                        <>
-
-                                                                        </>
-                                                                    }
-                                                                </div>
-                                                            </>
-                                                            ))}
-
-                                                        </h1>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
-                                    ))}
+
+                                        <div className=' px-14 py-5 '>
+                                            <div className='flex justify-center items-center text-md font-semibold'
+                                                onClick={() => setPostModal(true)}
+                                            >
+                                                <button className=' px-3 py-1 rounded-md bg-[#FFFF1A] text-black'>
+                                                    Add Post
+                                                </button>
+                                            </div>
+                                            <div className="mt- text-xs border-b border-[#5b5858] py-  text-[#002D74]"></div>
+                                        </div>
+
+                                        {/* Image Post */}
+
+
+                                        <div className='grid grid-cols-3 gap-3 px-5 p-4 min-h-[346px]'
+                                        // onClick={() => setOpenPostModal(true)}
+                                        >
+                                            {profilePosts?.map((item: any, index: number) => (
+                                                <div key={index} className="overflow-hidden h-64" onClick={() => viewImagePost(item._id)}>
+                                                    <div className='relative group cursor-pointer'>
+                                                        <div className='relative h-64'>
+                                                            <div className='h-64  overflow-hidden'>
+                                                                {/* <img className='object-cover h-64 w-full' src="https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
+
+                                                                <img className='object-cover h-64 w-full' src={`${postsImages}/${item?.Images}`} alt="" />
+
+                                                            </div>
+                                                        </div>
+                                                        <div className=' absolute top-0 opacity-0 group-hover:opacity-100 left-1/2
+                                             -translate-x-1/2 w-full h-full bg-black-rgba flex flex-row gap-5 text-white justify-center items-center'>
+                                                            <div className='flex flex-row gap-2'>
+                                                                <AiOutlineHeart size={25} />
+                                                                <h1>{item.likes.length} likes</h1>
+                                                            </div>
+                                                            <div className='flex flex-row gap-2'>
+                                                                <AiOutlineComment size={25} />
+                                                                <h1>
+                                                                    {data?.map((post: any, index: number) => (<>
+                                                                        <div>
+                                                                            {item?._id === post?._id ?
+                                                                                <>
+                                                                                    {post?.comment[0]?.comment?.length === 0 ? 'comments' : post?.comment[0]?.comment?.length}
+                                                                                </>
+                                                                                :
+                                                                                <>
+
+                                                                                </>
+                                                                            }
+                                                                        </div>
+                                                                    </>
+                                                                    ))}
+
+                                                                </h1>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                        :
+                        <>
+                            <ProfileSkeleton />
+                        </>
+                    }
+
                 </Layout>
             </div >
 
