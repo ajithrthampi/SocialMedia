@@ -18,7 +18,7 @@ const io = new Server({
 //  });
 path: "/socket-lwx2.onrender.com",
 cors:{
-    origin:"https://socket-lwx2.onrender.com",  
+    origin:"*",  
 }
 });
 
