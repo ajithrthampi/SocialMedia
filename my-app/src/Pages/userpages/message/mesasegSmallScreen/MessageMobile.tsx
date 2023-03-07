@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect,useRef} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs'
 import axiosinstance from '../../../../axios/axiosinstance';
@@ -19,6 +19,14 @@ const MessageMobile = ({ message, own, pic }: modal) => {
     const [profilepic, setProfilePic] = useState<any>()
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const scrollRef = useRef<any>()
+
+      // SCROLL TO RECENT CHAT
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+
+  }, [message])
 
     useEffect(() => {
         try {

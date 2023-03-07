@@ -49,55 +49,6 @@ const Userchat = ({ message, own, pic }: UserChat) => {
 
     return (
         <>
-            {/* <div className={own ? "message own": "message"}>
-                <div id="messages"
-                    className=" flex h-[501px] max-h-[500px] overflow-y-scroll  scrollbar-none flex-col space-y-4 p-3 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
-
-                    <div className="chat-message">
-                        <div className="flex items-end">
-                            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                                <div className='flex flex-col'>
-                                    <span className="px-4 font-semibold py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
-                                        {message.text}
-                                    </span>
-
-
-                                </div>
-
-                            </div>
-
-                            <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
-                                className="w-8 h-8 rounded-full order-1" />
-                        </div>
-                        <div className='text-xs pl-10'>{moment(message.createdAt).fromNow()}</div>
-                    </div>
-
-                    <div className="chat-message">
-                        <div className="flex items-end justify-end">
-                            <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                                <div><span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-blue-600 text-white ">Your error message says permission denied, npm global installs must be given root privileges dffgnndgegee rgergn egr emnr geng .</span></div>
-                            </div>
-                            <img src="https://images.unsplash.com/photo-1590031905470-a1a1feacbb0b?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
-                                className="w-6 h-6 rounded-full order-2" />
-                        </div>
-                    </div>
-
-                </div>
-            </div> */}
-            {/* 
-            <div className={own ? "message own" : "message"}>
-                <div className="messageTop">
-                    <img
-                        className="messageImg  "
-                        src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                        alt=""
-                    />
-                    <p className="messageText">{message.text}</p>
-                </div>
-                <div className="messageBottom">{moment(message.createdAt).fromNow()}</div>
-            </div> */}
-
-
             <div className=''>
                 <div className="flex flex-col h-full  mb-4">
                     <div className="flex flex-col h-full">

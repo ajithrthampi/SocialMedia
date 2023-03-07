@@ -214,7 +214,7 @@ const Message = ({ socket }: Socket_io) => {
 
                   {messages ?
                     <>
-                      <div className='lg:col-span-4 col-span-4 bg-[#1A1A1A] h-[643px] overflow-hidden '>
+                      <div className='lg:col-span-4 col-span-4 bg-[#1A1A1A] h-[643x] overflow-hidden '>
                         <div>
                           <div className='w-full  bg-[#353535]  p-3 flex gap-2 h-[79px]'>
                             <div className='lg:w-12 lg:h-12 md:w-8 md:h-8 rounded-full overflow-hidden cursor-pointer'>
@@ -229,10 +229,10 @@ const Message = ({ socket }: Socket_io) => {
 
                         {/* Message User chat content */}
                         {/* {!currentChat ?<> */}
-                        <div className='h-[501px] max-h-[500px] overflow-y-scroll  scrollbar-none'>
+                        <div className='h-screen max-h-screen overflow-y-scroll scrollbar-none  pb-52'>
                           {messages?.map((m: any) => (
                             <div
-                            // ref={scrollRef} 
+                            // ref={scrollRef}    
                             
                             >
                               <Userchat message={m} own={m.senderId === userIid} pic={user.profilePic} />
@@ -240,7 +240,7 @@ const Message = ({ socket }: Socket_io) => {
                           ))}
                         </div>
 
-                        <div className=" p-3 ">
+                        <div className=" p-3 relative bottom-60">
                           <div className=" text-xs  border border-[#5b5858]  text-[#002D74]"></div>
                           <div className='flex'>
                             <div className='mr-2 flex grow gap-3'>

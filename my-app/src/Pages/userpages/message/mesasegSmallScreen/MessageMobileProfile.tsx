@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext,useRef } from 'react'
 import { BsArrowLeft } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 // import { Socket } from 'socket.io-client'
@@ -29,11 +29,18 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
     const [newMessage, setNewMessage] = useState<any>()
+    const scrollRef = useRef<any>()
 
     const chatUserPicture = useSelector((state: any) => state.userDetails.value.chatProfilePic)
 
     // console.log("6565656565665656565656566565656656565656",chatUserPicture);
 
+      // SCROLL TO RECENT CHAT
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+
+  }, [messages])
 
     if (user) {
         var userId = user?.id
@@ -177,6 +184,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                                         {conversations?.map((item: any) => (
                                             <div
                                                 onClick={() => setCurrentChat(item)}
+                                               
                                             >
                                                 <MessageMobileCategory conversations={item} currentUser={userId} />
                                             </div>
@@ -213,12 +221,12 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                             </div>
                             <div className='h-screen max-h-screen overflow-y-scroll  scrollbar-none'>
                                 {messages?.map((m: any) => (
-                                    <div onClick={() => setMessageModal(true)} className="pb-12">
+                                    <div  ref={scrollRef}  onClick={() => setMessageModal(true)} className="">
                                         <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
                                     </div>
                                 ))}
                             </div>
-                            <div className=" p-3 relative bottom-48">
+                            <div className=" p-3 relative bottom-0">
                                 <div className=" text-xs border border-[#5b5858]  text-[#002D74]"></div>
                                 <div className='flex absolut '>
                                     <div className='mr-2 flex grow gap-3'>
