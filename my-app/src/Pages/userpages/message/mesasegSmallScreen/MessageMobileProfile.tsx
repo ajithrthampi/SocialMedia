@@ -213,7 +213,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                             </div>
                             <div className='h-screen max-h-screen overflow-y-scroll  scrollbar-none'>
                                 {messages?.map((m: any) => (
-                                    <div onClick={() => setMessageModal(true)} >
+                                    <div onClick={() => setMessageModal(true)} className="pb-12">
                                         <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
                                     </div>
                                 ))}
