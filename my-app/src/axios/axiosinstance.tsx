@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-    baseURL:"https://seechat.onrender.com"
+    baseURL:"https://seechat.onrender.com/"
         
     // baseURL:"http://localhost:4001" 
 })

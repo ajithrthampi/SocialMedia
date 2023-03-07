@@ -12,10 +12,15 @@
 const { Server } = require("socket.io");
 
 const io = new Server({ 
-    cors:{
-        origin:"http://localhost:3000"
-    }
- });
+//     cors:{
+//         origin:"http://localhost:3000"
+//     }
+//  });
+path: "/socket-lwx2.onrender.com",
+cors:{
+    origin:"https://socket-lwx2.onrender.com",  
+}
+});
 
  let users = [];
 
