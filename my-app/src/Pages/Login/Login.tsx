@@ -23,7 +23,7 @@ const Login = () => {
 
   if (user) {
     var userId = user?.id
-}
+  }
 
 
 
@@ -52,9 +52,9 @@ const Login = () => {
 
   useEffect(() => {
     setUseriID(user?.name)
-  },[state])
+  }, [state])
   console.log("userId.,.,.,.,.,.,.,.,", userIid);
-  
+
 
   const submit = (e: any) => {
     e.preventDefault()
@@ -62,11 +62,11 @@ const Login = () => {
     try {
       axiosinstance.post("/login", userr).then((response) => {
         // console.log("submitted");
-      //  setState( response.data.user.email)
+        //  setState( response.data.user.email)
         // console.log(response.data, 'response in login');
         if (response.data.auth) {
           // console.log('user.....', response.data.user.email);
-          console.log("state,.,.,",state)
+          console.log("state,.,.,", state)
           setState(true)
           localStorage.setItem("token", response.data.token)
 
@@ -81,10 +81,10 @@ const Login = () => {
               toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
           })
-          
+
           Toast.fire({
             icon: 'success',
-            title: `Signed in successfully` 
+            title: `Signed in successfully`
           })
           navigate('/home')
         } else {
@@ -100,9 +100,9 @@ const Login = () => {
         }
 
       }).catch((err) =>
-      console.log(err)
-       
-      
+        console.log(err)
+
+
       )
 
     } catch (err) {
@@ -123,14 +123,14 @@ const Login = () => {
       <section className="b h-screen  flex items-center justify-center  bg-gradient-to-r from-[#191819] to-[#3d3d3d] md:px-0 px-4">
         <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5   items-center">
 
-         
+
 
           <div className="md:w-1/2 px-8 md:px-16">
             <h2 className="font-bold text-2xl text-[#002D74]">Login</h2>
             <div className="text-red-600 text-center">
-            {userExist?"Invalid email or password":""}
-            {blockedUser?"The user is blocked":""}
-          </div>
+              {userExist ? "Invalid email or password" : ""}
+              {blockedUser ? "The user is blocked" : ""}
+            </div>
 
             <form action="" className="flex flex-col gap-4">
               <input
@@ -157,7 +157,7 @@ const Login = () => {
             </div>
             <div className="mt-3 text-xs flex justify-between items-center text-[#002D74]">
               {/* <Link to="/home">  */}
-              <p className="text-xs mt-4 md:px-0 px-7 text-[#2b4e86] cursor-default">If you are not a user ! please register   </p> 
+              <p className="text-xs mt-4 md:px-0 px-7 text-[#2b4e86] cursor-pointer">If you are not a user ! please register   </p>
               {/* </Link> */}
 
               <Link to="/signup">
@@ -168,6 +168,11 @@ const Login = () => {
                 </button>
               </Link>
             </div>
+            <Link to="forgotpassword">
+              <div className="text-xs mt-3 cursor-pointer  md:px-0 px-7 text-[#2b4e86] ">Forgot password</div>
+            </Link>
+
+
           </div>
           <div className="relative w-1/2 md:block hidden  bg-zinc-900/70 rounded-2xl ">
             <img className=" object-cover mix-blend-overlay " src="https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=600" />

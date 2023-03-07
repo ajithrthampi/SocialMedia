@@ -29,6 +29,8 @@ import FriendProfile from './Component/User/FriendProfile';
 import Dashboard from './Pages/admin/Pages/Dashboard';
 import UserManagement from './Pages/admin/Pages/UserManagement';
 import PostManagement from './Pages/admin/Pages/PostManagement';
+import ForgotPassword from './Pages/forgotPassword/ForgotPassword';
+import ForgotPasswordOpt from './Pages/forgotPassword/ForgotPasswordOpt';
 
 const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com/")
 
@@ -83,7 +85,8 @@ function App() {
               <Route path="*" element={<Error />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/" element={<Login />} />
-
+              <Route path="forgotpassword" element={<ForgotPassword/>} />
+              <Route path="otp" element={<ForgotPasswordOpt/>} />
 
               <Route path="/home" element={<HomePage  socket={socketio}  />} />
               <Route path="/profile" element={<Profile />} />

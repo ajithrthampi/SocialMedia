@@ -186,7 +186,7 @@ const ThirdFormDetails = ({ profileDetails, data }: details) => {
                                                 <img className='object-cover' src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
                                                 :
                                                 <>
-                                                    <img className='object-cover' src="https://images.pexels.com/photos/5397723/pexels-photo-5397723.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" />
+                                                        <img className='object-cover' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="" />
                                                 </>
                                             }
                                         </div>
