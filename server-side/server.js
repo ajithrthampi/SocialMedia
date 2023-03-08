@@ -14,10 +14,11 @@ app.use(cors())
 dotenv.config()
 
 mongoose.connect(process.env.DATABASE_ACCESS,()=>console.log('Database is connected'))
-app.use('/api/images',express.static('./public/Images'))  
+ 
 // app.use('/api/DP', express.static('./public/Images'))  
 
 app.use('/',userRouter)
 app.use('/admin',adminRoute)
+app.use('/api/images',express.static('./public/Images')) 
 
 app.listen(4001,()=>console.log("server is connected"))
