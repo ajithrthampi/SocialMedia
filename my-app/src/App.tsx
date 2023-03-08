@@ -36,9 +36,10 @@ import ForgotPasswordOpt from './Pages/forgotPassword/ForgotPasswordOpt';
 import Loading from './Component/lazyLoading/Loading';
 const LazyAbout = React.lazy(() => import('./Pages/homepages/HomePage'))
 
+// const socketio = require('socket.io-client')("ws://localhost:8000")
 
-const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com/")
-// const socketio = require('socket.io-client')("https://cerulean-dieffenbachia-f6d6d3.netlify.app", {path:"/socket-lwx2.onrender.com"})
+// const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com/")
+const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com")
 
 function App() {
 
