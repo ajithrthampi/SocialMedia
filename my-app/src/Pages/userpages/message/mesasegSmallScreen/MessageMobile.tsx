@@ -55,13 +55,13 @@ const MessageMobile = ({ message, own, pic }: modal) => {
         <>
             <div className='md:hidden '>
 
-                <div className=''>
+                <div className='   '>
                     <div className="flex flex-col h-full  ">
-                        <div className="flex flex-col h-full">
-                            <div className="grid grid-cols-12 gap-y-2">
+                        <div className="flex flex-col h-full ">
+                            <div className="grid grid-cols-12 gap-y-2 ">
 
                                 {own ? <div className="col-start-6 col-end-13 p-3 rounded-lg">
-                                    <div className="flex items-center justify-start flex-row-reverse">
+                                    <div className="flex items-center justify-start flex-row-reverse    ">
                                         <div
                                             className="flex items-center justify-center h-10 w-10 rounded-full  flex-shrink-0"
                                         >

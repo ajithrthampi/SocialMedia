@@ -202,7 +202,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                     :
                     <>
                         <div className=' overflow-hidden '>
-                            <div className='w-full text-white p-2 bg-[#111111] flex items-center gap-5 '>
+                            <div className='w-full text-white p-2 bg-[#111111] flex items-center gap-5 absolute top-0 '>
                                 <BsArrowLeft size={25}
                                     onClick={() => setCurrentChat(false)}
                                 />
@@ -219,16 +219,16 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='h-screen max-h-screen overflow-y-scroll  scrollbar-none'>
+                            <div className='pb-20 pt-20 max-h-screen  overflow-y-scroll  scrollbar-none'>
                                 {messages?.map((m: any) => (
                                     <div  ref={scrollRef}  onClick={() => setMessageModal(true)} className="">
                                         <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
                                     </div>
                                 ))}
                             </div>
-                            <div className=" p-3 relative bottom-0">
-                                <div className=" text-xs border border-[#5b5858]  text-[#002D74]"></div>
-                                <div className='flex absolut '>
+                            <div className=" p-3 absolute bottom-0 w-full bg-[#111111]">
+                                <div className=" text-xs border  border-[#5b5858]  text-[#002D74]"></div>
+                                <div className='flex     '>
                                     <div className='mr-2 flex grow gap-3'>
                                         <input
                                             type="text"
