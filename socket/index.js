@@ -12,7 +12,7 @@
 const { Server } = require("socket.io");
 
 const io = new Server({ 
-    path: "https://socket-lwx2.onrender.com",
+    // path: "https://socket-lwx2.onrender.com",
     cors:{
         origin:"https://cerulean-dieffenbachia-f6d6d3.netlify.app/"
     }
