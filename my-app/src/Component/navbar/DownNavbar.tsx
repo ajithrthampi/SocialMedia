@@ -6,12 +6,13 @@ import { BsPeople } from "react-icons/bs";
 import { CgProfile } from 'react-icons/cg';
 import { HiHome } from 'react-icons/hi'
 import { MdOutlineNotifications } from 'react-icons/md';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom'
 import axiosinstance from '../../axios/axiosinstance';
 import { UserContext } from '../../Pages/context/Context';
 import Notifi from '../../Pages/userpages/notification/Notification';
 import postsImages from '../../services/imageApi';
-import { view_Profile_Details } from '../../services/UserApi';
+import { get_notification_count, view_Profile_Details } from '../../services/UserApi';
 
 interface mode {
     children: any
@@ -29,6 +30,9 @@ const DownNavbar = () => {
     const [open, setOpen] = useState<boolean>(false)
     const handleOnClose = () => setOpen(false)
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [notificationCount, setNotoficationCount] = useState()
+
+    const notifyUpdate = useSelector((state: any) => state.userDetails.value.notifi)
 
 
     if (user) {
@@ -77,14 +81,38 @@ const DownNavbar = () => {
 
     useEffect(() => {
         viewProfileDetails(userIdData)
-    }, [user,userIdData])
+    }, [user, userIdData])
 
-    const viewProfileDetails = async (userIdData:any) => {
+    const viewProfileDetails = async (userIdData: any) => {
         const viewProfileDetailsResponce = await view_Profile_Details(userIdData)
         setProfileImage(viewProfileDetailsResponce)
-      console.log("Navbar details....", viewProfileDetailsResponce);
-     }
- 
+        console.log("Navbar details....", viewProfileDetailsResponce);
+    }
+
+    useEffect(() => {
+        // try {
+        //       axiosinstance.get("/getnotificationscount", {
+        //     headers: {
+        //         "x-access-token": localStorage.getItem("token"),
+        //     },
+        // }).then((res) => {
+        //     console.log("Nitification--Count", res.data.length);
+        //     setNotoficationCount(res.data.length)
+        // })
+        //     .catch((err) => {
+        //         navigate("/error")
+        //     })
+        // } catch (error) {   
+        // }
+        notificationCountAll()
+    }, [notifyUpdate])
+
+
+    const notificationCountAll = async () => {
+        const get_allNotificationCountAll = await get_notification_count()
+        setNotoficationCount(get_allNotificationCountAll.length)
+    }
+
     return (
         <>
             <div className=' md:hidden relative z-10'>
@@ -111,10 +139,20 @@ const DownNavbar = () => {
                         </Link>
                         <div className="" >
                             <MdOutlineNotifications size={28} onClick={() => setOpen(true)} />
-                            <div className='hidden xl:block'>
+                            {notificationCount ?
+                                <>
+                                    <div className=' absolute top-3 right-32 w-5 h-5 rounded-full bg-red-500 flex items-center justify-center'>
+                                        <p className='text-xs text-white font-semibold'>
+                                            {notificationCount}
+                                        </p>
+                                    </div>
+                                </>
+                                :
+                                <>
 
-                                Notification
-                            </div>
+                                </>
+                            }
+
                         </div>
                         <Link to="/profile">
                             {profileImage ?

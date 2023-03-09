@@ -77,11 +77,14 @@ const PostFormCard = ({ socket }: Socket_io) => {
     const { user } = useContext(UserContext)
     const dispatch = useDispatch()
 
+
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
 
+    const socketio = require('socket.io-client')("https://socket-lwx2.onrender.com")
+
     const notifyUpdate = useSelector((state: any) => state.userDetails.value.notifi)
-    // console.log('notifyUpdate.,.,/./,/.,/',notifyUpdate);
+    console.log('notifyUpdate.,.,/./,/.,/', notifyUpdate);
 
 
     console.log("USer, user", user);
@@ -478,6 +481,8 @@ const PostFormCard = ({ socket }: Socket_io) => {
         }
     }
 
+  
+
 
 
     return (
@@ -667,10 +672,6 @@ const PostFormCard = ({ socket }: Socket_io) => {
                             <MainSkeleton />
                         </>
                     }
-
-
-
-
                     {/* <div className='pt-10 bg-red-500'>hello</div> */}
                 </div>
             </div>
@@ -685,7 +686,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
             </PostModal>
 
-            <CommentModal postPassDetails={postPassDetails} data={query} onClose={() => setCommentModal(false)} isVisible={commentModal} >
+            <CommentModal postPassDetails={postPassDetails} data={query} onClose={() => setCommentModal(false)} isVisible={commentModal} socket={socket} >
 
             </CommentModal>
 

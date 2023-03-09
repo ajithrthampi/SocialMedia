@@ -26,6 +26,7 @@ const io = new Server({
  }          
 
  const removeUser = (socketId)=>{
+  
     users = users.filter((user)=>user.socketId !== socketId)
  }
 

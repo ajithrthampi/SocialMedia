@@ -1,6 +1,7 @@
-import { Children, Fragment } from 'react'
+import { Children, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import axiosinstance from '../../../axios/axiosinstance'
 
 interface noti {
   open: boolean
@@ -14,6 +15,28 @@ interface noti {
 export default function Notifi( { open , setOpen,  onClose,isOpen , title, children}: noti ) {
   
   // const [open, setOpen] = useState(true)
+
+    //GET NOTIFICATION
+
+    useEffect(() => {
+       getAllNotification()
+    },[open])
+
+    const getAllNotification = () => {
+      try {
+                axiosinstance.get("/getnotificationscount", {
+                headers: {
+                    "x-access-token": localStorage.getItem("token"),
+                },
+            }).then((response) => {
+               console.log("res data",response.data);
+               
+            })
+      } catch (error) {
+        
+      }
+
+    }
 
   return (
     <>

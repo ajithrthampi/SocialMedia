@@ -35,28 +35,28 @@ const MessageMobileCategory = ({ conversations, currentUser }: ChategoryUser) =>
     console.log("users///////////////////////////////////", users);
     return (
         <>
-         
-                        <div className='flex gap-5 text-white p-2'
-                        //  onClick={handleCLick}
-                        >
-                            <div className='w-14 h-14  rounded-full overflow-hidden cursor-pointer'>
-                                {users?.Images ?
-                                    <>
-                                        <img src={`${postsImages}/${users?.Images}`} alt="profilepic" />
-                                    </>
-                                    :
-                                    <>
-                                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profilepic" />
-                                    </>
-                                }
 
-                            </div>
-                            <div className=''>
-                                <div className='text-lg'>{users && users.name}</div>
-                                <div className='text-sm'>Active now</div>
-                            </div>
-                        </div>
-             
+            <div className='flex gap-5 text-white p-2'
+            //  onClick={handleCLick}
+            >
+                <div className='w-14 h-14  rounded-full overflow-hidden cursor-pointer'>
+                    {users?.Images ?
+                        <>
+                            <img src={`${postsImages}/${users?.Images}`} alt="profilepic" />
+                        </>
+                        :
+                        <>
+                            <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU' alt="profilepic" />
+                        </>
+                    }
+
+                </div>
+                <div className=''>
+                    <div className='text-lg'>{users && users.name}</div>
+                    <div className='text-sm'>Active now</div>
+                </div>
+            </div>
+
 
 
         </>

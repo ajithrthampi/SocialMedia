@@ -19,9 +19,11 @@ import { like_post, post_details, view_post } from '../../services/UserApi';
 import postsImages from '../../services/imageApi';
 import { useSelector } from 'react-redux';
 
+interface Socket_io {
+    socket: any
+}
 
-
-const Post = () => {
+const Post = ({ socket }: Socket_io) => {
 
     const navigate = useNavigate()
     const { user } = useContext(UserContext)
@@ -223,7 +225,7 @@ const Post = () => {
                 </div>
             </div>
 
-            <CommentModal postPassDetails={postPassDetails} data={data} onClose={() => setCommentModal(false)} isVisible={commentModal}>
+            <CommentModal postPassDetails={postPassDetails} data={data} onClose={() => setCommentModal(false)} isVisible={commentModal} socket={socket}>
 
             </CommentModal>
 

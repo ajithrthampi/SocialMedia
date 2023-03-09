@@ -160,7 +160,7 @@ const Message = ({ socket }: Socket_io) => {
   }, [messages])
 
   
-    const [users, setUser] = useState<any>()
+    const [users, setUser ] = useState<any>()
     
 
     useEffect(() => {

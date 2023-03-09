@@ -10,11 +10,12 @@ import { IoMdClose, IoMdPhotos } from 'react-icons/io'
 import { MdDelete } from 'react-icons/md'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Socket } from 'socket.io-client'
 import axiosinstance from '../../axios/axiosinstance'
 import { UserContext } from '../../Pages/context/Context'
-import { commentCountUpdateStatus } from '../../redux/store/features/userSlice'
+import { commentCountUpdateStatus, NotifyUpdate } from '../../redux/store/features/userSlice'
 import postsImages from '../../services/imageApi'
-import { chat_user, comment_comment, get_comment, view_Profile_Details } from '../../services/UserApi'
+import { add_notification, chat_user, comment_comment, get_comment, view_Profile_Details } from '../../services/UserApi'
 import DeleteModal from './DeleteModal'
 
 interface modal {
@@ -23,12 +24,13 @@ interface modal {
     children: any
     postPassDetails: any
     data: any
+    socket: any
 
 
 }
 
-const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
-    // console.log("postPassDetails", postPassDetails);
+const CommentModal = ({ isVisible, onClose, postPassDetails, data, socket }: modal) => {
+    console.log("postPassDetails/./././././././", postPassDetails);
 
     const [core, setCore] = useState()
     const [comment, setComment] = useState<any>()
@@ -66,11 +68,11 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         chat_USers(Id)
     }, [postPassDetails])
 
-    const chat_USers = async(Id:any) => {
-      const cgat_users = await chat_user(Id)
-      if(cgat_users){
-        setUserName(cgat_users.username)
-      }
+    const chat_USers = async (Id: any) => {
+        const cgat_users = await chat_user(Id)
+        if (cgat_users) {
+            setUserName(cgat_users.username)
+        }
     }
 
 
@@ -115,10 +117,18 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         })
     }
 
-    const submitComment = async(postId: string, type: number) => {
-        const Images = postPassDetails.Images
-        const userId = user.id
+    const submitComment = async (postId: string, type: number) => {
+        const Images = postPassDetails?.Images
+        const userId = user?.id
         const id = { userId, postId, comment }
+
+        let details = {
+            receiverId: postPassDetails?.userId,
+            // userName: username,
+            type: "commented",
+            // userDp: DP,
+            read: false
+        }
 
         // console.log(userId, postId, comment, "scsdcscscsssddddddddd............");
 
@@ -136,21 +146,49 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
             // }).catch((err) => {
             //     navigate('/error')
             // })
+            const addComment = await comment_comment(id)
+            if (addComment) {
+                setComment("")
+                setCommentStatus(addComment)
+                dispatch(commentCountUpdateStatus(true))
+            }
+            // socket?.emit("sendNotification", {
+            //     senderName: user?.name,
+            //     receiverName: userName,
+            //     type,
+            //     image: Images
+            // })
+            // socket?.emit("sendNotification", details)
+            // let notifyDetails = {
+            //     senderName: user?.name,
+            //     receiverName: userName,
+            //     type,
+            //     image: Images
+            // }
+            
            
-                const addComment =  await comment_comment(id)
-                if(addComment){
-                    setComment("")
-                    setCommentStatus(addComment)
-                    dispatch(commentCountUpdateStatus(true))
-                }
+                // if (postPassDetails?.userId !== userId) {
+                //     // await create_notification(notifyDetails)
+                //     // axiosinstance.post("/addnotification",notifyDetails, {
+                //     //     headers: {
+                //     //         "x-access-token": localStorage.getItem("token"),
+                //     //     },
+                //     // })
+                //     const get_Notification = await add_notification(notifyDetails)
+                //     console.log("commmeme mtrf emr fegegegegme ge geg emg ermg egm ergme gme gme g",get_Notification);
+                    
+                //     // dispatch(NotifyUpdate(!notifyUpdate))
+                // }
+        
         }
-       
+
+
     }
 
     //  GET COMMENT
 
     useEffect(() => {
-        const postId = postPassDetails._id
+        const postId = postPassDetails?._id
         // axiosinstance.get("/getcomment/" + postId, {
         //     headers: {
         //         "x-access-token": localStorage.getItem("token"),
@@ -172,20 +210,20 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
         getAllComment(postId)
     }, [postPassDetails, commentStatus, modalDelete])
 
-    const getAllComment = async(postId:any) => {
-       const allComment = await get_comment(postId)
-       if(allComment){
-        setGetComment(allComment)
+    const getAllComment = async (postId: any) => {
+        const allComment = await get_comment(postId)
+        if (allComment) {
+            setGetComment(allComment)
 
-       }
+        }
     }
 
 
     const openModalData = (commentId: any) => {
         setModalDelete(true)
         setState(commentId)
-        console.log("commentId",commentId);
-        
+        console.log("commentId", commentId);
+
     }
     // console.log(".datataTTATATATATTATATATATATTATATA",state);
 
@@ -331,9 +369,9 @@ const CommentModal = ({ isVisible, onClose, postPassDetails, data }: modal) => {
                 </div>
             </div>
             {/* <div className='z-10'> */}
-                <DeleteModal isVisible={modalDelete} onClose={() => setModalDelete(false)} state={state} postPassDetails={postPassDetails}>
+            <DeleteModal isVisible={modalDelete} onClose={() => setModalDelete(false)} state={state} postPassDetails={postPassDetails}>
 
-                </DeleteModal>
+            </DeleteModal>
             {/* </div> */}
 
 

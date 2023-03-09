@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import { BsArrowLeft } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
 // import { Socket } from 'socket.io-client'
@@ -11,6 +11,7 @@ import jwtDecode from 'jwt-decode'
 import { useSelector } from 'react-redux'
 import postsImages from '../../../../services/imageApi'
 import MobileMessageCategorySkeleton from '../../../../skeleton/MobileMessageCategorySkeleton'
+import { view_Profile_Details } from '../../../../services/UserApi'
 
 interface Socket_io {
     socket: any
@@ -29,18 +30,19 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
     const [userIdData, setUserIdData] = useState<any>()
     const [state, setState] = useState<boolean>()
     const [newMessage, setNewMessage] = useState<any>()
+    const [profileDetails, setProfileDetails] = useState<any>()
     const scrollRef = useRef<any>()
 
     const chatUserPicture = useSelector((state: any) => state.userDetails.value.chatProfilePic)
 
     // console.log("6565656565665656565656566565656656565656",chatUserPicture);
 
-      // SCROLL TO RECENT CHAT
+    // SCROLL TO RECENT CHAT
 
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" })
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({ behavior: "smooth" })
 
-  }, [messages])
+    }, [messages])
 
     if (user) {
         var userId = user?.id
@@ -155,6 +157,34 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
         navigate("/home")
     }
 
+    // User Prfile Name
+
+    useEffect(() => {
+        // try {
+
+
+        //     axiosinstance.get("/viewprofiledetails/" + userId, {
+        //         headers: {
+        //             "x-access-token": localStorage.getItem("token"),
+        //         },
+        //     }).then((response) => {
+
+        //         setProfileDetails(response.data)
+        //         refetch()
+        //     })
+        // } catch (err) {
+
+        //     console.log("Eror message...", err);
+        // }
+        viewProfileDetails(userId)
+    }, [user])
+
+    const viewProfileDetails = async (userId: any) => {
+        const viewProfileDetailsResponce = await view_Profile_Details(userId)
+        setProfileDetails(viewProfileDetailsResponce)
+    }
+
+
     return (
         <>
             {/* MODAL Message */}
@@ -162,19 +192,34 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                 {!currentChat ?
                     <>
                         <div className=''>
+
                             <div className='w-full text-white p-2 bg-[#111111] flex  items-center gap-5 h-14'
                             >
                                 <BsArrowLeft size={25} onClick={closeMessage} />
-                                <div className='flex gap-2 justify-center '>
-                                    <div>
-                                        <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
-                                            className="w-8 h-8 rounded-full order-1" />
+                                {profileDetails?.map((item: any, index: any) => (
+                                    <div className='flex gap-2 justify-center '>
+                                        <div>
+
+                                            {profileDetails[0].Images ?
+                                                <>
+                                                    <img className="w-8 h-8 rounded-full order-1" src={`${postsImages}/${profileDetails[0].Images}`} alt="" />
+                                                </>
+                                                :
+                                                <>
+                                                    <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile"
+                                                        className="w-8 h-8 rounded-full order-1" />
+                                                </>
+
+                                            }
+
+                                        </div>
+                                        <div>
+                                            <div className='text-xl font-semibold'>{item?.username}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className='text-sm font-semibold'>Ajith R Thampittt</div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
+
                             {/* First Page  */}
                             {conversations ?
                                 <>
@@ -184,7 +229,7 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                                         {conversations?.map((item: any) => (
                                             <div
                                                 onClick={() => setCurrentChat(item)}
-                                               
+
                                             >
                                                 <MessageMobileCategory conversations={item} currentUser={userId} />
                                             </div>
@@ -219,9 +264,9 @@ const MessageMobileProfile = ({ socket }: Socket_io) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='pb-20 pt-20 max-h-screen  overflow-y-scroll  scrollbar-none'>
+                            <div className='pb-20 pt-12 max-h-screen  overflow-y-scroll  scrollbar-none'>
                                 {messages?.map((m: any) => (
-                                    <div  ref={scrollRef}  onClick={() => setMessageModal(true)} className="">
+                                    <div ref={scrollRef} onClick={() => setMessageModal(true)} className="">
                                         <MessageMobile message={m} own={m.senderId === userId} pic={user.profilePic} />
                                     </div>
                                 ))}

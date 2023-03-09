@@ -41,7 +41,7 @@ const HomePage = ({socket}:Socket_io) => {
       <div className='max-h-screen overflow-hidden '>
         <Navbar />
         
-        <Post />
+        <Post socket = {socket} />
         
         <Layout>
           <PostFormCard socket = {socket}  />
