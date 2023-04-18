@@ -55,6 +55,9 @@ const UserProfile = () => {
     const isUpdatePostyDetails = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
 
 
+    console.log("7878788787878787878787878787878787878787878978979",profileDetails);
+    
+
 
 
 
@@ -223,7 +226,7 @@ const UserProfile = () => {
 
 
     const followersModal = () => {
-        
+
         // try {
         //     axiosinstance.get("/followerslist/" + userId, {
         //         headers: {
@@ -312,7 +315,9 @@ const UserProfile = () => {
                                                 <div>
                                                     {profileDetails[0].Images ?
                                                         <img className="p-1 mx-aut  w-20 justify-content-center h-20 rounded-full ring-1 object-cover
-                                             ring-gray-300 dark:ring-gray-500" src={`${postsImages}/${profileDetails[0].Images}`} alt="Bordered avatar" />
+                                             ring-gray-300 dark:ring-gray-500" 
+                                             src={`${postsImages}/${profileDetails[0].Images}`}
+                                              alt="Bordered avatar" />
                                                         : <img className="p-1 mx-auto  w-28 justify-content-center h-28 rounded-full
                                                  ring-2 ring-gray-300 dark:ring-gray-500"
                                                             src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQA0BrKaI0cwXl3-wpk6Fu2gMbrP1LKk6waAlhKhrTzTobcVlka34MsNf4Yp3k1tG4ufTY&usqp=CAU'
@@ -434,7 +439,9 @@ const UserProfile = () => {
                                                 <div className='  rounded-full  cursor-pointer'>
                                                     {profileDetails[0].Images ?
                                                         <>
-                                                            <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`${postsImages}/${profileDetails[0]?.Images}`} alt="" />
+                                                            <img className='rounded-full w-36 h-36  object-cover overflow-hidden' 
+                                                            src={`${postsImages}/${profileDetails[0]?.Images}`}
+                                                             alt="" />
                                                         </>
                                                         :
                                                         <>

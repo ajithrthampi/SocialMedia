@@ -45,7 +45,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
 
     // const isFriendPostModals = useSelector((state: any) => state.userDetails.value.friendDetails)
     // console.log("is modalll datalkadlsf.fds//.././././",is   s);
-    console.log("?????????????????reduc", profileDetails);
+    console.log("?????????????????reduc", postPassDetails);
     // console.log("//////////////////////",userId);
 
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
@@ -206,7 +206,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
                                             <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
                                                 <img
                                                     className='object-cove'
-                                                    src={`${postsImages}/${profileDetails[0].Images}`}
+                                                    src={`${postsImages}/${profileDetails[0]?.Images}`}
                                                     alt="" />
                                             </div>
                                             <div className='text-sm'>{userName}</div>
@@ -231,11 +231,11 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
                                         <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
                                             <img
                                                 className='object-cove'
-                                                src={`${postsImages}/${profileDetails[0].Images}`}
+                                                src={`${postsImages}/${profileDetails[0]?.Images}`}
                                                 alt="" />
                                         </div>
                                         <div className='text-sm'> {userName}</div>
-                                        <div className='text-sm'>{isPostDetails.caption}</div>
+                                        <div className='text-sm'>{postPassDetails.caption}</div>
                                     </div>
                                 </div>
 
@@ -315,7 +315,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
                             <div className='flex gap-3 items-center '>
                                 <img
                                     className='object-cover w-10 h-10 rounded-full '
-                                    src={`${postsImages}/${profileDetails[0].Images}`}
+                                    src={`${postsImages}/${profileDetails[0]?.Images}`}
                                     alt="" />
                                 <div>
                                     <div className='text-sm text-white'>name</div>

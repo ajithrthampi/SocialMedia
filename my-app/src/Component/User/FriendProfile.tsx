@@ -17,6 +17,7 @@ import { conversationUser, followersListss, followingListss, following_count, fo
 import postsImages from '../../services/imageApi'
 import { useQuery } from '@tanstack/react-query'
 
+
 const FriendProfile = () => {
 
   const [following, setfFollowing] = useState<any>()
@@ -37,11 +38,12 @@ const FriendProfile = () => {
   const [followModal, setFollowModal] = useState<boolean>(false)
   const [stateFollowers, setStateFollowers] = useState<any>()
   const [viewAllFollowing, setViewAllFollowing] = useState<any>()
+
   const isprofileDetails = useSelector((state: any) => state.userDetails.value.friendDetails)
   const followUnfollowUpdations = useSelector((state: any) => state.userDetails.value.followUnfollowUpdation)
 
 
-  console.log("userr id In friend", followUser);
+  console.log("2212121212121212121212121212212121202020202113", isprofileDetails);
 
   useEffect(() => {
     setReduxState(isprofileDetails)
@@ -433,7 +435,9 @@ const FriendProfile = () => {
               <div className='flex  lg:p-10 p-5 gap-12 lg:pl-40 pl-32'>
 
                 <div className='  rounded-full  cursor-pointer'>
-                  <img className='rounded-full w-36 h-36  object-cover overflow-hidden' src={`images/${reduxState?.Images}`} alt="profile pic" />
+                  <img className='rounded-full w-36 h-36  object-cover overflow-hidden' 
+                  src={`${postsImages}/${reduxState?.Images}`}
+                   alt="profile pic.../" />
                 </div>
                 <div>
                   <>
@@ -486,7 +490,7 @@ const FriendProfile = () => {
                         <div className='h-64  overflow-hidden'>
                           {/* <img className='object-cover h-64 w-full' src="https://images.pexels.com/photos/1633525/pexels-photo-1633525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="" /> */}
 
-                          <img className='object-cover h-64 w-full' src={`/images/${item?.Images}`} alt="" />
+                          <img className='object-cover h-64 w-full' src={`${postsImages}/${item?.Images}`} alt="" />
 
                         </div>
                       </div>
