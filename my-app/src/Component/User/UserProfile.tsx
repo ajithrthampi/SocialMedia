@@ -147,6 +147,7 @@ const UserProfile = () => {
     }
 
     useEffect(() => {
+
         // const viewImagePosts = (postId: any) => {
         //     console.log(postId, 'id in comment click');
         //     axiosinstance.get("/postdetails/" + postId, {
@@ -222,8 +223,8 @@ const UserProfile = () => {
 
 
     const followersModal = () => {
+        
         // try {
-
         //     axiosinstance.get("/followerslist/" + userId, {
         //         headers: {
         //             "x-access-token": localStorage.getItem("token"),
@@ -233,11 +234,11 @@ const UserProfile = () => {
         //         setFollowModal(true)
         //         setStateFollowers("Followers")
         //     })
-
         // } catch (err) {
         //     // navigate('/error')
         //     console.log(err);
         // }
+
         const userId = user.id
         followers_Lists(userId)
     }
@@ -252,6 +253,7 @@ const UserProfile = () => {
 
 
     const followingsModal = () => {
+
         // try {
         //     const userId = user.id
         //     axiosinstance.get("/followinglist/" + userId, {
@@ -263,7 +265,6 @@ const UserProfile = () => {
         //         setFollowModal(true)
         //         setStateFollowers("Remove")
         //     })
-
         // } catch (err) {
         //     // navigate('/error')
         //     console.log(err);
@@ -281,7 +282,6 @@ const UserProfile = () => {
             setStateFollowers("Remove")
         }
     }
-
 
     const { data, isLoading, refetch } = useQuery(["Id"], () =>
 
@@ -566,7 +566,7 @@ const UserProfile = () => {
             </EditUserModal>
 
             <OpenPostModal postPassDetails={eachPost} onClose={() => setOpenPostModal(false)} isVisible={openPostModal} profileDetails={profileDetails} >
-
+                     
             </OpenPostModal>
 
             <FollowListModal isVisible={followModal} onClose={() => setFollowModal(false)} followersLists={followersLists} stateFollowers={stateFollowers}>

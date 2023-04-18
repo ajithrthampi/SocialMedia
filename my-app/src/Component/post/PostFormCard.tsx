@@ -515,7 +515,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
 
                                 <div className='flex gap-5 items-center mt-5 '>
                                     <div className=''>
-                                        <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1 '>
+                                        <button className='flex items-center gap-3 rounded-xl bg-[#1E1E1E] px-3 py-1 '  onClick={() => setPostModal(true)}>
                                             <FcStackOfPhotos />
                                             Photo</button>
                                     </div>
@@ -525,7 +525,7 @@ const PostFormCard = ({ socket }: Socket_io) => {
                                     Video</button>
                             </div> */}
                                     <div className='grow text-right'>
-                                        <button className='text-black bg-[#FFFF1A] px-6 py-1 rounded-xl'
+                                        <button className='text-black bg-[#FFFF1A] px-6 py-1 rounded-xl font-semibold'
                                             onClick={() => setPostModal(true)}
                                         >
                                             Post

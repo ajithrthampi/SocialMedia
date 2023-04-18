@@ -6,7 +6,7 @@ import ImageUploading from 'react-images-uploading';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import { useDispatch } from 'react-redux';
 import { updateCaptionIn } from '../../redux/store/features/userSlice';
-
+import postsImages from '../../services/imageApi'
 interface modal {
     isVisible: any
     children: any
@@ -15,12 +15,12 @@ interface modal {
     onClosee: () => void
     postData: any
     postPassDetails: any
- 
+
 }
 
 const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData, postPassDetails }: modal) => {
-  
-    
+
+
     // const postId = postData._id
 
 
@@ -29,25 +29,25 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
     const [caption, setCaption] = useState({})
     const [state, setState] = useState()
     const dispatch = useDispatch()
-    
+
 
     // const isFriendPostModals = useSelector((state:any) => state.userDetails.value.friendShowModal)
-    
+
 
     // useEffect(() => {
     //     setState(isFriendPostModals)
     // }, [])
 
-    // console.log("is modalll datalkadlsf.fds//.././././",state);
-    
-    
+    console.log("post DetaiLS S SS  S SSSSSSSSSSSSSSSSSSSSSSSS", postPassDetails);
+
+
 
 
     // DELETE POST
 
     const deletePost = () => {
         const postId = postData
-        console.log(postId,"sdlfnsdkhfbdsfkjnfds........./.");
+        console.log(postId, "sdlfnsdkhfbdsfkjnfds........./.");
 
         axiosinstance.delete("/deletepost/" + postId, {
             headers: {
@@ -59,9 +59,9 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
             // viewPosts()
             onClose()
             console.log("hiii there");
-        
+
             onClosee()
-           
+
         }).catch((err) => {
             // navigate('/error')
             console.log(err);
@@ -76,7 +76,7 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
 
     // ON CHNAGE CAPTION
 
-    const handleCaption = (e:any) => {
+    const handleCaption = (e: any) => {
         const { name, value } = e.target
         setCaption({
             ...caption,
@@ -102,6 +102,11 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
             // navigate('/error')
             console.log(err);
         })
+    }
+
+    const closeHandle = () => {
+        onClose()
+        setEditPostData(false)
     }
 
     if (!isVisible) return null
@@ -142,63 +147,89 @@ const EachPostModalDetails = ({ isVisible, children, onClose, onClosee, postData
 
             {editPostData ?
                 <>
-                <div>
-                
-                    <div className='text-black absolute flex  justify-center items-center bottom-0 top-0 right-0  left-0 duration-1000 backdrop-blur-sm duration h-screen w-screen z-10'>
-                        
-                        <div className='text-black w-[60rem] bg-[#191819] h-[30rem] flex shadow-xl'>
-                        <button className='text-white text-xl place-self-end '
-                        onClick={() => onClose()} >
-                        <IoMdClose size={25} />
-                    </button>
-                            <div className='w-1/2 '>
-                                {<div className='w-full h-full flex justify-center items-center overflow-hidden pl-3 md:pl-0'>
-                                    <img src={`/images/${postPassDetails.Images}`} className='' alt="Free unsplash image" />
+                    <div className='hidden md:block'>
 
-                                </div>}
-                            </div>
-                            
+                        <div className=' text-black absolute flex  justify-center items-center bottom-0 top-0 right-0  left-0 duration-1000 backdrop-blur-sm duration h-screen w-screen z-10'>
 
-                            <div className='w-1/2 bg-[#191819] flex flex-col justify-between px-5 py-3'>
-                                <div className='flex justify-between h-[3rem] ' >
-                                    <p className='text-main text-white' >Comments</p>
+                            <div className='text-black w-[60rem] bg-[#191819] h-[30rem] flex shadow-xl'>
+                                <div className='w-1/2 '>
+                                    {<div className='w-full h-full flex justify-center items-center overflow-hidden pl-3 md:pl-0'>
+                                        <img src={`${postsImages}/${postPassDetails.Images}`} className='' alt="Post image" />
 
-                                    {/* {eachPost.userId === user.id && <AiOutlineMore className='w-5 hover:text-main  cursor-pointer' color='black' size='20px' onClick={() => setOption(true)} />} */}
+                                    </div>}
                                 </div>
 
-                                {/* <div className=' flex items-center'>
+
+                                <div className='w-1/2 bg-[#191819] flex flex-col justify-between px-5 py-3'>
+                                    <div className='flex justify-between h-[3rem] ' >
+                                        <p className='text-main text-white' >Comments</p>
+
+                                        {/* {eachPost.userId === user.id && <AiOutlineMore className='w-5 hover:text-main  cursor-pointer' color='black' size='20px' onClick={() => setOption(true)} />} */}
+                                    </div>
+
+                                    {/* <div className=' flex items-center'>
                                 <IoMdHeart className='w-5  cursor-pointer' /> <p className='text-[10px] pl-1'>24 likes</p>
                             </div> */}
 
-                                <div className='h-full pt-5 pl-6 '>
-                                    <div className='h-[350px] overflow-y-scroll scrollbar-none '>
-                                        <div className="pb-4 px-1">
-                                            <label className="font-semibold text-gray-700 block pb-1">Caption :</label>
-                                            <input
-                                            id="caption" 
-                                            name='caption' 
-                                            className="rounded-md px-4 py-2 w-full outline outline-white text-slate-400 bg-[#313131] " 
-                                            type="text"
-                                            defaultValue={postPassDetails.caption}
-                                            onChange={handleCaption}
-                                            />
-                                        </div>
+                                    <div className='h-full pt-5 pl-6 '>
+                                        <div className='h-[350px] overflow-y-scroll scrollbar-none '>
+                                            <div className="pb-4 px-1">
+                                                <label className="font-semibold text-gray-700 block pb-1">Caption :</label>
+                                                <input
+                                                    id="caption"
+                                                    name='caption'
+                                                    className="rounded-md px-4 py-2 w-full outline outline-white text-slate-400 bg-[#313131] "
+                                                    type="text"
+                                                    defaultValue={postPassDetails.caption}
+                                                    onChange={handleCaption}
+                                                />
+                                            </div>
 
-                                        <button data-modal-toggle="popup-modal" type="button" className=" mx-auto text-white bg-yellow-500 cursor-pointer focus:ring-4 focus:outline-none  focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 ml-2 py-2.5 text-center mr-2 mt-2"
-                                         onClick={updateCaption}
-                                        >
-                                            Make Changes
-                                        </button>
-                                    </div>
-                                    <div className='mt-2 flex'>
+                                            <button data-modal-toggle="popup-modal" type="button" className=" mx-auto text-white bg-yellow-500 cursor-pointer focus:ring-4 focus:outline-none  focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 ml-2 py-2.5 text-center mr-2 mt-2"
+                                                onClick={updateCaption}
+                                            >
+                                                Make Changes
+                                            </button>
+                                        </div>
+                                        <div className='mt-2 flex'>
+                                        </div>
                                     </div>
                                 </div>
+                                <AiOutlineClose className='w-5 hover:text-main  cursor-pointer text-white text-xl'
+                                    onClick={() => closeHandle()}
+                                />
                             </div>
-                            <AiOutlineClose className='w-5 hover:text-main  cursor-pointer'
-                            // onClick={() => setEdit(false)}
-                            />
                         </div>
                     </div>
+                    {/* SMALL SCREEN */}
+                    <div className=' md:hidden text-black absolute flex  justify-center items-center bottom-0 top-0 right-0  left-0 duration-1000 backdrop-blur-sm duration h-screen w-screen z-10'>
+                        <div className='text-black w-[60rem] bg-[#191819] h-[30rem]  shadow-xl flex flex-col justify-center items-center gap-4'>
+                            <div className='flex justify-center items-center '>
+                                {<div className=' h-[300px] w-full object-cover  overflow-hidden  '>
+                                    <img src={`${postsImages}/${postPassDetails.Images}`} className='' alt="Post image" />
+                                </div>}
+                            </div>
+                            <div className='flex flex-col gap-3'>
+                            <div className='flex gap-3 justify-center items-center'>
+                                <label className="font-semibold text-gray-700 block pb-1">Caption:</label>
+                                <input
+                                    id="caption"
+                                    name='caption'
+                                    className="rounded-md px-4 py-2 w-full outline outline-white text-slate-400 bg-[#313131] "
+                                    type="text"
+                                    defaultValue={postPassDetails.caption}
+                                    onChange={handleCaption}
+                                />
+                            </div>
+                           
+                            <button data-modal-toggle="popup-modal" type="button" className=" flex justify-center items-center mx-auto text-white bg-yellow-500 cursor-pointer focus:ring-4 focus:outline-none  focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm  items-center px-5 ml-2 py-2.5 text-center mr-2 mt-2"
+                                onClick={updateCaption}
+                            >
+                                Make Changes
+                            </button>
+                                 </div>
+                        </div>
+
                     </div>
                 </>
                 :

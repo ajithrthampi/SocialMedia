@@ -83,7 +83,7 @@ export const PersonSlice = createSlice({
         },
         updatePostDetails:(state, action) => {
             state.value.PostDetails = action.payload
-            // console.log("PostDetails  PostDetails PostDetails", state.value.PostDetails);   
+            console.log("PostDetails_+=-=-=-+-=_+_+_+_+_+_+_+_+_+_+_+_+_  PostDetails PostDetails", state.value.PostDetails);   
         },
         NotifyUpdate: (state, action) => {
             state.value.notifi = action.payload

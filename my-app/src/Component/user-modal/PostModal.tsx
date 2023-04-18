@@ -61,6 +61,8 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
     if (user) {
         var userId = user.id
     }
+    console.log("user-=-=-=-=--=-=-=user", user);
+    
 
 
 
@@ -159,7 +161,7 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
 
     return (
         <>
-            <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm
+            <div className='fixed  inset-0 bg-black bg-opacity-25 backdrop-blur-sm md:z-40
            flex justify-center items-center '>
 
                 <div className='w-[1000px] flex flex-col'>
@@ -223,10 +225,10 @@ const PostModal = ({ isVisible, onClose, }: modal) => {
                             <div>
                                 <div className='flex items-center p-3 gap-3'>
                                     <div className='w-12 h-12 rounded-full overflow-hidden cursor-pointer'>
-                                        <img className='object-cove' src="https://images.pexels.com/photos/4890733/pexels-photo-4890733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                                        <img className='object-cove' src=""
                                             alt="" />
                                     </div>
-                                    <div>@ajithrthampi</div>
+                                    <div>{user?.name}</div>
                                 </div>
                                 <div>
                                     <textarea

@@ -51,6 +51,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
     const isUpdateCaption = useSelector((state: any) => state.userDetails.value.updateCaptionModal)
     const isPostDetails = useSelector((state: any) => state.userDetails.value.PostDetails)
+    // const isUpdatePostDeatils = useSelector((state: any) => state.userDetails.value.PostDetails)
     // console.log("isUpdateCaptionisUpdateCaption",isUpdateCaption);
 
     useEffect(() => {
