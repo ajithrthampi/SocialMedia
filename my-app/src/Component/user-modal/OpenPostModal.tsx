@@ -17,14 +17,14 @@ interface openPost {
     children: any
     onClose: () => void
     postPassDetails: any
-    profileDetails:any
+    profileDetails: any
 }
 
 const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileDetails }: openPost) => {
 
     const updateDeletePost = useSelector((state: any) => state.userDetails.value.closeDeleteUpdateMOdal)
-   
-    
+
+
 
     const [userName, setUserName] = useState([])
     const [comment, setComment] = useState<any>()
@@ -45,7 +45,7 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
 
     // const isFriendPostModals = useSelector((state: any) => state.userDetails.value.friendDetails)
     // console.log("is modalll datalkadlsf.fds//.././././",is   s);
-    console.log("?????????????????reduc", postPassDetails);
+    console.log("?????????????????reduc", profileDetails);
     // console.log("//////////////////////",userId);
 
     const isFriendEachPost = useSelector((state: any) => state.userDetails.value.friendEachPost)
@@ -204,14 +204,27 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
                                     <div className='flex items-center p-3 gap-3 justify-between '>
                                         <div className='flex justify-center items-center  gap-3'>
                                             <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                                <img
-                                                    className='object-cove'
-                                                    src={`${postsImages}/${profileDetails[0]?.Images}`}
-                                                    alt="" />
+                                                {
+                                                    profileDetails[0]?.Images ?
+                                                        <>
+                                                            <img
+                                                                className='object-cove'
+                                                                src={`${postsImages}/${profileDetails[0]?.Images}`}
+                                                                alt="" />
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <img
+                                                                className='object-cove'
+                                                                src={`${postsImages}/${profileDetails?.Images}`}
+                                                                alt="" />
+                                                        </>
+                                                }
+
                                             </div>
                                             <div className='text-sm'>{userName}</div>
                                         </div>
-                                        {userId=== postPassDetails.userId ?
+                                        {userId === postPassDetails.userId ?
                                             <>
                                                 <div className='' onClick={() => EachPostModal(postPassDetails._id)}>
                                                     <HiOutlineDotsHorizontal size={20} />
@@ -229,10 +242,23 @@ const OpenPostModal = ({ isVisible, onClose, children, postPassDetails, profileD
 
                                     <div className='flex items-center p-3 gap-3'>
                                         <div className='w-9 h-9 rounded-full overflow-hidden cursor-pointer'>
-                                            <img
-                                                className='object-cove'
-                                                src={`${postsImages}/${profileDetails[0]?.Images}`}
-                                                alt="" />
+                                            {
+                                                profileDetails[0]?.Images ?
+                                                    <>
+                                                        <img
+                                                            className='object-cove'
+                                                            src={`${postsImages}/${profileDetails[0]?.Images}`}
+                                                            alt="" />
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <img
+                                                            className='object-cove'
+                                                            src={`${postsImages}/${profileDetails?.Images}`}
+                                                            alt="" />
+                                                    </>
+                                            }
+
                                         </div>
                                         <div className='text-sm'> {userName}</div>
                                         <div className='text-sm'>{postPassDetails.caption}</div>
